@@ -3,7 +3,7 @@
 Research-based project on **machine learning from data streams**, using
 [River](https://riverml.xyz/) as the experimental framework.
 
-Status: **idea / scoping phase.** Nothing implemented yet.
+Status: **Phase 0 (research) complete, Phase 1 (experimentation) starting.**
 
 ---
 
@@ -15,8 +15,9 @@ object*: it sits on disk, you load it, you split it, you fit a model, you're don
 time, potentially forever, and is too large (or too fast) to store. The model must
 learn incrementally, in a single pass, using bounded memory. And because the world
 generating the data keeps changing, the model must also *notice when it becomes
-wrong* and adapt. That last part — **concept drift** — is the real research problem,
-and it's what makes this a project rather than a tutorial.
+wrong* and adapt. That last part — **concept drift**, and specifically the cost of
+*delayed labels* (the "Delay Tax") — is the real research problem, and it's what
+makes this a project rather than a tutorial.
 
 ---
 
@@ -38,11 +39,18 @@ The model is never "finished" — it is permanently mid-training.
 
 ---
 
-## Notes
+## How this site is organised
 
-Read them in order; each builds on the previous.
+| Phase | What it holds |
+|---|---|
+| **Phase 0 — Research** | Background notes, literature review, and exploratory bridges. The reading and scoping that defines the project. |
+| **Phase 1 — Experimentation** | Evidence dossiers and experimental protocols. Claims backed by numbers. |
 
-| # | File | What it covers |
+### Phase 0 — Research
+
+**Notes** — read in order; each builds on the previous:
+
+| # | Note | What it covers |
 |---|------|----------------|
 | 01 | [Streaming learning](Phase0:Research/notes/01-streaming-learning.md) | Batch vs online, the constraints, why it exists |
 | 02 | [Concept drift](Phase0:Research/notes/02-concept-drift.md) | The core research problem — types, detection, adaptation |
@@ -51,11 +59,43 @@ Read them in order; each builds on the previous.
 | 05 | [Project directions](Phase0:Research/notes/05-project-directions.md) | Candidate research questions, scored |
 | 06 | [Literature & landscape](Phase0:Research/notes/06-literature-landscape.md) | Key papers, competing tools |
 | 07 | [Open questions](Phase0:Research/notes/07-open-questions.md) | Things to decide before planning |
+| 08 | [Scope](Phase0:Research/notes/08-scope.md) | What is in and out of the project |
+
+**Literature review:**
+
+- [Index](Phase0:Research/literature_review/index.md) — every paper read, with verification status
+- [Gap analysis](Phase0:Research/literature_review/gap-analysis.md) — where the project's contribution sits
+- [Conclusion](Phase0:Research/literature_review/Conclusion.md)
+- Paper notes: [ROSE](Phase0:Research/literature_review/papers/cano-krawczyk-2022-rose.md) ·
+  [STUDD](Phase0:Research/literature_review/papers/cerqueira-2023-studd.md) ·
+  [Label delays (Botacin & Gomes)](Phase0:Research/literature_review/papers/botacin-gomes-2024-label-delays.md) ·
+  [DPL survey (Gomes 2022)](Phase0:Research/literature_review/papers/gomes-2022-dpl-survey.md) ·
+  [KDD 2026 drift benchmark](Phase0:Research/literature_review/papers/kdd2026-drift-benchmark.md) ·
+  [Gamma–Weibull (AGU 2026)](Phase0:Research/literature_review/papers/agu-2026-gamma-weibull.md)
+
+**Research digests:**
+
+- [Landscape](Phase0:Research/research/01-landscape.md)
+- [Delayed labels](Phase0:Research/research/02-delayed-labels.md)
+- [Perplexity prompts](Phase0:Research/research/perplexity-prompts.md)
+
+**Exploratory bridges** (adjacent areas considered): see
+[explore/README](Phase0:Research/explore/README.md).
+
+**Idea:** [Synopsis](Phase0:Research/idea/synopsis.md) · [Scope](Phase0:Research/idea/scope.md)
+
+### Phase 1 — Experimentation
+
+- [Streaming vs Batch: real metrics where online learning wins (and where it doesn't)](Phase1:Experimentation/streaming-vs-batch-metrics.md)
+  — evidence dossier + the Ch1 experimental protocol.
 
 ---
 
-## What still needs deciding
+## Running the docs locally
 
-See [notes/07-open-questions.md](Phase0:Research/notes/07-open-questions.md). Short version:
-which research question, which datasets, and how much scope. Planning and
-implementation come **after** that.
+```bash
+uv run mkdocs serve
+```
+
+The site is deployed to GitHub Pages on every push to `main` via
+`.github/workflows/ci.yml`.

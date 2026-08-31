@@ -1,5 +1,6 @@
 site_name: "Major Project — Streaming ML"
 site_description: "Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)."
+site_url: https://priyansh6747.github.io/Streaming-machine-learning-/
 docs_dir: docs
 
 theme:

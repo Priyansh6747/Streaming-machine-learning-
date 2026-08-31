@@ -1,4 +1,4 @@
-# Major Project — Streaming (Online) Machine Learning
+# Major Project — Streaming machine learning : Drift detection and adaptation
 
 Research-based project on **machine learning from data streams**, using
 [River](https://riverml.xyz/) as the experimental framework.

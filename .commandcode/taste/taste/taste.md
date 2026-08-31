@@ -1,0 +1,23 @@
+# Taste
+- Wants discussion outputs, notes, and ideas continuously captured in markdown files in the current working directory (repeatedly asked to "keep writing the markdowns"). Confidence: 0.9
+- Prefers to solidify the idea and scope fully before any planning begins ("no planning yet lets first solidify the idea", "lets scope it properly first"). Confidence: 0.8
+- Set /effort to low as default: prefers quick, straightforward implementation with minimal overhead. Confidence: 0.8
+- Uses Perplexity deep research (via handcrafted prompts) for literature/existing-work reviews. Confidence: 0.6
+- Self-described infra/DevOps/REST-server developer, not an ML expert (basic ML knowledge, knows transformers well); wants ML concepts explained in accessible, jargon-light terms. Confidence: 0.85
+- Experienced at building things with clear specs, but new to research projects — needs guidance on research process and scoping. Confidence: 0.7
+- Wants analysis/exploration scoped strictly to the relevant project directory (the working dir, e.g. `major/`), not the whole vault — "DO not analyse the whole vault." Confidence: 0.7
+- Requires facts/citations to be verified before being logged as verified — never hallucinate citations; explicitly flag unverifiable items (⚠️) rather than silently dropping them. Confidence: 0.9
+- Prioritizes empirical papers with concrete reported numbers (benchmark results, latency figures, F1/throughput) over qualitative/theoretical ones; recency-first while keeping foundational work, and depth on the core niche over padding for volume's sake. Confidence: 0.8
+- Wants source content restated in their own words and tables — no verbatim reproduction of excerpts or abstracts. Confidence: 0.8
+- Wants research outputs organized as structured, grep-able markdown: a maintained master index plus per-item notes and a synthesis document, with clean formatting (blank lines between entries, sorted sections). Confidence: 0.8
+- Wants risks and negative findings (e.g., papers that might scoop part of the contribution) flagged explicitly and loudly, not buried. Confidence: 0.8
+- Writes detailed, self-contained prompt briefs for delegated research tasks (role, objective, deliverables, search strategy, hard rules, output format) rather than terse one-liners. Confidence: 0.8
+- When the user supplies local reference material (e.g., a folder of PDFs), expects the assistant to stop and read all of it first, before continuing with web searches/fetches — user-provided sources take precedence over online research. Confidence: 0.7
+- Expects derived/summary documents to stick strictly to the recorded source-of-truth files: no new claims, papers, or numbers beyond what the sources contain. Confidence: 0.85
+- Wants review-type deliverables written conclusions-first, each verdict a bolded one-liner backed by concrete numbers; every substantive claim should carry a number or be explicitly flagged qualitative-only; crisp and dense — no throat-clearing or padding. Confidence: 0.95
+- Wants all available numbers mined from the source files and injected into deliverables — a document that says "no numbers" while the source notes contain figures is a defect to be fixed, not an acceptable state; only papers whose sources genuinely lack quantitative results may be flagged qualitative-only. Confidence: 0.9
+- Wants each deliverable to be self-contained — understandable and convincing on its own, with zero prior context of the project's file structure. Confidence: 0.7
+- Standard of evidence is empirical proof-by-benchmark: take established (non-streaming) models and beat them on real-world metrics to prove an approach works, rather than relying on conceptual/theoretical arguments. Confidence: 0.8
+- Expects each proven result/claim to be written up as its own slug-named markdown file ([slug].md), i.e., one focused deliverable per topic rather than one mega-document. Confidence: 0.6
+- Expects each proven result/claim to be written up as its own slug-named markdown file ([slug].md), i.e., one focused deliverable per topic rather than one mega-document. Confidence: 0.6
+- Likes deliverables to end with a tight, word-budgeted conclusion (e.g., explicitly asks for a "100 word conclusion"), but wants it as a structured bullet recap organized by category — what models, what metrics, how/method — not prose paragraphs; explicitly rejected a prose conclusion in favor of a scannable "groundwork update" format. Confidence: 0.7

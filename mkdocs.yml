@@ -51,6 +51,7 @@ plugins:
   - search
 
 extra_javascript:
+  - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
@@ -91,4 +92,6 @@ nav:
           - "Synopsis": "Phase0:Research/idea/synopsis.md"
           - "Scope": "Phase0:Research/idea/scope.md"
   - "Phase 1 — Experimentation":
+      - "Exp-01: DeepRiver vs frozen batch": "Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md"
+      - "Thesis: beating batch on reactivity metrics": "Phase1:Experimentation/thesis.md"
       - "Streaming vs Batch: real metrics": "Phase1:Experimentation/streaming-vs-batch-metrics.md"

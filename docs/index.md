@@ -86,6 +86,10 @@ The model is never "finished" — it is permanently mid-training.
 
 ### Phase 1 — Experimentation
 
+- [Exp-01: DeepRiver rolling vs frozen batch on SEA](Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)
+  — the first atomic experiment: can a DeepRiver rolling deep classifier recover from drift where a frozen batch model can't? (spec, pre-registered)
+- [Thesis: how streaming beats batch, and on what](Phase1:Experimentation/thesis.md)
+  — the mechanism and the metric family where the win is structural.
 - [Streaming vs Batch: real metrics where online learning wins (and where it doesn't)](Phase1:Experimentation/streaming-vs-batch-metrics.md)
   — evidence dossier + the Ch1 experimental protocol.
 

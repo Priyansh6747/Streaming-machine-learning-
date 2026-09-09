@@ -9,6 +9,70 @@ delayed/partial/selective labels). Sorted newest-first within each section.
 
 ## Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling
 
+### Streaming vs batch / retraining-policy comparisons (Ch1 thesis evidence — added Sep 2026)
+
+Direct answer to "has anyone beaten non-streaming models with streaming ones, or compared them on real metrics?" — yes, repeatedly; the honest summary is *context-dependent, no universal winner, streaming wins where it has a structural mechanism (per-sample updates), not by detector alone.*
+
+### [When to Retrain: An Empirical Study of Retraining Policies for Streaming ML Under Concept Drift, Budget, and Latency Constraints](https://arxiv.org/abs/2608.19488)
+- **Authors:** Sawan Dasari
+- **Year / Venue:** 2026, arXiv:2608.19488 (cs.LG); code public
+- **Chapter relevance:** Ch1 (primary — retraining-policy evidence for the thesis), Ch2 (secondary — latency/budget system model)
+- **Core claim:** Under explicit budgets and training-plus-deployment latency, the retraining *policy* (periodic vs error-threshold vs ADWIN-triggered vs none) matters far less than whether the model learns incrementally per sample; without incremental updates, simple periodic retraining beats both reactive policies on abrupt and gradual drift, reactive policies winning only under recurring drift.
+- **Key numbers:** 3,933 runs; 54 paired comparisons; without incremental updates policy choice separates post-drift accuracy by 15–55 pp; latency–budget queueing interaction silently halves effective budgets; immediate labels, linear learner.
+- **Method / dataset:** Simulator with stale-model-serves-during-latency; 3 drift regimes × 3 budgets × ≤5 latency levels × 3 datasets × 2 learning modes.
+- **Gap vs. our lemmas:** Scope-defining for Ch1: our claim must be about *streaming learners* (bounded recovery via per-sample updates), not drift detectors as batch-refit triggers. Immediate labels only — Delay Tax (Ch3) untouched. **Deep note:** `papers/dasari-2026-when-to-retrain.md`.
+- **Verified:** ✅
+
+### [Online versus batch retraining in one-step-ahead urban water demand forecasting under concept drift](https://doi.org/10.2166/ws.2026.134)
+- **Authors:** Lukas Hans, Dietlind Zühlke
+- **Year / Venue:** 2026, Water Supply 26(4):255–268
+- **Chapter relevance:** Ch1 (primary — deployment-faithful online-vs-batch-retraining evidence), Ch2 (secondary — runtime/latency in ops)
+- **Core claim:** Deployment-faithful prequential evaluation of incremental updating vs weekly batch retraining (rolling + expanding windows) on 6 years of hourly demand; an online averaging ensemble of three incremental learners achieves the lowest MAE/RMSE and mitigates high-error episodes; several expanding-window batch models are statistically indistinguishable in the milder-drift area, but the online ensemble is consistently faster (seconds vs minutes/hours) and keeps accuracy where batch baselines degrade.
+- **Key numbers:** Graphical abstract: avg MAE 391.2, runtime 27.6 s; Diebold–Mariano tests; two drift areas (variance/level drift vs distributional/shape drift).
+- **Method / dataset:** German utility, 6 years hourly consumption + meteorology; MAE/RMSE, DM tests, end-to-end runtime; online ensemble vs weekly batch retrain.
+- **Gap vs. our lemmas:** Applied confirmation that online wins under stronger drift and on cost — but regression forecasting, not classification/detector metrics; no recovery-time or damage-area measurement (our Ch1 metrics).
+- **Verified:** ✅
+
+### [Digital twin-based anomaly detection under concept drift: A comparison between iterative batch learning and incremental learning approaches](https://doi.org/10.1016/j.eswa.2025.130062)
+- **Authors:** Farah Abdoune, Maroua Nouiri, Olivier Cardin
+- **Year / Venue:** 2026, Expert Systems with Applications 299:130062
+- **Chapter relevance:** Ch1 (secondary — applied batch-vs-incremental comparison), Ch2 (secondary — digital-twin/ops context)
+- **Core claim:** Within a manufacturing digital-twin anomaly-detection framework, compares (i) a statistical threshold baseline, (ii) iterative batch learning (Isolation Forests periodically retrained with operator feedback), and (iii) incremental learning (Half-Space Trees updating in real time) under concept drift.
+- **Key numbers:** Headline numbers not yet extracted (full text not in vault).
+- **Method / dataset:** Manufacturing digital twin; threshold baseline vs periodic-batch iForest vs incremental HST.
+- **Gap vs. our lemmas:** Same paradigm axis as Ch1 but anomaly detection in a DT setting; supports the "drift favours incremental" applied story; no detector-level or delayed-label metrics.
+- **Verified:** ✅ (Crossref + publisher record)
+
+### [An Experimental Comparison of Batch and Online Machine Learning Algorithms](https://doi.org/10.1007/978-981-99-7007-0_9)
+- **Authors:** Thomas Bartz-Beielstein, Lukas Hans
+- **Year / Venue:** 2024, chapter 9 in *Online Machine Learning* (Springer, MLFA series), pp. 105–124
+- **Chapter relevance:** Ch1 (secondary — methodology of BML-vs-OML experiments), Ch2 (secondary)
+- **Core claim:** Book-chapter experimental studies comparing batch and online ML: study 1 predicts bike-sharing demand; study 2 compares on very large datasets in the presence of drift.
+- **Key numbers:** n/a at abstract level (chapter).
+- **Method / dataset:** Bike-sharing demand regression; large drifting datasets.
+- **Gap vs. our lemmas:** Same-lab companion to the Water Supply 2026 study (Hans co-author); classification/metric framing and recovery-time measurement still ours.
+- **Verified:** ✅
+
+### [All Versus One: An Empirical Comparison on Retrained and Incremental Machine Learning for Modeling Performance of Adaptable Software](https://dl.acm.org/doi/10.1109/SEAMS.2019.00029)
+- **Authors:** Tao Chen
+- **Year / Venue:** 2019, SEAMS (14th Intl Symposium on Software Engineering for Adaptive and Self-Managing Systems)
+- **Chapter relevance:** Ch1 (secondary — "retrained is not always more accurate" evidence), Ch2 (secondary — software/cloud domain)
+- **Core claim:** First large study comparing full-retrain ("all data, discard old model") vs truly incremental ("tune on each new sample") versions of the *same* algorithms; refutes the general belief that retrained ⇒ better accuracy: incremental wins on highly fluctuated data (and MLP), retrained wins on stable data (and SVM); incremental is always faster (15% to 3 orders of magnitude) and can dominate on both axes for 3 of 5 performance indicators.
+- **Key numbers:** 8 learning algorithms (LR/DT/SVM/MLP + bagging/boosting), 5 performance indicators, 3 real adaptable software systems, 1,360 conditions, 10 runs; Wilcoxon + effect sizes.
+- **Method / dataset:** WEKA/MOA implementations; S-RUBiS, ASOS, C-VARD; MAE + mean training time; drift counted via ADWIN, extent via mRSD.
+- **Gap vs. our lemmas:** Regression performance modeling (software domain), not classification streams; no detectors/recovery metrics; complements Read 2012 and reinforces our per-metric/per-context claim structure.
+- **Verified:** ✅
+
+### [Batch-Incremental versus Instance-Incremental Learning in Dynamic and Evolving Data](https://doi.org/10.1007/978-3-642-34156-4_29)
+- **Authors:** Jesse Read, Albert Bifet, Bernhard Pfahringer, Geoff Holmes
+- **Year / Venue:** 2012, IDA (LNCS 7619), pp. 313–323
+- **Chapter relevance:** Ch1 (primary — the canonical instance- vs batch-incremental comparison)
+- **Core claim:** First in-depth comparison of instance-incremental (learn per example) vs batch-incremental (gather batches, retrain) classifiers under drift; papers in both camps typically cite no evidence for the choice — this supplies it, revealing respective advantages/disadvantages with no universal winner.
+- **Key numbers:** 104 citations (Springer, Sep 2026); headline empirical numbers to be extracted on full read.
+- **Method / dataset:** MOA; multiple algorithms of each paradigm, drift adaptation focus.
+- **Gap vs. our lemmas:** Establishes context-dependence (hence our per-metric win card), not reactivity metrics; immediate labels only. **Deep note:** `papers/read-2012-batch-vs-instance.md`.
+- **Verified:** ✅
+
 ### [A Framework for Evaluating and Benchmarking Concept Drift Detection Methods](https://dl.acm.org/doi/10.1145/3770855.3819070)
 - **Authors:** Vitor Cerqueira, Heitor Murilo Gomes, Marco Heyden, Bernhard Pfahringer, Albert Bifet
 - **Year / Venue:** 2026, KDD '26 (Proceedings of the 32nd ACM SIGKDD, V.2), pp. 8671–8682
@@ -117,6 +181,16 @@ delayed/partial/selective labels). Sorted newest-first within each section.
 - **Key numbers:** Reported constant-time-per-example and high throughput; 1,598 citations on ACM DL.
 - **Method / dataset:** VFDT on synthetic/large data.
 - **Gap vs. our lemmas:** none — immediate labels; Ch1 static baseline.
+- **Verified:** ✅
+
+### [Mining Time-Changing Data Streams (CVFDT)](https://dl.acm.org/doi/10.1145/502512.502529)
+- **Authors:** Geoff Hulten, Laurie Spencer, Pedro Domingos
+- **Year / Venue:** 2001, KDD (foundational)
+- **Chapter relevance:** Ch1 (static/adaptive model baseline, foundational)
+- **Core claim:** Extends VFDT with a sliding window and alternate subtrees so the tree stays current under drift while still exploiting old data; the original demonstration that an *adaptive* stream learner tracks evolving concepts better than trees rebuilt periodically on recent data — the ancestor of our frozen-vs-adaptive claim.
+- **Key numbers:** Constant (amortised) time per example; experiments on synthetic + real evolving streams (e.g., network/data-stream settings).
+- **Method / dataset:** Hoeffding-tree variant with windowed statistics + alternate-subtree replacement.
+- **Gap vs. our lemmas:** Immediate labels; recovery-time/recovery-metrics framing not present — but it is the correct historical citation for "adaptive beats periodically-rebuilt batch," alongside VFDT (2000).
 - **Verified:** ✅
 
 ### [Learning in the Presence of Concept Drift and Hidden Contexts](https://doi.org/10.1007/bf00116900)

@@ -168,3 +168,50 @@ Fallback alternatives (if KDD'26 proves too heavy to reproduce):
 | Ch3 lemma 4 (identifiability) | Žliobaitė's result; ours only as restatement + hybrid motivation |
 | Ch3 hybrid confirmation protocol | Architecture named as open by Gomes 2022 and STUDD 2023; no built/evaluated instance found — **the central claim** |
 | Delayed-label evaluation protocol | Grzenda et al. 2020 (continuous re-evaluation) is the standard to use, not reinvent |
+
+---
+
+## 6. Ch1 status update — direct streaming-vs-batch comparisons (added Sep 2026)
+
+After web research logged into `index.md` §1 (subgroup "Streaming vs batch /
+retraining-policy comparisons"), the landscape for the Ch1/Phase-1 thesis question
+("take non-streaming models and beat them on real metrics") is now clear:
+
+**Direct comparisons already exist — Ch1 is not novel as a paradigm comparison.**
+
+- Read et al. 2012 (IDA): instance-incremental vs batch-incremental under drift —
+  no universal winner.
+- Chen 2019 (SEAMS): retrained vs incremental on 1,360 conditions — winner depends
+  on algorithm and drift intensity; incremental faster, often equal-or-better.
+- Amekoe et al. 2024: tuned frequent-retrain batch beats streaming under delay +
+  rare class (already logged).
+- Applied 2024–2026 (Hans & Zühlke 2026 Water Supply; Abdoune et al. 2026 ESWA;
+  Bartz-Beielstein & Hans 2024): online/incremental wins operationally under drift
+  intensity and on runtime.
+
+**Scope-defining new evidence — Dasari 2026 (arXiv:2608.19488):**
+
+- With per-sample *incremental* updates, retraining policy is irrelevant (54
+  paired comparisons, no practical difference vs no-retrain).
+- Without incremental updates, **periodic retraining beats both reactive
+  (drift-triggered / error-threshold) policies** under abrupt and gradual drift;
+  reactive only wins under recurring drift.
+- ⇒ The thesis claim must be worded about **streaming learners**, not about drift
+  detectors used as batch-refit triggers. "Event-driven beats clock-driven" is only
+  true when the *learner* updates per sample; a detector firing at batch cadence
+  inherits the clock's weaknesses. Our thesis.md §1/§3 mechanism (bounded recovery
+  via per-sample updates) already reflects this; keep it explicit.
+
+**What remains ours for Ch1 (defensible, narrow):**
+
+1. The **reactivity-metric family** applied to this comparison — recovery time,
+   damage area, rolling-Kappa dip depth, detection delay — none of the found
+   studies measure these (they use mean accuracy/MAE and runtime).
+2. A **fair, pre-registered protocol** with frozen + scheduled + oracle-tuned
+   baselines, ≥10 seeds, Friedman + Nemenyi, and an explicit win card (one claim
+   per metric, dataset + number).
+3. Quantifying the **scheduled-batch phase-noise** effect (recovery time scatters
+   uniformly over the retrain interval) rather than reporting one lucky schedule.
+4. The Delay Tax (Ch3) remains the project's main novelty; Ch1 is best framed as
+   the rigorous baseline chapter the literature lacks (consistent with KDD'26 as
+   the detector-side benchmark to build on).

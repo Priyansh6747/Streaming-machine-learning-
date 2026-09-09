@@ -7,6 +7,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "deep-river>=0.3.4",
     "matplotlib>=3.11.1",
+    "mkdocs-exporter>=6.2.0",
     "mkdocs-material>=9.7.7",
     # deep-river imports pytest at package import time (utils/estimator_checks)
     # but omits it from its own deps — required for it to import at all.

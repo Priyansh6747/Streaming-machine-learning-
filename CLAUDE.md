@@ -14,5 +14,10 @@ beyond its existing settings. See `.agentInstructions/README.md`.
 
 ## Commands
 
-- `uv run mkdocs serve` — preview locally
+- `uv run playwright install chromium` — one-time setup for the PDF export feature
+- `uv run mkdocs serve` — preview locally (set `MKDOCS_EXPORTER_PDF=false` to skip PDF generation if the browser is unavailable)
 - `uv run mkdocs build --strict` — build; fails on broken links
+
+Every page has a **Download as PDF** button (mkdocs-exporter plugin). PDFs are
+rendered at build time in headless Chromium, so `mkdocs build`/`mkdocs serve`
+require the Playwright browser unless `MKDOCS_EXPORTER_PDF=false` is set.

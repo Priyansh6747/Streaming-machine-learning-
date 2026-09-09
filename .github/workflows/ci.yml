@@ -29,5 +29,11 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material
+      - run: pip install mkdocs-material mkdocs-exporter
+      # PDF export renders each page in a headless browser at build time.
+      - run: playwright install chromium --with-deps
+      # Export PDFs (per-page + aggregated documentation.pdf) when deploying.
       - run: mkdocs gh-deploy --force
+        env:
+          MKDOCS_EXPORTER_PDF: "true"
+          MKDOCS_EXPORTER_PDF_AGGREGATOR: "true"

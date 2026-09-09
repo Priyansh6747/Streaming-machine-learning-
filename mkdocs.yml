@@ -32,6 +32,9 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -49,6 +52,24 @@ markdown_extensions:
 
 plugins:
   - search
+  - exporter:
+      formats:
+        pdf:
+          # PDFs are rendered at build time by a headless browser (playwright
+          # chromium). Requires:  uv run playwright install chromium
+          # Disable for a fast local build with:  MKDOCS_EXPORTER_PDF=false
+          enabled: !ENV [MKDOCS_EXPORTER_PDF, true]
+          concurrency: 4
+          aggregator:
+            # Optional extra: one big PDF of the whole site next to the
+            # per-page PDFs. Needs MKDOCS_EXPORTER_PDF=true to make sense.
+            enabled: !ENV [MKDOCS_EXPORTER_PDF_AGGREGATOR, false]
+            output: documentation.pdf
+      buttons:
+        - title: Download as PDF
+          icon: material/file-download-outline
+          enabled: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.enabled
+          attributes: !!python/name:mkdocs_exporter.formats.pdf.buttons.download.attributes
 
 extra_javascript:
   - javascripts/mathjax.js
@@ -95,3 +116,5 @@ nav:
       - "Exp-01: DeepRiver vs frozen batch": "Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md"
       - "Thesis: beating batch on reactivity metrics": "Phase1:Experimentation/thesis.md"
       - "Streaming vs Batch: real metrics": "Phase1:Experimentation/streaming-vs-batch-metrics.md"
+  - "Milestones":
+      - "Sept 9": "Reports/Sept9.md"

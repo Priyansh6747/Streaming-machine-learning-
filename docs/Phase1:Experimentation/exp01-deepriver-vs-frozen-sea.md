@@ -3,12 +3,13 @@
 **Series:** Ch1 / thesis pilot ("streaming vs non-streaming on real metrics"), first
 atomic experiment.
 
-**Aim → libs → method → calculations → results → conclusions** as requested; results
-and conclusions are **pre-registered placeholders** — this doc is written *before*
-the first run so the expectations are on record.
+**Aim → libs → method → calculations → results → conclusions** as requested; §5–6
+were pre-registered placeholders and are now filled from the first run
+(`experiments/exp01/results.json`).
 
-**Status:** 📝 Spec'd, not yet run. Code target: `experiments/exp01/` (repo root, uv
-project).
+**Status:** ✅ Run on 2026-09-09 (seed 42, RTX 3050 Laptop GPU). Code:
+`experiments/scripts/exp01_deepriver_vs_frozen_sea.py`; data artifact:
+`experiments/exp01/results.json`; figure: `figures/exp01-rolling-kappa-deepriver-vs-frozen.png`.
 
 **Formatting note:** math is written in Unicode (τ, κ₀, Δκ, ≈, ≥) so it renders
 identically in Obsidian, GitHub, and the mkdocs site — no LaTeX pipeline required.
@@ -50,17 +51,18 @@ Focus: **DeepRiver** (deep learning on data streams, River + PyTorch).
 
 | Package | Role | Notes |
 |---|---|---|
-| `deep-river` | streaming deep models (`RollingClassifier`) | the subject of the experiment |
-| `river` | stream generator (SEA), metrics, prequential loop | DeepRiver's host framework |
-| `torch` | neural net backend | CPU build sufficient for this scale |
-| `scikit-learn` | frozen batch baseline (`RandomForestClassifier`) | the opponent |
-| `numpy` | numerics | |
+| `deep-river` 0.3.4 | streaming deep models (`RollingClassifier`) | the subject of the experiment |
+| `river` 0.25.0 | metrics (`Accuracy`, `CohenKappa`, `Rolling`), prequential loop | pinned by deep-river (`<0.26`); see `notes/03-river-library.md` |
+| `torch` 2.5.1 | neural net backend | CUDA build; run on the RTX 3050 (Laptop) GPU |
+| `scikit-learn` 1.9.0 | frozen batch baseline (`RandomForestClassifier`) | the opponent |
+| `numpy` | stream generation, numerics | |
+| `pytest` | not used by us | required at import time by deep-river 0.3.4 (its `utils.estimator_checks` imports it) — packaging bug, so it's a project dep |
 
-Environment: the repo-root uv project (Python ≥ 3.13). Install (first run):
-`uv add deep-river scikit-learn` — pulls `torch` as a dependency (switch to the CPU
-index `https://download.pytorch.org/whl/cpu` if the default wheel is the large CUDA
-build). Exact versions pinned in `pyproject.toml` / `uv.lock` after first successful
-install (River must be pinned per `notes/03-river-library.md`).
+Environment: repo-root uv project, **Python 3.12** (deep-river's torch `<2.6` has no
+cp313 wheels, so the repo pins `>=3.12,<3.13`). Run:
+`uv run experiments/scripts/exp01_deepriver_vs_frozen_sea.py` — the script
+auto-selects CUDA if present (`--device cuda|cpu` to force). Exact versions in
+`pyproject.toml` / `uv.lock`.
 
 ---
 
@@ -68,24 +70,37 @@ install (River must be pinned per `notes/03-river-library.md`).
 
 ### 3a. Stream (SEA, one abrupt drift)
 
-- Generator: `river.synth.SEA` — 2 numerical features, binary classification, three
-  separable concepts.
-- Length: **60,000 samples**. Concept: `classification_function=0` for t < 30,000,
-  then `classification_function=1` → **abrupt drift at τ = 30,000**.
-- `noise = 0.1` (10% label noise, so the problem is non-trivial); balanced classes;
-  fixed `random_state` seed (single seed for Exp-01; the ≥10-seed sweep is a later,
-  separate experiment).
+- Generator: SEA concepts — 3 numerical features drawn once, continuously, from
+  U(0, 10)³; only features 0+1 matter (`x₀ + x₁` vs a threshold); binary labels.
+- Length: **60,000 samples**. Label rule: `x₀ + x₁ > 8` (SEA concept 0) for
+  t < 30,000, then `x₀ + x₁ > 9` (SEA concept 1) → **abrupt drift at τ = 30,000**.
+- `noise = 0.1` (10% label noise, so the problem is non-trivial); balanced classes
+  by construction; fixed seed 42 (single seed for Exp-01; the ≥10-seed sweep is a
+  later, separate experiment).
+- Implementation note: river 0.25's `synth.SEA` reseeds its RNG per generator, so
+  concatenating two variants *replays identical feature vectors* under the new
+  label rule (train-set memorisation confound). The script therefore draws one
+  uninterrupted feature stream and switches only the label rule at τ — identical
+  semantics to the intended SEA abrupt drift.
 
 ### 3b. Models
 
 | Role | Model | Warm-up | Update rule |
 |---|---|---|---|
-| Streaming | DeepRiver `RollingClassifier` (PyTorch MLP: 2 → 16 → 2, ReLU hidden, softmax out; Adam; binary cross-entropy) | learns from sample 1 onwards | per sample: predict → score → `learn_one` on a **rolling window** (bounded memory; old samples fall out → drift adaptivity) |
+| Streaming | DeepRiver `RollingClassifier` over a small **RNN head** (RNN 3 → 16 hidden → Linear → 2 logits; Adam, lr 1e-3, cross-entropy; one optimiser step per sample) | learns from sample 1 onwards | per sample: predict → score → `learn_one` on a **rolling window of 500** (bounded memory; old samples fall out → drift adaptivity) |
 | Frozen batch | sklearn `RandomForestClassifier(n_estimators=100)` | fit once on first **12,000 samples (20%)** | **never** updated after warm-up |
 
-Window size and learning rate are the two tuning knobs; pre-registered defaults
-(window_size ≈ 500, lr ≈ 1e-3) may be swept in a follow-up, *not* silently fitted
-to make H1 pass.
+- **Architecture note:** the spec'd "MLP 2 → 16 → 2" cannot be expressed in
+  DeepRiver's `RollingClassifier` — its feature-incremental layer handling requires
+  the module's first layer to take `n_features` units, and it feeds the net a
+  temporal window. The RNN head is the architecture DeepRiver documents for
+  rolling models; capacity (16 hidden) and lr are unchanged.
+- DeepRiver 0.3.4 bug worked around in the script: `_learn` runs the forward
+  before `module.train()`, so a predict-first (eval-mode) cuDNN RNN backward
+  crashes; the wrapper forces train mode before `learn_one`.
+- Window size and learning rate are the two tuning knobs; pre-registered defaults
+  (window_size = 500, lr = 1e-3) may be swept in a follow-up, *not* silently
+  fitted to make H1 pass.
 
 ### 3c. Evaluation protocol
 
@@ -101,7 +116,7 @@ for x, y in stream[12k:60k]:
 ```
 
 Metrics recorded **per sample**: accuracy, Cohen Kappa, rolling Cohen Kappa
-(w = 1,000). Runtime (seconds) and process-RSS delta measured around the whole loop.
+(w = 1,000). Runtime (seconds) and peak process RSS measured around the whole loop.
 
 ---
 
@@ -126,56 +141,94 @@ Let κ(t) be rolling Cohen Kappa at sample t (window w = 1,000).
 
 ## 5. Results
 
-Pre-registered expectations are in *italics*; numbers to be filled from the run
-(`experiments/exp01/results.json`). No cherry-picking: if H1 fails, that cell says
-so.
+Measured, seed 42, first run. Full per-sample series and metrics:
+`experiments/exp01/results.json`. Pre-registered expectations are in *italics*
+after each table; deviations are stated, not tuned away.
 
-### 5a. Full-run metrics (post-warm-up, cumulative)
+### 5a. Full-run metrics (post-warm-up, cumulative, n = 48,000)
 
-| Model | Accuracy | Cohen Kappa | Runtime (s) | Samples/s | Mem Δ (MB) |
+| Model | Accuracy | Cohen Kappa | Runtime (s) | Samples/s | Peak RSS (MB) |
 |---|---|---|---|---|---|
-| DeepRiver rolling | _*_ | _*_ | _*_ | _*_ | _*_ |
-| Frozen RF | _*_ | _*_ | _*_ | _*_ | _*_ |
+| DeepRiver rolling | **0.885** | **0.757** | 99.1 (CUDA) | 484 | 1074 |
+| Frozen RF | 0.856 | 0.689 | 0.17 (fit only) | — | — |
 
-*Expectation: frozen RF wins cumulative accuracy/Kappa (H2) because it dominates the
-30k pre-drift samples; that is fine — the claim is not global accuracy.*
+*Expectation was frozen RF winning cumulative accuracy/Kappa (H2).* **Deviated:**
+DeepRiver wins both — its pre-drift steady state is *not* below the frozen RF
+(κ_dr ≈ 0.755 vs κ_fr ≈ 0.759), and it keeps that level after the drift while the
+frozen model drops. The per-metric win is therefore even cleaner than
+pre-registered. Runtime is for the DeepRiver loop on the RTX 3050 (CUDA); the
+same 48k loop takes ~1,089 s (44 samples/s) on CPU, so GPU is effectively
+required at this window size. RSS is peak *process* RSS (both models + CUDA
+context in one process), not a per-model delta.
+
+![Rolling Cohen Kappa over the stream — DeepRiver dips and recovers, frozen RF dips and stays down](figures/exp01-rolling-kappa-deepriver-vs-frozen.png)
+
+*Figure 1 — rolling Cohen Kappa (w = 1,000), drift at τ = 30,000 marked. The
+blue (DeepRiver) dip is shallow and self-healing; the red (frozen RF) dip is
+deeper and never heals before the stream ends.*
 
 ### 5b. Drift-window metrics (τ = 30,000)
 
-| Model | κ₀ | Min κ | Dip depth Δκ | Recovery time (samples) | Damage area (samples·κ) |
+| Model | κ₀ | Min κ | Dip depth Δκ | Recovery time (samples from τ) | Damage area (samples·κ) |
 |---|---|---|---|---|---|
-| DeepRiver rolling | _*_ | _*_ | _*_ | _*bounded*_ | _*small*_ |
-| Frozen RF | _*_ | _*_ | _*_ | _*never*_ | _*large/unbounded*_ |
+| DeepRiver rolling | 0.755 | 0.703 | 0.052 | **835** (bounded) | 31 |
+| Frozen RF | 0.759 | 0.592 | 0.167 | **never** (≥ 5,000) | 3,307 |
 
-*Expectation (H1): DeepRiver dips then recovers within a few thousand samples; frozen
-RF dips and stays depressed — the recovery-time and damage-area columns are the win
-card for this experiment.*
+*Expectation (H1): DeepRiver dips then recovers within a few thousand samples;
+frozen RF dips and stays depressed.* **Confirmed** — DeepRiver is back inside its
+pre-drift band (≥ 0.95 · κ₀ for 500 consecutive samples) 835 samples after τ,
+within the pre-registered 5,000-sample budget; the frozen RF never re-enters the
+band in the window and is still depressed at stream end. Damage area differs by
+two orders of magnitude (31 vs 3,307 samples·κ) — the recovery-time and
+damage-area columns are the win card, as pre-registered.
 
 ### 5c. Headline verdict
 
-- H1 (bounded recovery): **pass / fail / inconclusive** —
-- H2 (batch wins steady state): **confirmed / refuted** —
+- H1 (bounded recovery): **pass** — DeepRiver re-enters its pre-drift band 835
+  samples after τ; frozen RF does not recover before the stream ends.
+- H2 (batch wins steady state): **refuted** — DeepRiver matches frozen RF
+  pre-drift (κ 0.755 vs 0.759) and wins cumulative Kappa 0.757 vs 0.689. The
+  honest-control half of the pre-registration did not materialise; the streaming
+  model is not penalised in steady state on this problem.
 
 ---
 
 ## 6. Conclusions
 
-*To be written after the run. Expected shape:*
+Written after the run (seed 42, single replicate — see caveats below).
 
-- If H1 holds: first DeepRiver-backed data point for thesis.md §6b — a streaming
-  deep learner shows bounded recovery on a drift where a frozen batch model never
-  recovers; per-metric win (recovery time, damage area), *not* global accuracy.
-- Interpret against the literature logged in `literature_review/index.md` §1: Read
-  2012 / Chen 2019 (no universal winner — context matters), Dasari 2026 (per-sample
-  learning dominates policy; expect the *learner* to matter more than the retrain
-  trigger). A DeepRiver rolling window is closer to "continuous windowed refit" than
-  "per-sample SGD", so how strongly it wins (or whether it does at all) is a real,
-  informative question.
-- If H1 fails or is inconclusive: recorded honestly; next knobs are window size,
-  learning rate, net capacity, or switching to DeepRiver's per-sample `Classifier` —
-  as separate atomic experiments, not silent re-tuning.
-- Cost column reported even if unfavourable (slow windowed refits are expected and
-  are part of the picture).
+- **First DeepRiver-backed data point for thesis.md §6b:** a streaming deep
+  learner (RollingClassifier, window 500) shows **bounded recovery** (835 samples)
+  on an abrupt drift where a frozen batch model never recovers within the stream.
+  The win is per-metric (recovery time 835 vs never, damage area 31 vs 3,307
+  samples·κ), and — beyond the pre-registration — DeepRiver also wins cumulative
+  accuracy/Kappa because its steady state matches the frozen RF pre-drift instead
+  of trailing it.
+- **Interpretation against the literature** (`literature_review/index.md` §1):
+  consistent with Read 2012 / Chen 2019 in that there is no universal winner —
+  context matters — and with Dasari 2026's "the learner matters more than the
+  trigger": the rolling window's continuous refit was what recovered, no detector
+  needed. The deep net *did not* pay a steady-state tax on this simple problem,
+  which is the part most likely to change on harder streams.
+- **Falsification path honoured:** the pre-registered recovery budget was
+  0.95 · κ₀ within 5,000 samples; H1 passed at 835. The result was *not* tuned —
+  window (500), lr (1e-3) and architecture (16 hidden) are the pre-registered
+  defaults; the two model changes from spec (single continuous stream; RNN head)
+  were forced by river/DeepRiver mechanics and are documented in §3a–3b.
+- **Caveats, recorded honestly:**
+  - Single seed, single replicate — the ≥10-seed sweep (with the confidence
+    interval on recovery time) is the follow-up; this pilot is existence
+    evidence, not statistics.
+  - Cost is real: 484 samples/s on an RTX 3050 (1,089 s / 44 samples/s on CPU)
+    for a 2.3k-parameter net — per-sample windowed refits are the slow path, and
+    the cost column stands even though it is unfavourable. At this scale the GPU
+    is not optional.
+  - Peak RSS 1,074 MB includes the CUDA context; the pure model footprint is far
+    smaller. A CPU-only measurement belongs to the cost-focused experiment.
+- **Next knobs, as separate atomic experiments:** seed sweep; harder drift
+  (SEA concept 3 threshold 9.5, or a real stream); window-size/lr sweep; DeepRiver
+  per-sample `Classifier` vs this rolling one (the windowed-refit vs per-sample-SGD
+  question the literature flags); a scheduled-retrain batch baseline.
 
 ---
 

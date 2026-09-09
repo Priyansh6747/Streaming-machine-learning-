@@ -3,8 +3,21 @@ name = "major"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
+    "deep-river>=0.3.4",
     "matplotlib>=3.11.1",
     "mkdocs-material>=9.7.7",
+    # deep-river imports pytest at package import time (utils/estimator_checks)
+    # but omits it from its own deps — required for it to import at all.
+    "pytest>=8",
+    "scikit-learn>=1.5.1",
+]
+
+[tool.uv]
+# Only resolve for platforms we actually run on — Intel-Mac wheels (e.g. torch)
+# are the failing marker combo in CI; drop x86_64 darwin from resolution.
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
 ]

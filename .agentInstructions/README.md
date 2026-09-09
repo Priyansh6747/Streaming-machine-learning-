@@ -13,6 +13,9 @@ this repo: prompts, skills, taste files, workflow notes, house style.
 2. This folder was previously named `.commandcode`. If you find references to
    that name, update them to `.agentInstructions`.
 3. Keep it in version control. Do not gitignore this folder.
+4. Every experiment must produce some sort of plot or data — an experiment is
+   not done until it yields a saved figure and/or a data artifact (table, CSV,
+   metrics file) in the repo. No experiment may end with only prose.
 
 ## Contents
 

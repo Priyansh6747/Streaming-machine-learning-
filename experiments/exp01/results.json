@@ -36,11 +36,11 @@
       "cohen_kappa": 0.689250976876008
     },
     "runtime_s": {
-      "deepriver_loop": 99.08078522199867,
-      "frozen_fit": 0.16961321199960366
+      "deepriver_loop": 95.87107091600046,
+      "frozen_fit": 0.16891691800265107
     },
-    "samples_per_s": 484.4531650859654,
-    "maxrss_mb": 1073.6171875
+    "samples_per_s": 500.67240869830533,
+    "maxrss_mb": 1074.03125
   },
   "series": {
     "t": [

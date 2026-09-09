@@ -3,7 +3,8 @@
 Research-based project on **machine learning from data streams**, using
 [River](https://riverml.xyz/) as the experimental framework.
 
-Status: **Phase 0 (research) complete, Phase 1 (experimentation) starting.**
+Status: **Phase 0 (research) complete, Phase 1 (experimentation) in progress — the
+first pilot (Exp-01) has been run.**
 
 ---
 
@@ -87,7 +88,8 @@ The model is never "finished" — it is permanently mid-training.
 ### Phase 1 — Experimentation
 
 - [Exp-01: DeepRiver rolling vs frozen batch on SEA](Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)
-  — the first atomic experiment: can a DeepRiver rolling deep classifier recover from drift where a frozen batch model can't? (spec, pre-registered)
+  — the first atomic experiment, **run**: DeepRiver recovered its pre-drift skill 835
+  samples after the drift; the frozen RF never did (damage area 31 vs 3,307 samples·κ).
 - [Thesis: how streaming beats batch, and on what](Phase1:Experimentation/thesis.md)
   — the mechanism and the metric family where the win is structural.
 - [Streaming vs Batch: real metrics where online learning wins (and where it doesn't)](Phase1:Experimentation/streaming-vs-batch-metrics.md)

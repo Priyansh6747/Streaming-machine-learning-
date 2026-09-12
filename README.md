@@ -12,7 +12,7 @@ learners (DeepRiver) as the experimental subject.
 | Status | |
 |---|---|
 | Phase 0 — research & literature | ✅ complete |
-| Phase 1 — experimentation | 🔬 first pilot run, results below |
+| Phase 1 — experimentation | 🔬 two experiments concluded — single-seed pilot **and** an 11-seed sweep, results below |
 
 ---
 
@@ -79,29 +79,38 @@ Delay Tax is the open problem).
 
 ---
 
-## First evidence: the pilot run
+## First evidence: the pilot, then the sweep
 
-Exp-01 (the first atomic experiment) put the weakest form of the claim on the bench:
-one synthetic drifting stream, one abrupt change, a **DeepRiver rolling deep
-classifier** vs a **frozen RandomForest**. Measured (seed 42, 60,000 samples —
-details in the [write-up](docs/Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)):
+Exp-01 put the weakest form of the claim on the bench: one synthetic drifting
+stream, one abrupt change, a **DeepRiver rolling deep classifier** vs a **frozen
+RandomForest**. On seed 42 the streaming model dipped briefly and was back inside
+its pre-drift band **835 samples** after the drift, while the frozen model fell from
+≈ 0.75 to ≈ 0.59 Kappa — **and never came back**.
 
-- Both models were equally skilled before the drift (rolling Kappa ≈ 0.75).
-- When the stream changed, the frozen model's skill fell to ≈ 0.59 — **and never
-  came back** before the stream ended.
-- DeepRiver dipped briefly, then **recovered to its pre-drift band 835 samples
-  after the drift**.
+Exp-02 then asked the obvious question — was 835 a fluke of that one seed? — by
+rerunning the identical experiment on **11 seeds**. The frozen model recovered on
+**none of the eleven**. The damage each model paid — the "damage area", the skill
+lost while it was wrong — was **≈ 294× smaller** for the streaming model (13 ± 31 vs
+3,710 ± 592 samples·κ), and even the streaming model's *worst* seed beat the frozen
+model's *best* seed by **24×**. The 835 figure itself did not survive the sweep:
+recovery time is 0 on eight of the eleven seeds (the model never left its band) and
+174–2,497 on the others. The claim generalised; the number did not — which is the
+honest version of the result.
 
-The money metric — damage area, the skill lost while a model is wrong — differed by
-two orders of magnitude:
+![Exp-02 seed sweep: recovery time and damage area per seed](docs/Phase1:Experimentation/figures/exp02-seed-sweep-recovery.png)
+
+![The damage gap as a distribution, one dot per seed](docs/Phase1:Experimentation/figures/exp02-damage-distribution.png)
+
+![How hard the drift hit each model, per seed](docs/Phase1:Experimentation/figures/exp02-dip-depth-per-seed.png)
 
 ![Exp-01 measured rolling Kappa over the stream: DeepRiver dips and heals, frozen RF stays down](docs/Phase1:Experimentation/figures/exp01-rolling-kappa-deepriver-vs-frozen.png)
 
 ![Exp-01 measured recovery time and damage area](docs/Phase1:Experimentation/figures/exp01-damage-area-vs-recovery.png)
 
-Honest caveat: this is a single seed and a deliberately simple stream — existence
-evidence, not statistics. The multi-seed sweep, real datasets and scheduled-retrain
-baselines are the next step (below).
+Honest caveat: both experiments use one deliberately simple synthetic stream, two
+models, no scheduled-retrain baseline and no label delay — existence evidence and a
+first distribution, not yet a field-wide claim. Real datasets, the full baseline
+ladder and the Delay Tax are the next step (below).
 
 ---
 
@@ -112,8 +121,9 @@ baselines are the next step (below).
    shown on post-dip behaviour instead.
 2. **The full baseline ladder** — frozen, scheduled-retrain, and oracle-tuned batch,
    reported side by side so no one can accuse us of picking an easy opponent.
-3. **Real statistics** — ≥10 seeds, Friedman + Nemenyi across datasets, honest
-   effect sizes; the pilot's single-run curves become confidence bands.
+3. **Real statistics** — ✅ the ≥10-seed requirement is met (Exp-02 ran 11 seeds on
+   one stream); what remains is Friedman + Nemenyi *across datasets and learners*,
+   with honest effect sizes, to turn the seed sweep into cross-dataset significance.
 4. **The Delay Tax itself** — label-delay sweeps (the STUDD-style experiment), where
    batch retraining starves and streaming must keep working on yesterday's labels.
 
@@ -126,7 +136,8 @@ Everything lives in `docs/`, organised in two phases:
 | | What you'll find |
 |---|---|
 | **Phase 0 — Research** | [Background notes](docs/Phase0:Research/notes/01-streaming-learning.md) (read in order), [literature review](docs/Phase0:Research/literature_review/index.md) with per-paper notes, and the [idea & scope](docs/Phase0:Research/idea/synopsis.md) |
-| **Phase 1 — Experimentation** | The [thesis](docs/Phase1:Experimentation/thesis.md) (the argument), [Exp-01 write-up](docs/Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md) (the pilot), and the [Ch1 protocol](docs/Phase1:Experimentation/streaming-vs-batch-metrics.md) |
+| **Phase 1 — Experimentation** | The [thesis](docs/Phase1:Experimentation/thesis.md) (the argument), [Exp-01 write-up](docs/Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md) (the pilot), [Exp-02 write-up](docs/Phase1:Experimentation/exp02-seed-sweep-sea.md) (the 11-seed sweep), and the [Ch1 protocol](docs/Phase1:Experimentation/streaming-vs-batch-metrics.md) |
+| **Results** | The [global results page](docs/Reports/Results.md) — the consolidated bottom line across every concluded experiment, with the [milestone reports](docs/Reports/Sept9.md) behind it |
 
 Code lives in `experiments/` (one folder per experiment + a `scripts/` and
 `figures/` home for runners and chart generators); data artifacts (`results.json`)

@@ -1,0 +1,630 @@
+{
+  "experiment": "Exp-02",
+  "question": "Is Exp-01's 835-sample recovery a fluke of one seed?",
+  "status": "concluded",
+  "spec": "docs/Reports/Results.md (Exp-02 row) \u00b7 docs/Reports/Sept9.md (next milestone 1)",
+  "protocol": "docs/Phase1:Experimentation/streaming-vs-batch-metrics.md \u00a75 (seeds & statistics)",
+  "baseline": "docs/Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md (seed 42)",
+  "device": "cuda",
+  "scenario": {
+    "stream": "SEA concepts (sum>8 -> sum>9), one continuous U(0,10)^3 draw",
+    "n_total": 60000,
+    "warm_up": 12000,
+    "tau": 30000,
+    "noise": 0.1,
+    "seeds": [
+      42,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "rolling_kappa_w": 1000,
+    "recovery_band": 0.95,
+    "recovery_lookahead": 5000,
+    "recovery_stretch": 500
+  },
+  "models": {
+    "streaming": {
+      "name": "DeepRiver RollingClassifier",
+      "module": "RNN(3->16) -> Linear(16->2), logits",
+      "window_size": 500,
+      "lr": 0.001,
+      "optimizer": "adam",
+      "loss": "cross_entropy",
+      "steps_per_sample": 1
+    },
+    "frozen": {
+      "name": "sklearn RandomForestClassifier",
+      "n_estimators": 100,
+      "warm_up_samples": 12000,
+      "update": "never after warm-up"
+    }
+  },
+  "seeds": [
+    42,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "sweep_runtime_s": 1127.2717262459998,
+  "process_maxrss_mb": 1108.31640625,
+  "acceptance": {
+    "min_seeds_10": {
+      "required": 10,
+      "actual": 11,
+      "pass": true
+    },
+    "streaming_recovers_on_every_seed": {
+      "recovered": 11,
+      "of": 11,
+      "pass": true
+    },
+    "frozen_never_recovers_on_every_seed": {
+      "never": 11,
+      "of": 11,
+      "pass": true
+    }
+  },
+  "cross_check_exp01": {
+    "seed": 42,
+    "exp01_recovery_samples": 835,
+    "exp02_recovery_samples": 835,
+    "delta_samples": 0,
+    "matches": true,
+    "note": "Exact match not required (cuDNN RNN backward is not bit-deterministic); the check is that the same seed lands in the same regime."
+  },
+  "aggregate": {
+    "n_seeds": 11,
+    "streaming_recovery_samples": {
+      "n": 11,
+      "mean": 318.72727272727275,
+      "sd": 764.5294096251747,
+      "min": 0,
+      "max": 2497,
+      "median": 0,
+      "never": 0
+    },
+    "frozen_recovery_samples": {
+      "n": 0,
+      "mean": null,
+      "sd": null,
+      "min": null,
+      "max": null,
+      "median": null,
+      "never": 11
+    },
+    "streaming_dip_depth": {
+      "n": 11,
+      "mean": 0.045155554915123755,
+      "sd": 0.014960127595149324,
+      "min": 0.02706362165481513,
+      "max": 0.07079488110761034,
+      "median": 0.0419672533689317
+    },
+    "frozen_dip_depth": {
+      "n": 11,
+      "mean": 0.17342244947215957,
+      "sd": 0.01820062864301293,
+      "min": 0.1531987569656419,
+      "max": 0.20796929394385466,
+      "median": 0.16681780019043468
+    },
+    "streaming_kappa0": {
+      "n": 11,
+      "mean": 0.7512178469357249,
+      "sd": 0.01668675139264548,
+      "min": 0.7144500756726809,
+      "max": 0.776094123327278,
+      "median": 0.7551718334325681
+    },
+    "frozen_kappa0": {
+      "n": 11,
+      "mean": 0.7670499607317368,
+      "sd": 0.018102004010718556,
+      "min": 0.7306756906553894,
+      "max": 0.7939972905062157,
+      "median": 0.7695537677172312
+    },
+    "streaming_min_kappa": {
+      "n": 11,
+      "mean": 0.7060622920206011,
+      "sd": 0.015268013133059439,
+      "min": 0.6774036740628134,
+      "max": 0.7280634464508221,
+      "median": 0.7089492859835002
+    },
+    "frozen_min_kappa": {
+      "n": 11,
+      "mean": 0.5936275112595772,
+      "sd": 0.013461375169596924,
+      "min": 0.5677276598658673,
+      "max": 0.6129965842742002,
+      "median": 0.592128500546632
+    },
+    "streaming_damage_area": {
+      "n": 11,
+      "mean": 12.632859885537464,
+      "sd": 31.421973799750457,
+      "min": 0.0,
+      "max": 103.13153208884732,
+      "median": 0.0010735082497553838
+    },
+    "frozen_damage_area": {
+      "n": 11,
+      "mean": 3709.9507297956334,
+      "sd": 592.0408453854474,
+      "min": 2438.613615713877,
+      "max": 4367.938061841044,
+      "median": 3821.6309358238395
+    },
+    "full_run": {
+      "deepriver_accuracy": {
+        "n": 11,
+        "mean": 0.8830397727272727,
+        "sd": 0.002068834014437353,
+        "min": 0.8788958333333333,
+        "max": 0.8864583333333333,
+        "median": 0.8831458333333333
+      },
+      "deepriver_cohen_kappa": {
+        "n": 11,
+        "mean": 0.7529960052124618,
+        "sd": 0.004360018235503689,
+        "min": 0.7446467480099315,
+        "max": 0.7606931835890324,
+        "median": 0.7534404477340948
+      },
+      "frozen_accuracy": {
+        "n": 11,
+        "mean": 0.8538863636363636,
+        "sd": 0.0016733813602307231,
+        "min": 0.8505,
+        "max": 0.8560833333333333,
+        "median": 0.85375
+      },
+      "frozen_cohen_kappa": {
+        "n": 11,
+        "mean": 0.6849730733678951,
+        "sd": 0.003543700170204951,
+        "min": 0.6781694100237258,
+        "max": 0.690261821350614,
+        "median": 0.6846723695172015
+      }
+    },
+    "total_deepriver_runtime_s": 1118.9630309929992
+  },
+  "per_seed": [
+    {
+      "seed": 42,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7551718334325681,
+          "min_kappa": 0.7032262602991479,
+          "dip_depth": 0.051945573133420186,
+          "recovery_time": 30835,
+          "recovery_samples": 835,
+          "damage_area": 31.166516656987117
+        },
+        "frozen": {
+          "kappa0": 0.7587109138576205,
+          "min_kappa": 0.5918931136671858,
+          "dip_depth": 0.16681780019043468,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 3306.743717190172
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8847916666666666,
+          "cohen_kappa": 0.7567547498734769
+        },
+        "frozen": {
+          "accuracy": 0.85575,
+          "cohen_kappa": 0.689250976876008
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 104.4852647209998,
+        "frozen_fit_s": 0.18601817300009316,
+        "samples_per_s": 459.39492164920364
+      }
+    },
+    {
+      "seed": 0,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7386425690232361,
+          "min_kappa": 0.711578947368421,
+          "dip_depth": 0.02706362165481513,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0010735082497553838
+        },
+        "frozen": {
+          "kappa0": 0.7629030369757827,
+          "min_kappa": 0.6057192374350086,
+          "dip_depth": 0.1571837995407741,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 3707.685697361591
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8824375,
+          "cohen_kappa": 0.7523943304795678
+        },
+        "frozen": {
+          "accuracy": 0.8524166666666667,
+          "cohen_kappa": 0.6826981490859738
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 103.08013038600006,
+        "frozen_fit_s": 0.17973791500003244,
+        "samples_per_s": 465.657152549733
+      }
+    },
+    {
+      "seed": 1,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7385913304771814,
+          "min_kappa": 0.7111678936760526,
+          "dip_depth": 0.027423436801128798,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0
+        },
+        "frozen": {
+          "kappa0": 0.7487974216729086,
+          "min_kappa": 0.5865904990980157,
+          "dip_depth": 0.1622069225748929,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 3267.2773753121382
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8831458333333333,
+          "cohen_kappa": 0.7534404477340948
+        },
+        "frozen": {
+          "accuracy": 0.8526875,
+          "cohen_kappa": 0.6824701745764027
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 105.62557303699987,
+        "frozen_fit_s": 0.18826904800016564,
+        "samples_per_s": 454.43540441845414
+      }
+    },
+    {
+      "seed": 2,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.74372622236928,
+          "min_kappa": 0.7017589690003483,
+          "dip_depth": 0.0419672533689317,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.018642830997995907
+        },
+        "frozen": {
+          "kappa0": 0.7560981409823581,
+          "min_kappa": 0.5951382496334937,
+          "dip_depth": 0.16095989134886435,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 3223.7175642901466
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8825416666666667,
+          "cohen_kappa": 0.7524234660047295
+        },
+        "frozen": {
+          "accuracy": 0.85375,
+          "cohen_kappa": 0.6857018519413955
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 101.30316280200009,
+        "frozen_fit_s": 0.1851404179999463,
+        "samples_per_s": 473.82528513761577
+      }
+    },
+    {
+      "seed": 3,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7624204311809535,
+          "min_kappa": 0.6916255500733431,
+          "dip_depth": 0.07079488110761034,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0
+        },
+        "frozen": {
+          "kappa0": 0.7939972905062157,
+          "min_kappa": 0.592128500546632,
+          "dip_depth": 0.20186878995958368,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 4367.938061841044
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8838333333333334,
+          "cohen_kappa": 0.7545662846096381
+        },
+        "frozen": {
+          "accuracy": 0.8556458333333333,
+          "cohen_kappa": 0.6886454117744188
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 102.41545577299985,
+        "frozen_fit_s": 0.1937341650000235,
+        "samples_per_s": 468.6792597631969
+      }
+    },
+    {
+      "seed": 4,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7523034221760878,
+          "min_kappa": 0.7195185766614338,
+          "dip_depth": 0.03278484551465399,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0
+        },
+        "frozen": {
+          "kappa0": 0.7695537677172312,
+          "min_kappa": 0.6089366477369333,
+          "dip_depth": 0.16061711998029782,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 3821.6309358238395
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8818125,
+          "cohen_kappa": 0.7508364060160951
+        },
+        "frozen": {
+          "accuracy": 0.8533958333333334,
+          "cohen_kappa": 0.6846723695172015
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 102.29169291799985,
+        "frozen_fit_s": 0.17640954200010128,
+        "samples_per_s": 469.24631542151
+      }
+    },
+    {
+      "seed": 5,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7624851295034465,
+          "min_kappa": 0.7089492859835002,
+          "dip_depth": 0.053535843519946336,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0155460159527262
+        },
+        "frozen": {
+          "kappa0": 0.7746558197968294,
+          "min_kappa": 0.590193989224259,
+          "dip_depth": 0.18446183057257037,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 4151.399762603905
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8840625,
+          "cohen_kappa": 0.7546306817533597
+        },
+        "frozen": {
+          "accuracy": 0.853375,
+          "cohen_kappa": 0.6824857363702258
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 103.25413532199968,
+        "frozen_fit_s": 0.1678978790000656,
+        "samples_per_s": 464.87242230358356
+      }
+    },
+    {
+      "seed": 6,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7144500756726809,
+          "min_kappa": 0.6774036740628134,
+          "dip_depth": 0.037046401609867496,
+          "recovery_time": 30174,
+          "recovery_samples": 174,
+          "damage_area": 4.628147639877181
+        },
+        "frozen": {
+          "kappa0": 0.7306756906553894,
+          "min_kappa": 0.5774769336897475,
+          "dip_depth": 0.1531987569656419,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 2438.613615713877
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.880875,
+          "cohen_kappa": 0.7473818218468394
+        },
+        "frozen": {
+          "accuracy": 0.8547708333333334,
+          "cohen_kappa": 0.6859492000718564
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 101.83975637899994,
+        "frozen_fit_s": 0.1762898669999231,
+        "samples_per_s": 471.3287001725186
+      }
+    },
+    {
+      "seed": 7,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.776094123327278,
+          "min_kappa": 0.7231896811723537,
+          "dip_depth": 0.05290444215492429,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0
+        },
+        "frozen": {
+          "kappa0": 0.7867835728600103,
+          "min_kappa": 0.6129965842742002,
+          "dip_depth": 0.1737869885858101,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 4223.091751647893
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8864583333333333,
+          "cohen_kappa": 0.7606931835890324
+        },
+        "frozen": {
+          "accuracy": 0.8560833333333333,
+          "cohen_kappa": 0.690261821350614
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 97.99629024500018,
+        "frozen_fit_s": 0.16532742900017183,
+        "samples_per_s": 489.81446011880007
+      }
+    },
+    {
+      "seed": 8,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7632939145273375,
+          "min_kappa": 0.7280634464508221,
+          "dip_depth": 0.03523046807651542,
+          "recovery_time": 30000,
+          "recovery_samples": 0,
+          "damage_area": 0.0
+        },
+        "frozen": {
+          "kappa0": 0.7796769592150369,
+          "min_kappa": 0.6011012086840061,
+          "dip_depth": 0.1785757505310308,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 4120.95419840943
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8845833333333334,
+          "cohen_kappa": 0.7551879374203143
+        },
+        "frozen": {
+          "accuracy": 0.854375,
+          "cohen_kappa": 0.6843987054590248
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 97.87961181799983,
+        "frozen_fit_s": 0.17002462400023433,
+        "samples_per_s": 490.39834862905445
+      }
+    },
+    {
+      "seed": 9,
+      "drift_metrics": {
+        "window": "t in [tau, tau+5000) for dip; recovery within same window",
+        "deepriver": {
+          "kappa0": 0.7562172646029242,
+          "min_kappa": 0.6902029274783765,
+          "dip_depth": 0.06601433712454763,
+          "recovery_time": 32497,
+          "recovery_samples": 2497,
+          "damage_area": 103.13153208884732
+        },
+        "frozen": {
+          "kappa0": 0.7756969538097219,
+          "min_kappa": 0.5677276598658673,
+          "dip_depth": 0.20796929394385466,
+          "recovery_time": null,
+          "recovery_samples": null,
+          "damage_area": 4180.4053475579285
+        }
+      },
+      "full_run": {
+        "n_evaluated": 48000,
+        "deepriver": {
+          "accuracy": 0.8788958333333333,
+          "cohen_kappa": 0.7446467480099315
+        },
+        "frozen": {
+          "accuracy": 0.8505,
+          "cohen_kappa": 0.6781694100237258
+        }
+      },
+      "cost": {
+        "deepriver_loop_s": 98.79195759200002,
+        "frozen_fit_s": 0.16924815799984572,
+        "samples_per_s": 485.86950972501984
+      }
+    }
+  ]
+}

@@ -114,6 +114,7 @@ nav:
           - "Scope": "Phase0:Research/idea/scope.md"
   - "Phase 1 — Experimentation":
       - "Exp-01: DeepRiver vs frozen batch": "Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md"
+      - "Exp-02: seed sweep (11 seeds)": "Phase1:Experimentation/exp02-seed-sweep-sea.md"
       - "Thesis: beating batch on reactivity metrics": "Phase1:Experimentation/thesis.md"
       - "Streaming vs Batch: real metrics": "Phase1:Experimentation/streaming-vs-batch-metrics.md"
   - "Results":

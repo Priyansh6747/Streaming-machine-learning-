@@ -128,3 +128,5 @@ nav:
       - "ML reference": "ML.md"
   - "Product":
       - "DriftDeck": "DriftDeck.md"
+      - "EverLearn": "EverLearn.md"
+      - "EverRank": "EverRank.md"

@@ -121,3 +121,10 @@ nav:
       - "Results (global)": "Reports/Results.md"
   - "Milestones":
       - "Sept 9": "Reports/Sept9.md"
+  - "Viva":
+      - "Viva brief": "Reports/viva-brief.md"
+  - "Reference":
+      - "Repository structure": "struct.md"
+      - "ML reference": "ML.md"
+  - "Product":
+      - "DriftDeck": "DriftDeck.md"

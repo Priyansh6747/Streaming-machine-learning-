@@ -1,0 +1,35 @@
+exp_id: e11
+title: "Label-free adaptation on feature-space drift"
+description: >
+  Label swap (real drift) and feature permutation (virtual drift) on SEA and
+  Hyperplane. Tests the pre-registered mechanism claim: the SSL arm wins where
+  supervised error-stream detectors are blind.
+seeds: "0-10"
+need_proba: false
+streams:
+  - {generator: sea, shape: abrupt, n_samples: 40000, warm_up: 8000, noise: 0.1, position: 20000, concept_a: 0, concept_b: 1, mechanism: label_swap, params: {swap_from: 0, swap_to: 1}}
+  - {generator: sea, shape: abrupt, n_samples: 40000, warm_up: 8000, noise: 0.1, position: 20000, concept_a: 0, concept_b: 1, mechanism: feature_permutation}
+  - {generator: hyperplane, shape: abrupt, n_samples: 40000, warm_up: 8000, noise: 0.1, position: 20000, mechanism: label_swap, params: {swap_from: 0, swap_to: 1}}
+  - {generator: hyperplane, shape: abrupt, n_samples: 40000, warm_up: 8000, noise: 0.1, position: 20000, mechanism: feature_permutation}
+models:
+  - id: driftformer
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: adwin_bagging
+    type: river
+    params: {class: ADWINBaggingClassifier}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance: {}

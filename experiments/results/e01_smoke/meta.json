@@ -1,0 +1,124 @@
+{
+  "schema": "driftlab/2",
+  "exp_id": "e01",
+  "config_hash": "59f2cd79598f6bca82c00882bb6f680b552b9669485467cc09e9ef567ec834d6",
+  "git_sha": "dc974c0dde5f8a67e14bb8466bf5c15690315698",
+  "versions": {
+    "python": "3.12.3",
+    "river": "0.25.0",
+    "torch": "2.5.1+cu124",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "deep_river": "0.3.4"
+  },
+  "started_unix": 1794477796.9482994,
+  "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
+  "argv": [
+    "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",
+    "--exp",
+    "e01",
+    "--seeds",
+    "0-1",
+    "--out",
+    "experiments/results/e01_smoke"
+  ],
+  "config": {
+    "exp_id": "e01",
+    "title": "Metric v2 revision of Exp-01/02",
+    "description": "Re-run the Exp-01/02 SEA pilot with the corrected metric contract: oracle-referenced AUE, panel-shared damage, and recovery conditional on a band exit. The legacy 294x/24x numbers remain in exp01/exp02 artifacts; this experiment publishes the corrected magnitudes beside them.\n",
+    "streams": [
+      {
+        "generator": "sea",
+        "shape": "abrupt",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "id": "deepriver_rolling",
+        "type": "deepriver_rolling",
+        "params": {
+          "window_size": 500,
+          "lr": 0.001,
+          "n_hidden": 16,
+          "device": "auto"
+        }
+      },
+      {
+        "id": "frozen_rf",
+        "type": "frozen_rf",
+        "params": {
+          "n_estimators": 100
+        }
+      }
+    ],
+    "detectors": [],
+    "detector_hosts": [
+      "ht",
+      "hat"
+    ],
+    "detector_channels": [
+      "raw",
+      "ewma"
+    ],
+    "detector_delays": [
+      0
+    ],
+    "model_delays": [
+      0
+    ],
+    "metrics": {
+      "rolling_window": 1000,
+      "band": 0.95,
+      "stretch": 500,
+      "window": 5000,
+      "delta_max": {
+        "abrupt": 1000,
+        "gradual": 2000,
+        "incremental": 4000,
+        "recurring": 2000
+      },
+      "ewma_alpha": 0.01
+    },
+    "seeds": [
+      42,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "acceptance": {
+      "baseline_model": "frozen_rf",
+      "treatment_model": "deepriver_rolling",
+      "min_aue_ratio": 5.0,
+      "frozen_never_recovers": true,
+      "treatment_damage_lower_seeds": 10
+    }
+  }
+}

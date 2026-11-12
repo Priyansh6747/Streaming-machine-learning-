@@ -1,0 +1,519 @@
+{
+  "title": "Metric v2 revision of Exp-01/02",
+  "description": "Re-run the Exp-01/02 SEA pilot with the corrected metric contract: oracle-referenced AUE, panel-shared damage, and recovery conditional on a band exit. The legacy 294x/24x numbers remain in exp01/exp02 artifacts; this experiment publishes the corrected magnitudes beside them.\n",
+  "n_streams": 1,
+  "seeds": [
+    0,
+    1
+  ],
+  "n_model_runs": 10,
+  "n_episodes": 10,
+  "n_detections": 0,
+  "models": {
+    "deepriver_rolling": {
+      "n": 2,
+      "accuracy": {
+        "mean": 0.8827916666666666,
+        "sd": 0.0005008673033404553
+      },
+      "kappa": {
+        "mean": 0.7529173891068315,
+        "sd": 0.0007397166045922727
+      },
+      "ece": {
+        "mean": null,
+        "sd": null
+      },
+      "brier": {
+        "mean": null,
+        "sd": null
+      },
+      "aue": {
+        "mean": -0.0463,
+        "sd": 0.007495331880577403
+      },
+      "damage_ref": {
+        "mean": 14.402101530901326,
+        "sd": 1.0727647956719886
+      },
+      "damage_full": {
+        "mean": 88.01380833360356,
+        "sd": 32.4571630414996
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "recovery_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "recovery_prediction_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "dip": {
+        "mean": 0.032498498933683506,
+        "sd": 0.0008318962398075222
+      },
+      "samples_per_s": {
+        "mean": 462.985244444075,
+        "sd": 8.098653949388627
+      },
+      "model_bytes": 1480.0
+    },
+    "frozen_rf": {
+      "n": 2,
+      "accuracy": {
+        "mean": 0.8525520833333333,
+        "sd": 0.00019150808657135516
+      },
+      "kappa": {
+        "mean": 0.6825841618311881,
+        "sd": 0.00016120232165542153
+      },
+      "ece": {
+        "mean": null,
+        "sd": null
+      },
+      "brier": {
+        "mean": null,
+        "sd": null
+      },
+      "aue": {
+        "mean": 0.0042,
+        "sd": 0.001979898987322333
+      },
+      "damage_ref": {
+        "mean": 433.9486918871371,
+        "sd": 95.25476973627688
+      },
+      "damage_full": {
+        "mean": 3128.3700745326146,
+        "sd": 3.8158341496402763
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "recovery_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "recovery_prediction_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "dip": {
+        "mean": 0.14771705118940814,
+        "sd": 0.014067297980132764
+      },
+      "samples_per_s": {
+        "mean": 34880.66240703544,
+        "sd": 460.7335079922825
+      },
+      "model_bytes": 24739765.0
+    },
+    "ht": {
+      "n": 2,
+      "accuracy": {
+        "mean": 0.8726666666666667,
+        "sd": 0.0012963624321753514
+      },
+      "kappa": {
+        "mean": 0.7297759724693794,
+        "sd": 0.0023681458467671064
+      },
+      "ece": {
+        "mean": null,
+        "sd": null
+      },
+      "brier": {
+        "mean": null,
+        "sd": null
+      },
+      "aue": {
+        "mean": -0.0045,
+        "sd": 0.0015556349186104047
+      },
+      "damage_ref": {
+        "mean": 354.7524280141101,
+        "sd": 68.42846940166523
+      },
+      "damage_full": {
+        "mean": 692.3003634322956,
+        "sd": 10.076161704393318
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "recovery_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "recovery_prediction_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "dip": {
+        "mean": 0.12106976930096486,
+        "sd": 0.014360903504652541
+      },
+      "samples_per_s": {
+        "mean": 36095.654699258215,
+        "sd": 462.54612958916
+      },
+      "model_bytes": 604909.5
+    },
+    "hat": {
+      "n": 2,
+      "accuracy": {
+        "mean": 0.8735729166666666,
+        "sd": 0.005435883380371554
+      },
+      "kappa": {
+        "mean": 0.7323027244343697,
+        "sd": 0.011381330504977728
+      },
+      "ece": {
+        "mean": null,
+        "sd": null
+      },
+      "brier": {
+        "mean": null,
+        "sd": null
+      },
+      "aue": {
+        "mean": -0.008900000000000002,
+        "sd": 0.015414927829866736
+      },
+      "damage_ref": {
+        "mean": 317.94289741206364,
+        "sd": 86.73921412625721
+      },
+      "damage_full": {
+        "mean": 691.8318952094901,
+        "sd": 337.13548699079007
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "recovery_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "recovery_prediction_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "dip": {
+        "mean": 0.11284260142167374,
+        "sd": 0.017246464607217866
+      },
+      "samples_per_s": {
+        "mean": 12401.754859539866,
+        "sd": 462.43727311122893
+      },
+      "model_bytes": 651663.5
+    },
+    "oracle_ref": {
+      "n": 2,
+      "accuracy": {
+        "mean": 0.8534895833333334,
+        "sd": 1.4731391274737745e-05
+      },
+      "kappa": {
+        "mean": 0.6847213363579514,
+        "sd": 0.0007381580237482326
+      },
+      "ece": {
+        "mean": null,
+        "sd": null
+      },
+      "brier": {
+        "mean": null,
+        "sd": null
+      },
+      "aue": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "damage_ref": {
+        "mean": 387.87446391643743,
+        "sd": 75.23717529399421
+      },
+      "damage_full": {
+        "mean": 3031.3058266406806,
+        "sd": 18.96164956302364
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "sd": 0.0
+      },
+      "recovery_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "recovery_prediction_samples": {
+        "mean": null,
+        "sd": null
+      },
+      "dip": {
+        "mean": 0.13791647684698105,
+        "sd": 0.014748910823134303
+      },
+      "samples_per_s": {
+        "mean": 20251.957639924134,
+        "sd": 26.303798067206436
+      },
+      "model_bytes": 24384485.0
+    }
+  },
+  "detectors": {},
+  "detectors_by_shape": [],
+  "acceptance": {
+    "aue_ratio": {
+      "baseline": "frozen_rf",
+      "treatment": "deepriver_rolling",
+      "baseline_aue": 0.0042,
+      "treatment_aue": -0.0463,
+      "ratio": Infinity,
+      "threshold": 5.0,
+      "pass": true
+    },
+    "frozen_never_recovers": {
+      "model": "frozen_rf",
+      "never": 2,
+      "of": 2,
+      "pass": true
+    },
+    "treatment_damage_lower_seeds": {
+      "wins": 2,
+      "of": 2,
+      "required": 10,
+      "pass": false
+    },
+    "pass": false
+  },
+  "per_seed": [
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 0,
+      "model": "deepriver_rolling",
+      "delay": 0,
+      "accuracy": 0.8824375,
+      "kappa": 0.7523943304795679,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": -0.041,
+      "damage_ref": 15.16066079253919,
+      "damage_full": 110.96448841832532,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.03191025946127202,
+      "samples_per_s": 468.71185757017093,
+      "model_bytes": 1480
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 0,
+      "model": "frozen_rf",
+      "delay": 0,
+      "accuracy": 0.8524166666666667,
+      "kappa": 0.6826981490859737,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": 0.0028,
+      "damage_ref": 366.5933982662526,
+      "damage_full": 3125.6718723295207,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.13776996939468444,
+      "samples_per_s": 35206.45019485665,
+      "model_bytes": 24823525
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 0,
+      "model": "ht",
+      "delay": 0,
+      "accuracy": 0.87175,
+      "kappa": 0.7281014404822916,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": -0.0034,
+      "damage_ref": 306.3661932739764,
+      "damage_full": 699.4252857018043,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.11091507704885939,
+      "samples_per_s": 36422.724204102306,
+      "model_bytes": 622937
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 0,
+      "model": "hat",
+      "delay": 0,
+      "accuracy": 0.8697291666666667,
+      "kappa": 0.7242549084553747,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": 0.002,
+      "damage_ref": 379.27678391553206,
+      "damage_full": 930.2226842393068,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.12503769349693128,
+      "samples_per_s": 12728.747391230232,
+      "model_bytes": 368572
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 0,
+      "model": "oracle_ref",
+      "delay": 0,
+      "accuracy": 0.8535,
+      "kappa": 0.685243292902131,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": 0.0,
+      "damage_ref": 334.6737470687331,
+      "damage_full": 3017.8979156521837,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.12748742198882712,
+      "samples_per_s": 20270.557233908417,
+      "model_bytes": 24244325
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 1,
+      "model": "deepriver_rolling",
+      "delay": 0,
+      "accuracy": 0.8831458333333333,
+      "kappa": 0.7534404477340949,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": -0.0516,
+      "damage_ref": 13.643542269263461,
+      "damage_full": 65.06312824888181,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.033086738406094995,
+      "samples_per_s": 457.2586313179791,
+      "model_bytes": 1480
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 1,
+      "model": "frozen_rf",
+      "delay": 0,
+      "accuracy": 0.8526875,
+      "kappa": 0.6824701745764026,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": 0.0056,
+      "damage_ref": 501.30398550802164,
+      "damage_full": 3131.0682767357084,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.15766413298413184,
+      "samples_per_s": 34554.87461921423,
+      "model_bytes": 24656005
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 1,
+      "model": "ht",
+      "delay": 0,
+      "accuracy": 0.8735833333333334,
+      "kappa": 0.7314505044564672,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": -0.0056,
+      "damage_ref": 403.13866275424374,
+      "damage_full": 685.1754411627869,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.13122446155307033,
+      "samples_per_s": 35768.58519441413,
+      "model_bytes": 586882
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 1,
+      "model": "hat",
+      "delay": 0,
+      "accuracy": 0.8774166666666666,
+      "kappa": 0.7403505404133648,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": -0.0198,
+      "damage_ref": 256.60901090859517,
+      "damage_full": 453.4411061796733,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.1006475093464162,
+      "samples_per_s": 12074.762327849501,
+      "model_bytes": 934755
+    },
+    {
+      "stream": 0,
+      "generator": "sea",
+      "shape": "abrupt",
+      "seed": 1,
+      "model": "oracle_ref",
+      "delay": 0,
+      "accuracy": 0.8534791666666667,
+      "kappa": 0.6841993798137718,
+      "ece": NaN,
+      "brier": NaN,
+      "aue": 0.0,
+      "damage_ref": 441.0751807641417,
+      "damage_full": 3044.7137376291776,
+      "recovery_rate": 0.0,
+      "recovery_samples": null,
+      "recovery_prediction_samples": null,
+      "dip": 0.14834553170513498,
+      "samples_per_s": 20233.35804593985,
+      "model_bytes": 24524645
+    }
+  ],
+  "limits": {
+    "limit": null,
+    "need_proba": false
+  },
+  "exp_id": "e01",
+  "config_hash": "59f2cd79598f6bca82c00882bb6f680b552b9669485467cc09e9ef567ec834d6",
+  "runtime_s": 229.8724663257599
+}

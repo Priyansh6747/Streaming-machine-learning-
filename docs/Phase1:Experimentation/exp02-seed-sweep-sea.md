@@ -12,6 +12,15 @@ from that file.
 `experiments/exp02/results.json`; figures: `figures/exp02-*.png` (a nine-figure suite —
 one story per figure — embedded through §5–§6).
 
+!!! warning "Metric correction (E01, 2026-11-12)"
+    The damage-area numbers on this page use the legacy τ→recovery integral. On
+    8/11 seeds recovery collapsed to τ, so the streaming integral was truncated and
+    **294×/24× are upper bounds**. The corrected metric gives `damage_ref`
+    **70.6 vs 504.4** samples·κ (**≈7.1×**) and `damage_full` **293.9 vs 3,408.1**
+    (**≈11.6×**); the worst-vs-best ratio is **1.27×**. The frozen-never-recovers
+    result (0/11) is unchanged. See
+    [E01 — Metric v2 correction](../Reports/E01-metric-v2.md).
+
 **Formatting note:** math is written in Unicode (τ, κ₀, Δκ, ≈, ≥) so it renders
 identically in Obsidian, GitHub, and the mkdocs site — no LaTeX pipeline required.
 

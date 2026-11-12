@@ -1,0 +1,502 @@
+{
+  "schema": "driftlab/2",
+  "exp_id": "e04",
+  "config_hash": "b9fae4c70ae8b36106df994f129f29808abe68fb6209e4d7d486bcc1ab5e03f0",
+  "git_sha": "dc974c0dde5f8a67e14bb8466bf5c15690315698",
+  "versions": {
+    "python": "3.12.3",
+    "river": "0.25.0",
+    "torch": "2.5.1+cu124",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "deep_river": "0.3.4"
+  },
+  "started_unix": 1794483582.2488835,
+  "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
+  "argv": [
+    "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",
+    "--exp",
+    "e04",
+    "--seeds",
+    "0-4"
+  ],
+  "config": {
+    "exp_id": "e04",
+    "title": "Detector matrix across drift shapes and generators",
+    "description": "Eight River detectors replayed on the error streams of a static Hoeffding tree and an adaptive HAT, across four generators and four temporal shapes. Raw and EWMA channels. KDD-2026 detection metrics with per-shape delta_max.\n",
+    "streams": [
+      {
+        "generator": "sea",
+        "shape": "abrupt",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "sea",
+        "shape": "gradual",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 32000,
+            "kind": "gradual"
+          }
+        ]
+      },
+      {
+        "generator": "sea",
+        "shape": "incremental",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 10000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 40000,
+            "kind": "incremental"
+          }
+        ]
+      },
+      {
+        "generator": "sea",
+        "shape": "recurring",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "recurring"
+          },
+          {
+            "start": 38000,
+            "end": 38000,
+            "kind": "recurring"
+          }
+        ]
+      },
+      {
+        "generator": "hyperplane",
+        "shape": "abrupt",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "hyperplane",
+        "shape": "gradual",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 32000,
+            "kind": "gradual"
+          }
+        ]
+      },
+      {
+        "generator": "hyperplane",
+        "shape": "incremental",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 10000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 40000,
+            "kind": "incremental"
+          }
+        ]
+      },
+      {
+        "generator": "hyperplane",
+        "shape": "recurring",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "recurring"
+          },
+          {
+            "start": 38000,
+            "end": 38000,
+            "kind": "recurring"
+          }
+        ]
+      },
+      {
+        "generator": "randomrbf",
+        "shape": "abrupt",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "randomrbf",
+        "shape": "gradual",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 32000,
+            "kind": "gradual"
+          }
+        ]
+      },
+      {
+        "generator": "randomrbf",
+        "shape": "incremental",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 10000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 40000,
+            "kind": "incremental"
+          }
+        ]
+      },
+      {
+        "generator": "randomrbf",
+        "shape": "recurring",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "recurring"
+          },
+          {
+            "start": 38000,
+            "end": 38000,
+            "kind": "recurring"
+          }
+        ]
+      },
+      {
+        "generator": "agrawal",
+        "shape": "abrupt",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "agrawal",
+        "shape": "gradual",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 32000,
+            "kind": "gradual"
+          }
+        ]
+      },
+      {
+        "generator": "agrawal",
+        "shape": "incremental",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 10000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 40000,
+            "kind": "incremental"
+          }
+        ]
+      },
+      {
+        "generator": "agrawal",
+        "shape": "recurring",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 42,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": 1,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "recurring"
+          },
+          {
+            "start": 38000,
+            "end": 38000,
+            "kind": "recurring"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "id": "ht",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingTreeClassifier"
+        }
+      },
+      {
+        "id": "hat",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingAdaptiveTreeClassifier"
+        }
+      }
+    ],
+    "detectors": [
+      "adwin",
+      "kswin",
+      "page_hinkley",
+      "ddm",
+      "eddm",
+      "fhddm",
+      "hddm_a",
+      "hddm_w"
+    ],
+    "detector_hosts": [
+      "ht",
+      "hat"
+    ],
+    "detector_channels": [
+      "raw",
+      "ewma"
+    ],
+    "detector_delays": [
+      0
+    ],
+    "model_delays": [
+      0
+    ],
+    "metrics": {
+      "rolling_window": 1000,
+      "band": 0.95,
+      "stretch": 500,
+      "window": 5000,
+      "delta_max": {
+        "abrupt": 1000,
+        "gradual": 2000,
+        "incremental": 4000,
+        "recurring": 2000
+      },
+      "ewma_alpha": 0.01
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "acceptance": {}
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "schema": "driftlab/2",
+  "exp_id": "e02",
+  "config_hash": "6da445782d890a77e8d958e65ba3077fe3114f2c8fe441d313863d1f4bdc00be",
+  "git_sha": "dc974c0dde5f8a67e14bb8466bf5c15690315698",
+  "versions": {
+    "python": "3.12.3",
+    "river": "0.25.0",
+    "torch": "2.5.1+cu124",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "deep_river": "0.3.4"
+  },
+  "started_unix": 1794479786.637985,
+  "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
+  "argv": [
+    "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",
+    "--exp",
+    "e02",
+    "--seeds",
+    "0-4"
+  ],
+  "config": {
+    "exp_id": "e02",
+    "title": "No-drift control",
+    "description": "Stationary SEA and Hyperplane streams. Every model and detector runs with no drift; all alarms are false positives. This is the denominator for FAR and the sanity check that damage is not manufactured by the metric.\n",
+    "streams": [
+      {
+        "generator": "sea",
+        "shape": "stationary",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 0,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": 0,
+        "concept_b": null,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": []
+      },
+      {
+        "generator": "hyperplane",
+        "shape": "stationary",
+        "n_samples": 60000,
+        "warm_up": 12000,
+        "noise": 0.1,
+        "seed": 0,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "rule",
+        "params": {},
+        "episodes": []
+      }
+    ],
+    "models": [
+      {
+        "id": "frozen_rf",
+        "type": "frozen_rf",
+        "params": {
+          "n_estimators": 100
+        }
+      },
+      {
+        "id": "scheduled_rf_1k",
+        "type": "scheduled_rf",
+        "params": {
+          "every": 1000,
+          "window": 12000,
+          "n_estimators": 100
+        }
+      },
+      {
+        "id": "scheduled_rf_5k",
+        "type": "scheduled_rf",
+        "params": {
+          "every": 5000,
+          "window": 12000,
+          "n_estimators": 100
+        }
+      },
+      {
+        "id": "scheduled_rf_20k",
+        "type": "scheduled_rf",
+        "params": {
+          "every": 20000,
+          "window": 12000,
+          "n_estimators": 100
+        }
+      },
+      {
+        "id": "ht",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingTreeClassifier"
+        }
+      },
+      {
+        "id": "hat",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingAdaptiveTreeClassifier"
+        }
+      },
+      {
+        "id": "arf",
+        "type": "river",
+        "params": {
+          "class": "ARFClassifier"
+        }
+      },
+      {
+        "id": "lb",
+        "type": "river",
+        "params": {
+          "class": "LeveragingBaggingClassifier"
+        }
+      },
+      {
+        "id": "adwin_bagging",
+        "type": "river",
+        "params": {
+          "class": "ADWINBaggingClassifier"
+        }
+      }
+    ],
+    "detectors": [
+      "adwin",
+      "kswin",
+      "page_hinkley",
+      "ddm",
+      "eddm",
+      "fhddm",
+      "hddm_a",
+      "hddm_w"
+    ],
+    "detector_hosts": [
+      "ht",
+      "hat"
+    ],
+    "detector_channels": [
+      "raw",
+      "ewma"
+    ],
+    "detector_delays": [
+      0
+    ],
+    "model_delays": [
+      0
+    ],
+    "metrics": {
+      "rolling_window": 1000,
+      "band": 0.95,
+      "stretch": 500,
+      "window": 5000,
+      "delta_max": {
+        "abrupt": 1000,
+        "gradual": 2000,
+        "incremental": 4000,
+        "recurring": 2000
+      },
+      "ewma_alpha": 0.01
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "acceptance": {
+      "max_far_per_1k": {
+        "adwin": 0.1,
+        "page_hinkley": 0.1,
+        "kswin": 0.1
+      }
+    }
+  }
+}

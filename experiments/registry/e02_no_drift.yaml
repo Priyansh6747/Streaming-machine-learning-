@@ -1,0 +1,62 @@
+exp_id: e02
+title: "No-drift control"
+description: >
+  Stationary SEA and Hyperplane streams. Every model and detector runs with no
+  drift; all alarms are false positives. This is the denominator for FAR and
+  the sanity check that damage is not manufactured by the metric.
+seeds: "0-10"
+need_proba: false
+streams:
+  - generator: sea
+    shape: stationary
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    concept_a: 0
+  - generator: hyperplane
+    shape: stationary
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+models:
+  - id: frozen_rf
+    type: frozen_rf
+    params: {n_estimators: 100}
+  - id: scheduled_rf_1k
+    type: scheduled_rf
+    params: {every: 1000, window: 12000, n_estimators: 100}
+  - id: scheduled_rf_5k
+    type: scheduled_rf
+    params: {every: 5000, window: 12000, n_estimators: 100}
+  - id: scheduled_rf_20k
+    type: scheduled_rf
+    params: {every: 20000, window: 12000, n_estimators: 100}
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: lb
+    type: river
+    params: {class: LeveragingBaggingClassifier}
+  - id: adwin_bagging
+    type: river
+    params: {class: ADWINBaggingClassifier}
+detectors: [adwin, kswin, page_hinkley, ddm, eddm, fhddm, hddm_a, hddm_w]
+detector_hosts: [ht, hat]
+detector_channels: [raw, ewma]
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  ewma_alpha: 0.01
+acceptance:
+  max_far_per_1k:
+    adwin: 0.1
+    page_hinkley: 0.1
+    kswin: 0.1

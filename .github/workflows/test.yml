@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Sync environment
+        run: uv sync
+      - name: Unit tests
+        run: uv run pytest experiments/tests -q
+      - name: Smoke experiment
+        run: uv run python -m experiments.run --exp e02 --seeds 42 --limit 1500 --no-proba

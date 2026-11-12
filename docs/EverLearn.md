@@ -64,10 +64,11 @@ rollback. MLOps teams spend a large share of their effort feeding a cycle that i
 structurally, always behind the data.
 
 The research already priced cost 1. On a drifting stream, the frozen model never
-recovered — its damage area was ≈ **3,710 ± 592** samples·κ across 11 seeds, and a
-model that retrains on a schedule can only heal at the tick, staying wrong for up to a
-full interval by pure luck of phase. The staleness window is not an accident of bad
-ops; it is the defining property of batch-trained models.
+recovered — its corrected `damage_ref` was **504.4 ± 104.1** samples·κ across 11
+seeds, versus **70.6 ± 66.5** for the streaming model (**≈7.1×**), and a model that
+retrains on a schedule can only heal at the tick, staying wrong for up to a full
+interval by pure luck of phase. The staleness window is not an accident of bad ops;
+it is the defining property of batch-trained models.
 
 **Why this is a product and not a feature:** every "retrain faster" fix reduces the
 window but keeps it — and keeps the machinery. Only a model that learns from the stream
@@ -127,15 +128,20 @@ dollar figure.
 ## 6. The evidence — the mechanism is already measured
 
 The product's founding claim — *a model that keeps learning recovers; a frozen one
-never does* — is not a pitch, it is Exp-01 and Exp-02:
+never does* — is not a pitch, it is Exp-01/02 plus the E01 metric correction:
 
 | Fact | Number | Source |
 |---|---|---|
-| Frozen batch model recovered after drift | **0 / 11 seeds** | Exp-02 |
-| Streaming model recovered | **11 / 11**, inside the 5,000-sample budget | Exp-02 |
-| Damage paid while wrong (streaming vs frozen) | **13 ± 31** vs **3,710 ± 592** samples·κ — ≈ **294×** | Exp-02 |
-| Worst streaming seed vs best frozen seed | streaming won by **24×** | Exp-02 |
-| Streaming self-heal on the pilot stream | back inside the pre-drift band **835 samples** after drift; frozen fell 0.75 → 0.59 κ and never returned | Exp-01 |
+| Frozen batch model recovered after drift | **0 / 11 seeds** | E01 |
+| Streaming model recovered (real excursion) | **7 / 11 seeds**; the other 4 never left the band | E01 |
+| Damage paid while wrong, corrected `damage_ref` | **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ — ≈ **7.1×** | E01 |
+| Damage over the rest of the stream (`damage_full`) | **293.9** vs **3,408.1** samples·κ — ≈ **11.6×** | E01 |
+| Worst streaming seed vs best frozen seed | **1.27×**, not 24× | E01 |
+| Streaming self-heal on the pilot stream | back inside the pre-drift band **834 samples** after drift on seed 42; frozen fell 0.75 → 0.59 κ and never returned | Exp-01 |
+
+The legacy **294×** mean and **24×** worst-vs-best figures were upper bounds from a
+truncated integral and are retired. The durable claim is the 0/11 frozen recovery
+and the corrected ≈7× mean damage gap.
 
 The honest caveat, carried over from the research: this is one synthetic stream, two
 models, no delayed labels, no real data. It proves the *mechanism*, not the market.
@@ -273,9 +279,9 @@ snapshots, rollback, audit) that makes self-modifying models safe to deploy.
 
 **The metric.** Staleness saved — damage area avoided × cost-per-error, in dollars.
 
-**The evidence.** Exp-01/02: a streaming model self-heals after drift in bounded time
-(11/11 seeds); a frozen model never does (0/11, ≈294× more damage). The mechanism is
-measured, not promised.
+**The evidence.** E01: a streaming model self-heals after drift (7/11 seeds with a real
+excursion; the other 4 never left the band); a frozen model never does (0/11), paying
+**≈7.1×** more corrected `damage_ref`. The mechanism is measured, not promised.
 
 **The honest gaps.** Delayed labels weaken the learner exactly when it matters (the
 Delay Tax — the project's open problem), and self-modifying models need governance

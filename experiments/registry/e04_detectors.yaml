@@ -1,0 +1,46 @@
+exp_id: e04
+title: "Detector matrix across drift shapes and generators"
+description: >
+  Eight River detectors replayed on the error streams of a static Hoeffding
+  tree and an adaptive HAT, across four generators and four temporal shapes.
+  Raw and EWMA channels. KDD-2026 detection metrics with per-shape delta_max.
+seeds: "0-10"
+need_proba: false
+stream_grid:
+  generators: [sea, hyperplane, randomrbf, agrawal]
+  shapes: [abrupt, gradual, incremental, recurring]
+  defaults:
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    width: 2000
+    period: 8000
+    n_episodes: 2
+    concept_a: 0
+    concept_b: 1
+  per_shape:
+    incremental:
+      width: 10000
+models:
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+detectors: [adwin, kswin, page_hinkley, ddm, eddm, fhddm, hddm_a, hddm_w]
+detector_hosts: [ht, hat]
+detector_channels: [raw, ewma]
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  ewma_alpha: 0.01
+  delta_max:
+    abrupt: 1000
+    gradual: 2000
+    incremental: 4000
+    recurring: 2000
+acceptance: {}

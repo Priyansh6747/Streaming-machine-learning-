@@ -1,0 +1,41 @@
+exp_id: e01
+title: "Metric v2 revision of Exp-01/02"
+description: >
+  Re-run the Exp-01/02 SEA pilot with the corrected metric contract:
+  oracle-referenced AUE, panel-shared damage, and recovery conditional on a
+  band exit. The legacy 294x/24x numbers remain in exp01/exp02 artifacts; this
+  experiment publishes the corrected magnitudes beside them.
+seeds: [42, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+need_proba: false
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: deepriver_rolling
+    type: deepriver_rolling
+    params:
+      window_size: 500
+      lr: 0.001
+      n_hidden: 16
+      device: auto
+  - id: frozen_rf
+    type: frozen_rf
+    params:
+      n_estimators: 100
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance:
+  baseline_model: frozen_rf
+  treatment_model: deepriver_rolling
+  min_aue_ratio: 5.0
+  frozen_never_recovers: true
+  treatment_damage_lower_seeds: 10

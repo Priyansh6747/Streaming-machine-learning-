@@ -134,8 +134,8 @@ This product is the project's findings applied at the level of a single user:
 
 | Research result | EverRank feature |
 |---|---|
-| **Exp-01/02 — streaming self-heals, frozen never does** (0/11 vs 11/11; ≈294× less damage) | The per-user adaptor recovers within a bounded number of interactions when the user's taste changes; the incumbent's monthly retrain literally cannot see one user's drift in the aggregate |
-| **Damage area / recovery time** | The product's headline metric: interactions × skill lost *for this user*, while their feed was stale |
+| **E01 — streaming self-heals, frozen never does** (frozen 0/11; real streaming recovery 7/11; ≈7.1× less corrected `damage_ref`) | The per-user adaptor recovers within a bounded number of interactions when the user's taste changes; the incumbent's monthly retrain literally cannot see one user's drift in the aggregate |
+| **`damage_ref` / recovery rate** | The product's headline metric: interactions × skill lost *for this user*, while their feed was stale |
 | **The Delay Tax** | Clicks land in seconds, purchases in days, churn in weeks — the adaptor learns on yesterday's truth, and the honest promise is "bounded staleness," not zero lag |
 | **Selective/biased labels literature** | The IPS-corrected learner — feedback is conditioned on what EverRank itself chose to show |
 | **Prequential harness** | The shadow-rerank engine: replay the customer's own interactions, prove per-user lift offline before a live A/B |

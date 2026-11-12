@@ -11,6 +11,13 @@ were pre-registered placeholders and are now filled from the first run
 `experiments/scripts/exp01_deepriver_vs_frozen_sea.py`; data artifact:
 `experiments/exp01/results.json`; figure: `figures/exp01-rolling-kappa-deepriver-vs-frozen.png`.
 
+!!! warning "Metric correction (E01, 2026-11-12)"
+    The damage-area numbers on this page use the legacy τ→recovery integral, which
+    truncated the streaming arm. The corrected 11-seed result is `damage_ref`
+    **70.6 vs 504.4** samples·κ (**≈7.1×**) and `damage_full` **293.9 vs 3,408.1**
+    (**≈11.6×**). The legacy 294×/24× are retired. See
+    [E01 — Metric v2 correction](../Reports/E01-metric-v2.md).
+
 **Formatting note:** math is written in Unicode (τ, κ₀, Δκ, ≈, ≥) so it renders
 identically in Obsidian, GitHub, and the mkdocs site — no LaTeX pipeline required.
 

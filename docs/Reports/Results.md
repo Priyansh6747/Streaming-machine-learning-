@@ -12,8 +12,8 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 
 | | |
 |---|---|
-| **Status** | 2 experiments concluded (Exp-01 2026-09-09, Exp-02 2026-09-12); 3 scheduled |
-| **Data artifacts** | `experiments/exp01/results.json` (full per-sample series + metrics) · `experiments/exp02/results.json` (11-seed sweep: per-seed rows + distribution) |
+| **Status** | 3 concluded: Exp-01, Exp-02, **E01 metric v2 correction**; **E04 detector map first pass (5 seeds)**; 3 scheduled |
+| **Data artifacts** | `experiments/exp01/results.json` · `experiments/exp02/results.json` · `experiments/results/e01/` (**corrected metric**) · `experiments/results/e04/` (**detector map**) |
 | **Method / protocol** | [`thesis.md`](../Phase1:Experimentation/thesis.md) · [`streaming-vs-batch-metrics.md`](../Phase1:Experimentation/streaming-vs-batch-metrics.md) |
 | **Formatting note** | unicode math (τ, κ₀, Δκ, ≈, ≥) renders identically in Obsidian, GitHub, mkdocs |
 
@@ -23,15 +23,23 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 
 > **A model that keeps learning from the stream heals itself after a concept
 > change — a model that was trained once and frozen does not.**
-> Across **11 seeds** (Exp-02, the project's first statistical result): the frozen
-> model recovered on **0 of 11** runs. The skill lost while the model is wrong —
-> the project's "damage area" — was **≈ 294× smaller** for the streaming model
-> (**13 ± 31** vs **3,710 ± 592** samples·κ), and even the *worst* streaming seed
-> (103) beat the *best* frozen seed (2,439) by **24×**. The streaming model also
-> wins the overall averages: **88.3% vs 85.4%** accuracy, **0.753 vs 0.685**
-> Cohen Kappa. Recovery time is bounded but is **not one number**: it is 0 on
-> 8 of 11 seeds (no excursion to recover from) and 174–2,497 samples otherwise —
-> always inside the pre-registered 5,000-sample budget.
+> Across **11 seeds**: the frozen model recovered on **0 of 11** runs. The
+> corrected metric (E01) prices the damage over a fixed 5,000-sample window with
+> a panel-shared reference: **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ, a
+> **≈ 7.1×** gap. Over the rest of the stream the gap is **≈ 11.6×**
+> (**293.9** vs **3,408.1**). The streaming model also wins the overall
+> averages: **88.3% vs 85.4%** accuracy, **0.753 vs 0.685** Cohen Kappa.
+> Recovery is **7/11** seeds with a real excursion (177–4,462 samples); the old
+> “0 on 8/11” was an artefact of the τ-anchored rule. The legacy **294×** and
+> **24×** figures are retired as upper bounds; the corrected worst-vs-best ratio
+> is **1.27×** (224.1 vs 284.8).
+
+!!! warning "Metric correction — read this before quoting any number below"
+    Sections 3a and 3b use the original `damage_area` definition, which
+    integrated from τ to the recovery point. On 8/11 seeds recovery collapsed to
+    τ, truncating the streaming integral. **294× and 24× are upper bounds and are
+    retired.** The corrected numbers are in §3c and
+    [`E01-metric-v2.md`](E01-metric-v2.md).
 
 ![The process — how one experiment produces a verdict](figures/results-process-flow.png)
 
@@ -44,8 +52,9 @@ any other way.*
 | | Streaming model (keeps learning) | Frozen model (trained once) |
 |---|---|---|
 | Reacts to change on its own? | **Yes** — adapts on its own error signal | **No** — waits for a human to retrain |
-| Recovery after the drift at τ | **bounded** — 174–2,497 samples when an excursion occurs; 0 on 8/11 seeds (never left its band) | **never** — 0 of 11 seeds recovered |
-| Skill lost during the drift (damage area) | **13 ± 31** samples·κ (worst seed 103) | **3,710 ± 592** samples·κ (best seed 2,439) |
+| Recovery after the drift at τ | **7/11 seeds** with a real excursion; 177–4,462 samples | **never** — 0 of 11 seeds recovered |
+| Skill lost, corrected `damage_ref` (5k window) | **70.6 ± 66.5** samples·κ (worst 224.1) | **504.4 ± 104.1** samples·κ (best 284.8) |
+| Skill lost over the rest of the stream (`damage_full`) | **293.9 ± 210.8** samples·κ | **3,408.1 ± 583.4** samples·κ |
 | Overall quality (full run, 48k samples) | **0.883** acc · **0.753** κ | 0.854 acc · 0.685 κ |
 
 ---
@@ -68,10 +77,13 @@ The scoreboard metrics used in every verdict:
 | Metric | What it measures | Good direction |
 |---|---|---|
 | Accuracy / Cohen Kappa (rolling, w = 1,000) | classification skill over time, chance-corrected | ↑ |
-| κ₀ — pre-drift baseline | each model's own skill *before* the change | reference level |
-| Δκ — dip depth | how much skill the drift knocks off | ↓ (shallower) |
-| **Recovery time** | samples from drift τ until the model is back inside its pre-drift band (≥ 0.95·κ₀ for 500 consecutive samples) | ↓ (faster) |
-| **Damage area** | total skill lost × time spent below baseline (Σ samples·κ) — the one number that prices the whole drift | ↓ |
+| κ_ref — shared pre-drift reference | mean pre-drift skill across the model panel | reference level |
+| Δκ — dip depth | how much skill the drift knocks off, relative to κ_ref | ↓ (shallower) |
+| **`recovery_rate`** | fraction of episodes with a real band exit followed by 500 in-band samples | ↑ |
+| **`damage_ref`** (primary) | fixed-window integral `Σ max(κ_ref − κ(t), 0)` — cannot be gamed by a weak model's own baseline | ↓ |
+| **`damage_full`** | the same integral over the rest of the stream | ↓ |
+| **`AUE`** | mean error minus the **timing-oracle** error; secondary, because the oracle is not an upper bound | ↓ |
+| ~~Recovery time / damage area~~ | legacy Exp-01/02 definitions; kept only for audit, superseded by E01 | — |
 
 ---
 
@@ -167,6 +179,76 @@ to be credited; orange X = a seed that did leave its band but was scored 0 becau
 excursion began after τ + 500; hollow blue = never left the band. Four of the eleven
 seeds are orange — which is why the mean recovery time is not a property of the model.*
 
+### 3c. E01 — corrected metric v2 (11 seeds, 2026-11-12)
+
+This supersedes the damage numbers in 3a and 3b. E01 re-ran the same SEA/DeepRiver
+vs frozen pilot with a fixed-window, panel-shared damage metric and recovery
+conditional on a real band exit.
+
+| Metric (11 seeds) | DeepRiver | Frozen RF |
+|---|---:|---:|
+| **`damage_ref`** (5k window, primary) | **70.6 ± 66.5** (worst 224.1) | **504.4 ± 104.1** (best 284.8) |
+| **`damage_full`** (rest of stream) | **293.9 ± 210.8** | **3,408.1 ± 583.4** |
+| `AUE` vs timing oracle | **−0.0472 ± 0.0058** | +0.0010 ± 0.0027 |
+| `recovery_rate` | **7/11** | **0/11** |
+| Recovery time, recovered seeds | 177–4,462 (mean 2,017) | never |
+| Full-run accuracy / Cohen κ | **0.883 / 0.753** | 0.854 / 0.685 |
+
+![E01 metric v2 — damage_ref and AUE per model](../Phase1:Experimentation/figures/e01-metric-v2-model-comparison.png)
+
+*Figure 8 — the corrected comparison. Left: `damage_ref`; right: AUE against the
+timing oracle. AUE is secondary because the timing oracle knows when the drift
+happened but not what the new concept is; its own damage (494) is almost identical
+to frozen. The primary result is the `damage_ref` gap.*
+
+**Verdict.** Frozen recovered on **0/11** seeds. DeepRiver's `damage_ref` was lower
+on **11/11** seeds, with a **≈7.1×** mean gap and a **≈11.6×** full-stream gap. The
+worst DeepRiver seed beat the best frozen seed by only **1.27×**, so the legacy
+**24×** worst-case claim is retired along with the **294×** mean. The clean headline
+is: *the frozen model never recovers, and the streaming model pays roughly one
+seventh of the fixed-window damage.* The full write-up is
+[`E01-metric-v2.md`](E01-metric-v2.md).
+
+!!! note "Panel caveat"
+    The current E01 artifact's shared reference includes HT/HAT because of a
+    default-host bug that has since been fixed. The qualitative verdict is
+    unchanged; the exact `damage_ref` values will move when the clean two-model
+    panel is rerun.
+
+### 3d. E04 — detector map, first pass (5 seeds, 2026-11-12)
+
+Eight detectors were replayed on the raw and smoothed mistake streams of two
+hosts, across four generators and four drift shapes. This is the first map of
+“which alarm works for which change”.
+
+| Drift shape | Best default | Balanced score | Changes caught | False alarms /1k | Detection delay |
+|---|---|---:|---:|---:|---:|
+| Abrupt | **HDDM-A, raw** | **0.683** | 75% | 0.0075 | 0.185 |
+| Gradual | **HDDM-A, raw** | **0.842** | 95% | 0.0083 | 0.155 |
+| Incremental | **HDDM-A, raw** | **0.883** | 90% | 0.0033 | 0.012 |
+| Recurring | **HDDM-A, raw** | **0.500** | 73% | 0.0308 | 0.144 |
+
+![E04 detector balanced score — static host, raw signal](../Phase1:Experimentation/figures/e04-detector-f1-ht-raw.png)
+
+*Figure 9 — balanced score per detector and drift shape on the static host, raw
+signal. HDDM-A is the best cell for every shape; recurring drift is the hard
+case.*
+
+**Verdict.** **HDDM-A on the raw signal is the sensible default** across all four
+shapes. Recurring change is the hard case (0.50); incremental is the easiest
+(0.88). Smoothing the mistake signal raises false alarms without improving the
+ranking; the raw channel is the default and the smoothed channel is a diagnostic.
+This is a 5-seed first pass with default detector settings, not the full
+pre-registered matrix. The full write-up is
+[`E04-detector-map.md`](E04-detector-map.md).
+
+!!! warning "Scoring bug found and fixed"
+    The first E04 report selected KSWIN for incremental with F1 = 1.0 and episode
+    recall = 0.25. That was impossible: zero-alarm runs had `precision = None` and
+    were excluded from the F1 mean. The corrected report recomputes F1 from raw
+    TP/FP/episode counts and treats zero alarms as F1 = 0. The “KSWIN perfect”
+    result is retired.
+
 ---
 
 ## 4. Verdict registry — one conclusion per experiment
@@ -176,11 +258,13 @@ experiments are listed so the roadmap is visible, with their acceptance bar.
 
 | Exp | Question asked | Setting | Verdict (measured) | Conclusion |
 |---|---|---|---|---|
-| **Exp-01** ✅ | Can a streaming deep learner beat a *frozen* batch model on a drifting stream? | SEA, one abrupt drift, 2 models, seed 42 | **Streaming wins** — recovers in 835 samples (frozen: never); damage 31 vs 3,307; also wins full-run acc/κ | Weakest form of the claim **confirmed**. A model that keeps learning survives concept drift on its own |
-| **Exp-02** ✅ | Is the 835-sample recovery a fluke of one seed? | SEA, one abrupt drift, 2 models, **11 seeds** | **Streaming wins on every seed** — frozen recovered **0/11**; damage **13 ± 31** vs **3,710 ± 592** (≈294×; worst streaming seed still 24× better than best frozen seed); dip 0.045 vs 0.173; full run **0.883/0.753** vs 0.854/0.685. Seed 42 reproduced Exp-01 exactly (835, delta 0) | The claim **generalises**, the number does not — 835 was seed luck; recovery is 0 on 8/11 seeds (no excursion) and 174–2,497 otherwise. Refines H2: frozen *does* win steady state (κ₀ 0.767 vs 0.751) yet loses the run. Recovery time under-reports late dips; damage area is the trustworthy metric |
-| Exp-03 ⏳ | Does streaming also beat a *scheduled-retrain* batch model (the honest industrial baseline)? | SEA + baseline ladder | *pending* | acceptance: streaming recovery ≪ retrain interval r_next − τ |
-| Exp-04 ⏳ | Does the win survive on **real** streams (Phishing, Covertype, Airlines, CreditCard, Elec2)? | 5 real streams, post-dip protocol | *pending* | acceptance: streaming ≥ frozen on post-drift windows |
-| Exp-05 ⏳ | The **Delay Tax**: do delayed/rare labels starve batch retraining while streaming keeps working? | label-delay sweep | *pending* | acceptance: streaming quality degrades slower under delay |
+| **Exp-01** ✅ *(legacy metric)* | Can a streaming deep learner beat a *frozen* batch model on a drifting stream? | SEA, one abrupt drift, 2 models, seed 42 | **Streaming wins** — recovers in 835 samples (frozen: never); legacy damage 31 vs 3,307 | Weakest form of the claim **confirmed**. The 835/damage numbers are superseded by E01 |
+| **Exp-02** ✅ *(legacy metric)* | Is the 835-sample recovery a fluke of one seed? | SEA, one abrupt drift, 2 models, **11 seeds** | **Streaming wins on every seed** — frozen recovered **0/11**; legacy damage **13 ± 31** vs **3,710 ± 592** (≈294×; 24× worst-vs-best) | The claim **generalises**; the legacy magnitudes are **upper bounds** and retired by E01. Frozen still wins the stationary phase (κ₀ 0.767 vs 0.751) |
+| **E01** ✅ | Does the corrected metric preserve the Exp-01/02 verdict? | SEA abrupt, **11 seeds**, metric v2 | **Frozen recovered 0/11; DeepRiver `damage_ref` lower 11/11; 70.6 ± 66.5 vs 504.4 ± 104.1 (≈7.1×); `damage_full` 293.9 vs 3,408.1 (≈11.6×); recovery 7/11; worst-vs-best 1.27×** | The claim **survives**, the magnitude shrinks. **294× and 24× retired.** AUE is secondary: the timing oracle is weak (damage 494). Current panel includes HT/HAT; clean two-model rerun pending |
+| **E04** ✅ *(first pass, 5 seeds)* | Which detector works for which drift shape, and does the host matter? | 4 generators × 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **HDDM-A raw is best for all four shapes; balanced score 0.683 abrupt, 0.842 gradual, 0.883 incremental, 0.500 recurring; recurring is hardest; EWMA raises false alarms** | One sensible default exists; recurring drift is the hard case. A scoring bug that made a never-ringing detector look perfect was found and fixed. Full 11-seed matrix and tuning pending |
+| **E03** ⏳ | Does streaming also beat a *scheduled-retrain* batch model (the honest industrial baseline)? | SEA + baseline ladder | *pending* | acceptance: streaming recovery ≪ retrain interval r_next − τ |
+| **E14** ⏳ | Does the win survive on **real** streams (Phishing, Covertype, Airlines, CreditCard, Elec2)? | 5 real streams, post-dip protocol | *pending* | acceptance: streaming ≥ frozen on post-drift windows |
+| **E15** ⏳ | The **Delay Tax**: do delayed/rare labels starve batch retraining while streaming keeps working? | label-delay sweep | *pending* | acceptance: streaming quality degrades slower under delay |
 
 *Scope guard: Exp-01 is deliberately the easiest possible version of the claim
 (one synthetic stream, no scheduled retrain, no label delay, single seed). Each
@@ -210,7 +294,7 @@ results can be checked against the promises rather than reported after the fact.
 the measured recovery is inside the promised regime, and the measured damage gap is
 even larger than the thesis sketched.*
 
-### 5b. Exp-02 — pre-registered acceptance vs measured
+### 5b. Exp-02 — pre-registered acceptance vs measured *(legacy metric)*
 
 | Pre-registered condition (fixed before the run) | Required | Measured | Verdict |
 |---|---|---|---|
@@ -222,23 +306,29 @@ even larger than the thesis sketched.*
 
 **Bottom line:** the falsification conditions set before the runs were not
 triggered. Exp-01 showed the effect exists on one seed; Exp-02 shows the *claim*
-holds on all eleven — the frozen model never recovers and the damage gap survives
-worst-case-vs-best-case comparison. The specific 835-sample figure was seed luck and
-is retired as a headline number; the honest headline is the damage gap, plus the
-finding that recovery time under-reports late dips. The one control expectation
-Exp-01 refuted (batch winning steady state) is restored by the larger sample, and
-streaming still wins the run outright.
+holds on all eleven — the frozen model never recovers. The specific 835-sample
+figure was seed luck and is retired. **E01 supersedes the damage magnitudes:** the
+legacy 294×/24× are upper bounds; the corrected gaps are ≈7.1× (`damage_ref`) and
+≈11.6× (`damage_full`), and the worst-vs-best ratio is only 1.27×. The claim that
+the gap survives a worst-case-vs-best-case comparison is **retired**. The one
+control expectation Exp-01 refuted (batch winning steady state) is restored by the
+larger sample, and streaming still wins the run outright.
 
 ---
 
 ## 6. Provenance
 
-- Measured numbers: `experiments/exp01/results.json` · `experiments/exp02/results.json`
+- Measured numbers: `experiments/exp01/results.json` · `experiments/exp02/results.json` ·
+  `experiments/results/e01/summary.json` (**corrected metric**) ·
+  `experiments/results/e04/detections.jsonl` (**detector map raw counts**)
 - Full write-ups: [`exp01-deepriver-vs-frozen-sea.md`](../Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md) ·
-  [`exp02-seed-sweep-sea.md`](../Phase1:Experimentation/exp02-seed-sweep-sea.md)
+  [`exp02-seed-sweep-sea.md`](../Phase1:Experimentation/exp02-seed-sweep-sea.md) ·
+  [`E01-metric-v2.md`](E01-metric-v2.md) (**correction**) ·
+  [`E04-detector-map.md`](E04-detector-map.md) (**detector map**)
 - Thesis + pre-registered expectations: [`thesis.md`](../Phase1:Experimentation/thesis.md)
 - Protocol & metric definitions: [`streaming-vs-batch-metrics.md`](../Phase1:Experimentation/streaming-vs-batch-metrics.md)
 - Milestone records: [`Sept9.md`](Sept9.md) (Exp-01)
 - Figure sources: `experiments/scripts/make_results_figures.py` ·
   `experiments/scripts/make_exp01_summary_chart.py` ·
-  `experiments/scripts/exp02_seed_sweep_sea.py --figure-only`
+  `experiments/scripts/exp02_seed_sweep_sea.py --figure-only` ·
+  `experiments/results/e01/figures/model_comparison.png` (E01)

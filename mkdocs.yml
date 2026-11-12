@@ -77,6 +77,7 @@ extra_javascript:
 
 nav:
   - Home: index.md
+  - "Progress log": "Reports/progress.md"
   - "Phase 0 — Research":
       - Notes:
           - "Streaming learning": "Phase0:Research/notes/01-streaming-learning.md"
@@ -119,8 +120,11 @@ nav:
       - "Streaming vs Batch: real metrics": "Phase1:Experimentation/streaming-vs-batch-metrics.md"
   - "Results":
       - "Results (global)": "Reports/Results.md"
+      - "E01 — Metric v2 correction": "Reports/E01-metric-v2.md"
+      - "E04 — Detector map": "Reports/E04-detector-map.md"
   - "Milestones":
       - "Sept 9": "Reports/Sept9.md"
+      - "Mid-term report": "Reports/mid_term.md"
   - "Viva":
       - "Viva brief": "Reports/viva-brief.md"
   - "Reference":

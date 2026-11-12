@@ -1,0 +1,48 @@
+exp_id: e12
+title: "DriftFormer architecture sensitivity"
+description: >
+  d_model, depth, block size and replay capacity. Establishes whether the
+  default is on a plateau or a cliff; five seeds, three generators.
+seeds: [0, 1, 2, 3, 4]
+need_proba: false
+stream_grid:
+  generators: [sea, hyperplane, agrawal]
+  shapes: [abrupt, recurring]
+  defaults:
+    n_samples: 30000
+    warm_up: 6000
+    noise: 0.1
+    position: 15000
+    width: 2000
+    period: 6000
+    n_episodes: 2
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: df_d32
+    type: driftformer
+    params: {block_size: 32, d_model: 32, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: df_d64
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: df_d128
+    type: driftformer
+    params: {block_size: 32, d_model: 128, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: df_l4
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 4, ssl_weight: 0.3, device: cpu}
+  - id: df_b16
+    type: driftformer
+    params: {block_size: 16, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: df_b256
+    type: driftformer
+    params: {block_size: 256, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance: {}

@@ -12,7 +12,7 @@ learners (DeepRiver) as the experimental subject.
 | Status | |
 |---|---|
 | Phase 0 — research & literature | ✅ complete |
-| Phase 1 — experimentation | 🔬 two experiments concluded — single-seed pilot **and** an 11-seed sweep, results below |
+| Phase 1 — experimentation | 🔬 three concluded: single-seed pilot, 11-seed sweep, **E01 corrected metric**; **E04 detector map first pass**; baseline ladder and Delay Tax next |
 
 ---
 
@@ -89,27 +89,42 @@ its pre-drift band **835 samples** after the drift, while the frozen model fell 
 
 Exp-02 then asked the obvious question — was 835 a fluke of that one seed? — by
 rerunning the identical experiment on **11 seeds**. The frozen model recovered on
-**none of the eleven**. The damage each model paid — the "damage area", the skill
-lost while it was wrong — was **≈ 294× smaller** for the streaming model (13 ± 31 vs
-3,710 ± 592 samples·κ), and even the streaming model's *worst* seed beat the frozen
-model's *best* seed by **24×**. The 835 figure itself did not survive the sweep:
-recovery time is 0 on eight of the eleven seeds (the model never left its band) and
-174–2,497 on the others. The claim generalised; the number did not — which is the
-honest version of the result.
+**none of the eleven**. The original damage-area metric reported **294×**, but E01
+showed that was an **upper bound**: the integral was truncated on seeds where the
+recovery rule collapsed. The corrected metric uses a fixed 5,000-sample window and
+a shared reference level: **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ — a
+**≈ 7.1×** gap (**≈ 11.6×** over the rest of the stream). The worst streaming seed
+beats the best frozen seed by only **1.27×**, so the old **24×** worst-case claim
+is retired too. Recovery is **7/11** seeds with a real excursion (177–4,462
+samples); the old 835 was seed luck. The claim generalised; the magnitude did not
+— which is the honest version of the result.
 
-![Exp-02 seed sweep: recovery time and damage area per seed](docs/Phase1:Experimentation/figures/exp02-seed-sweep-recovery.png)
+![E01 corrected metric: damage_ref and AUE per model](docs/Phase1:Experimentation/figures/e01-metric-v2-model-comparison.png)
 
-![The damage gap as a distribution, one dot per seed](docs/Phase1:Experimentation/figures/exp02-damage-distribution.png)
+*E01 (11 seeds, corrected metric): `damage_ref` is the primary damage number; AUE
+is secondary because the timing oracle knows when the drift happened but not what
+the new concept is.*
+
+![Exp-02 seed sweep (legacy metric): recovery time and damage area per seed](docs/Phase1:Experimentation/figures/exp02-seed-sweep-recovery.png)
+
+![The legacy damage gap as a distribution, one dot per seed](docs/Phase1:Experimentation/figures/exp02-damage-distribution.png)
 
 ![How hard the drift hit each model, per seed](docs/Phase1:Experimentation/figures/exp02-dip-depth-per-seed.png)
 
 ![Exp-01 measured rolling Kappa over the stream: DeepRiver dips and heals, frozen RF stays down](docs/Phase1:Experimentation/figures/exp01-rolling-kappa-deepriver-vs-frozen.png)
 
-![Exp-01 measured recovery time and damage area](docs/Phase1:Experimentation/figures/exp01-damage-area-vs-recovery.png)
+![Exp-01 measured recovery time and legacy damage area](docs/Phase1:Experimentation/figures/exp01-damage-area-vs-recovery.png)
 
-Honest caveat: both experiments use one deliberately simple synthetic stream, two
-models, no scheduled-retrain baseline and no label delay — existence evidence and a
-first distribution, not yet a field-wide claim. Real datasets, the full baseline
+The detector map (E04, 5-seed first pass) then asked which early-warning signal
+catches which kind of change. Across four generators, four drift shapes, two hosts
+and eight detectors, **HDDM-A on the raw mistake stream is the best default for all
+four shapes**; recurring drift is the hard case (balanced score 0.50) and
+incremental is the easiest (0.88). Smoothing the mistake signal raises false alarms
+without improving the ranking. The full 11-seed matrix and detector tuning are next.
+
+Honest caveat: these experiments use one deliberately simple synthetic stream family,
+two-to-eight models, no scheduled-retrain baseline and no label delay — existence
+evidence and a first map, not yet a field-wide claim. Real datasets, the full baseline
 ladder and the Delay Tax are the next step (below).
 
 ---

@@ -1,0 +1,66 @@
+exp_id: e03
+title: "Classical baseline ladder and phase-noise test"
+description: >
+  Frozen, scheduled-retrain, oracle-retrain, static and adaptive streaming
+  learners on SEA and Hyperplane. Drift onset is jittered per seed so the
+  scheduled model hits a different retrain phase each run; scheduled recovery
+  should scatter uniformly over the retrain interval.
+seeds: "0-10"
+need_proba: false
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    position_jitter: 7000
+    concept_a: 0
+    concept_b: 1
+  - generator: hyperplane
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    position_jitter: 7000
+models:
+  - id: frozen_rf
+    type: frozen_rf
+    params: {n_estimators: 100}
+  - id: scheduled_rf_1k
+    type: scheduled_rf
+    params: {every: 1000, window: 12000, n_estimators: 100}
+  - id: scheduled_rf_5k
+    type: scheduled_rf
+    params: {every: 5000, window: 12000, n_estimators: 100}
+  - id: scheduled_rf_20k
+    type: scheduled_rf
+    params: {every: 20000, window: 12000, n_estimators: 100}
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: lb
+    type: river
+    params: {class: LeveragingBaggingClassifier}
+  - id: adwin_bagging
+    type: river
+    params: {class: ADWINBaggingClassifier}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance:
+  baseline_model: scheduled_rf_5k
+  treatment_model: arf
+  min_aue_ratio: 1.0

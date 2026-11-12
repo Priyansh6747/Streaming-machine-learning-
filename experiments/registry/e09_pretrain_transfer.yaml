@@ -1,0 +1,44 @@
+exp_id: e09
+title: "Leave-one-generator-out pretraining transfer"
+description: >
+  DriftFormer pretrained on the other three generators vs from-scratch, on a
+  held-out generator. Run once per fold; change the evaluation generator and the
+  checkpoint path for the other folds.
+seeds: "0-10"
+need_proba: false
+stream_grid:
+  generators: [randomrbf]
+  shapes: [abrupt, gradual, recurring]
+  defaults:
+    n_samples: 30000
+    warm_up: 6000
+    noise: 0.1
+    position: 15000
+    width: 2000
+    period: 6000
+    n_episodes: 2
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: driftformer_scratch
+    type: driftformer
+    params: {n_features: 10, block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: driftformer_pretrained
+    type: driftformer
+    params:
+      n_features: 10
+      block_size: 32
+      d_model: 64
+      n_layers: 2
+      ssl_weight: 0.3
+      device: cpu
+      checkpoint: experiments/checkpoints/df_logo_rbf.pt
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance: {}

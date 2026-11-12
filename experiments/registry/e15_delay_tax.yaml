@@ -1,0 +1,49 @@
+exp_id: e15
+title: "Delay Tax on the model panel"
+description: >
+  Labels arrive L samples late; prediction is at t, scoring and learning use the
+  label that just arrived. Five models across four delays, with arrival-time
+  metrics and prediction-time recovery reported separately.
+seeds: "0-10"
+need_proba: false
+model_delays: [0, 100, 1000, 5000]
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    concept_a: 0
+    concept_b: 1
+  - generator: hyperplane
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+models:
+  - id: frozen_rf
+    type: frozen_rf
+    params: {n_estimators: 100}
+  - id: scheduled_rf_5k
+    type: scheduled_rf
+    params: {every: 5000, window: 12000, n_estimators: 100}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: driftformer
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance: {}

@@ -1,0 +1,35 @@
+exp_id: e14
+title: "External validity on real streams"
+description: >
+  River's offline Phishing data and Elec2 (small download), shuffled and then
+  injected with label-swap or feature-permutation drift at a known point, using
+  the KDD-2026 simulation protocol.
+seeds: [0, 1, 2, 3, 4]
+need_proba: false
+streams:
+  - {generator: elec2, shape: abrupt, n_samples: 45312, warm_up: 9062, noise: 0.0, position: 30000, mechanism: label_swap, params: {swap_from: 0, swap_to: 1}}
+  - {generator: elec2, shape: abrupt, n_samples: 45312, warm_up: 9062, noise: 0.0, position: 30000, mechanism: feature_permutation}
+  - {generator: phishing, shape: abrupt, n_samples: 1250, warm_up: 250, noise: 0.0, position: 625, mechanism: label_swap, params: {swap_from: 0, swap_to: 1}}
+  - {generator: phishing, shape: abrupt, n_samples: 1250, warm_up: 250, noise: 0.0, position: 625, mechanism: feature_permutation}
+models:
+  - id: frozen_rf
+    type: frozen_rf
+    params: {n_estimators: 100}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: driftformer
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 200
+  band: 0.95
+  stretch: 100
+  window: 600
+acceptance: {}

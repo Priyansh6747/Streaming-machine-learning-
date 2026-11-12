@@ -1,0 +1,38 @@
+exp_id: e06
+title: "Label delay shifts detection by L (Lemma 1)"
+description: >
+  Isolate the detection effect: a host model is trained with immediate labels,
+  then its error stream is replayed as if each label arrived L samples late.
+  Five delays, two hosts, two channels, KDD metrics with the acceptable window
+  anchored at d_s + L.
+seeds: "0-10"
+need_proba: false
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+detectors: [adwin, kswin, page_hinkley, ddm, eddm, hddm_w]
+detector_hosts: [ht, hat]
+detector_channels: [raw, ewma]
+detector_delays: [0, 100, 500, 2000, 10000]
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  ewma_alpha: 0.01
+  delta_max:
+    abrupt: 1000
+acceptance: {}

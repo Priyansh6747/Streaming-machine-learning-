@@ -1,0 +1,39 @@
+exp_id: e07
+title: "Block-prequential safety and speed gate"
+description: >
+  DriftFormer at update block sizes 1, 32 and 128 against ARF on SEA abrupt.
+  No DL result is reportable until the block-32 accuracy matches block-1 within
+  0.01 and the speedup is at least 5x.
+seeds: [0, 1]
+need_proba: false
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 60000
+    warm_up: 12000
+    noise: 0.1
+    position: 30000
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: driftformer_b1
+    type: driftformer
+    params: {block_size: 1, d_model: 64, n_layers: 2, device: cpu}
+  - id: driftformer_b32
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, device: cpu}
+  - id: driftformer_b128
+    type: driftformer
+    params: {block_size: 128, d_model: 64, n_layers: 2, device: cpu}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+acceptance: {}

@@ -622,22 +622,25 @@ A 0.071 excursion below baseline cannot integrate to zero over any non-degenerat
 window. **8 of 11 streaming seeds sit on this floor**, while the frozen model — which
 never recovers — always integrates the full window.
 
-**Consequences:**
+**Consequences (resolved by E01):**
 
-1. The comparison is **asymmetric**: truncated integral (streaming) vs complete integral
-   (frozen). Both the **294×** mean ratio and the **24×** worst-vs-best ratio are
-   **upper bounds**.
-2. Correcting it will **shrink** the gap. Magnitude unknown — the fix needs a rerun,
-   because `exp02/results.json` retains no per-sample series.
+1. The comparison was **asymmetric**: truncated integral (streaming) vs complete integral
+   (frozen). Both the **294×** mean ratio and the **24×** worst-vs-best ratio were
+   **upper bounds**; both are **retired**.
+2. E01 corrected it with a fixed 5,000-sample window and a panel-shared `κ_ref`:
+   `damage_ref` **70.6 ± 66.5** vs **504.4 ± 104.1** (**≈7.1×**); `damage_full`
+   **293.9 vs 3,408.1** (**≈11.6×**); worst-vs-best **1.27×**. See
+   [`Reports/E01-metric-v2.md`](Reports/E01-metric-v2.md).
 3. The claim that "damage area and dip depth are the trustworthy metrics" is **too
-   generous** — damage area is *defined in terms of* the same τ-anchored recovery rule,
-   so they are not independent evidence.
+   generous** — the legacy damage area was *defined in terms of* the same τ-anchored
+   recovery rule. `damage_ref` and `damage_full` are the trustworthy ones now;
+   recovery time is meaningful only conditional on an exit.
 4. **Untouched:** frozen recovered on **0 of 11** seeds, and the streaming dip is
    consistently ~3.8× shallower. Those stand.
 
-**The fix:** integrate damage over a fixed window `[τ, τ+W)` regardless of recovery, or
-from the first band-exit to recovery. ~102 s/seed on the GPU. Keep both artifacts for
-auditability.
+**The fix is done:** E01 integrates over a fixed window regardless of recovery and
+keeps the old artifacts for auditability. Do not quote 294×/24× except as a retired
+upper bound.
 
 ### 11.2 "Recovery = 0" does not mean "instant recovery"
 

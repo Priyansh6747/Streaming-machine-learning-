@@ -87,9 +87,18 @@ The model is never "finished" — it is permanently mid-training.
 
 ### Phase 1 — Experimentation
 
+- [E01 — Metric v2 correction](Reports/E01-metric-v2.md)
+  — the **current** headline: frozen recovered **0/11**, DeepRiver's corrected
+  `damage_ref` is **70.6 vs 504.4** samples·κ (**≈7.1×**), and the legacy **294×**
+  is retired as an upper bound.
+- [E04 — Detector map](Reports/E04-detector-map.md)
+  — eight detectors across four drift shapes and four generators; **HDDM-A on the
+  raw signal is the best default**, recurring drift is the hard case, and smoothing
+  raises false alarms.
 - [Exp-01: DeepRiver rolling vs frozen batch on SEA](Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)
-  — the first atomic experiment, **run**: DeepRiver recovered its pre-drift skill 835
-  samples after the drift; the frozen RF never did (damage area 31 vs 3,307 samples·κ).
+  — the first atomic experiment (legacy metric; superseded by E01).
+- [Exp-02: the 11-seed sweep](Phase1:Experimentation/exp02-seed-sweep-sea.md)
+  — the sweep that made the claim statistical (legacy metric; corrected by E01).
 - [Thesis: how streaming beats batch, and on what](Phase1:Experimentation/thesis.md)
   — the mechanism and the metric family where the win is structural.
 - [Streaming vs Batch: real metrics where online learning wins (and where it doesn't)](Phase1:Experimentation/streaming-vs-batch-metrics.md)

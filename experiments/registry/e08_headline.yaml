@@ -1,0 +1,47 @@
+exp_id: e08
+title: "DriftFormer vs the panel across drift shapes"
+description: >
+  The headline DL experiment: DriftFormer, ARF, HAT and frozen RF on four
+  generators and three drift shapes, with an oracle RF reference. Primary
+  endpoint is AUE; secondary is full-run Kappa and recovery rate.
+seeds: "0-10"
+need_proba: false
+stream_grid:
+  generators: [sea, hyperplane, randomrbf, agrawal]
+  shapes: [abrupt, gradual, recurring]
+  defaults:
+    n_samples: 40000
+    warm_up: 8000
+    noise: 0.1
+    position: 20000
+    width: 2000
+    period: 4000
+    n_episodes: 2
+    concept_a: 0
+    concept_b: 1
+models:
+  - id: driftformer
+    type: driftformer
+    params: {block_size: 32, d_model: 64, n_layers: 2, ssl_weight: 0.3, device: cpu}
+  - id: arf
+    type: river
+    params: {class: ARFClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+  - id: frozen_rf
+    type: frozen_rf
+    params: {n_estimators: 100}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  delta_max:
+    abrupt: 1000
+    gradual: 2000
+    recurring: 2000
+acceptance: {}

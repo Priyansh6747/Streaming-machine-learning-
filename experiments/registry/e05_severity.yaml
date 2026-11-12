@@ -1,0 +1,46 @@
+exp_id: e05
+title: "Severity and width sweep"
+description: >
+  SEA drift severity controlled by the threshold gap (1.0, 1.5, 2.0, 2.5)
+  crossed with transition width (0, 500, 2000, 10000). Reports NDT against the
+  measured severity of the oracle model, not the nominal drift label.
+seeds: "0-10"
+need_proba: false
+streams:
+  - {generator: sea, shape: abrupt, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 0, concept_a: 0, concept_b: 1}
+  - {generator: sea, shape: abrupt, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 0, concept_a: 0, concept_b: 3}
+  - {generator: sea, shape: abrupt, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 0, concept_a: 1, concept_b: 2}
+  - {generator: sea, shape: abrupt, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 0, concept_a: 2, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 500, concept_a: 0, concept_b: 1}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 500, concept_a: 0, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 500, concept_a: 1, concept_b: 2}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 500, concept_a: 2, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 2000, concept_a: 0, concept_b: 1}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 2000, concept_a: 0, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 2000, concept_a: 1, concept_b: 2}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 2000, concept_a: 2, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 10000, concept_a: 0, concept_b: 1}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 10000, concept_a: 0, concept_b: 3}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 10000, concept_a: 1, concept_b: 2}
+  - {generator: sea, shape: gradual, n_samples: 60000, warm_up: 12000, noise: 0.1, position: 30000, width: 10000, concept_a: 2, concept_b: 3}
+models:
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+detectors: [adwin, kswin, page_hinkley, ddm, eddm, hddm_a, hddm_w]
+detector_hosts: [ht, hat]
+detector_channels: [raw, ewma]
+detector_delays: [0]
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  ewma_alpha: 0.01
+  delta_max:
+    abrupt: 1000
+    gradual: 2000
+acceptance: {}

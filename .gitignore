@@ -1,8 +1,29 @@
-
+# Environments, build output and caches
 site/
 .venv/
 __pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Datasets: downloaded or regenerated, never part of the evidence contract
+data/
+experiments/data/
+
+# Model weights and checkpoints
 experiments/checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.pkl
+*.joblib
+
+# Experiment caches
 experiments/results/**/cache/
-experiments/data/kdd/
-data/raw/
+
+# JVM crash dumps
+hs_err_pid*.log
+replay_pid*.log

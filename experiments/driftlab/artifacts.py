@@ -56,13 +56,19 @@ class ArtifactWriter:
         self._detections_path = self.out_dir / "detections.jsonl"
         self._models_path = self.out_dir / "models.jsonl"
         if not self.resume:
-            for path in (self._episodes_path, self._detections_path, self._models_path):
+            for path in (
+                self._episodes_path,
+                self._detections_path,
+                self._models_path,
+                self.out_dir / "signals.npz",
+            ):
                 if path.exists():
                     path.unlink()
             for path in self._cache_dir.glob("*"):
                 if path.is_file():
                     path.unlink()
         self._series: dict[str, np.ndarray] = {}
+        self._signals: dict[str, np.ndarray] = {}
         self._start = time.time()
 
     def write_meta(self) -> None:
@@ -101,6 +107,12 @@ class ArtifactWriter:
     def series_items(self) -> dict[str, np.ndarray]:
         return dict(self._series)
 
+    def add_signal(self, key: str, values: np.ndarray) -> None:
+        self._signals[key] = np.asarray(values)
+
+    def signal_items(self) -> dict[str, np.ndarray]:
+        return dict(self._signals)
+
     def completed_units(self) -> set[str]:
         return {path.stem for path in self._cache_dir.glob("*.json")}
 
@@ -121,8 +133,13 @@ class ArtifactWriter:
             for key, value in self._series.items()
             if key.startswith(series_prefix)
         }
-        if series:
-            np.savez_compressed(self._cache_dir / f"{unit}.npz", **series)
+        signals = {
+            f"sig__{key}": value
+            for key, value in self._signals.items()
+            if key.startswith(series_prefix)
+        }
+        if series or signals:
+            np.savez_compressed(self._cache_dir / f"{unit}.npz", **series, **signals)
 
     def load_seed_caches(
         self, allowed: set[str] | None = None
@@ -142,7 +159,10 @@ class ArtifactWriter:
                 continue
             with np.load(path) as data:
                 for key in data.files:
-                    self._series[key] = data[key]
+                    if key.startswith("sig__"):
+                        self._signals[key[len("sig__") :]] = data[key]
+                    else:
+                        self._series[key] = data[key]
         return models, episodes, detections
 
     def rewrite_rows(
@@ -162,6 +182,8 @@ class ArtifactWriter:
     def finalize(self, summary: dict[str, Any]) -> None:
         if self._series:
             np.savez_compressed(self.out_dir / "series.npz", **self._series)
+        if self._signals:
+            np.savez_compressed(self.out_dir / "signals.npz", **self._signals)
         summary = {
             **summary,
             "exp_id": self.exp_id,

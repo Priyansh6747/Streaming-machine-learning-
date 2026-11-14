@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from collections import deque
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
@@ -75,6 +76,26 @@ class RunningStandardizer:
         self.mean.fill(0.0)
         self.m2.fill(0.0)
         self.count = 0
+
+
+def _mean_pairwise_js(probs: torch.Tensor) -> float:
+    """Mean pairwise Jensen-Shannon divergence across a head bank, in [0, 1]."""
+    n_heads = int(probs.shape[1])
+    if n_heads < 2:
+        return 0.0
+    eps = 1e-12
+    total = 0.0
+    pairs = 0
+    for left in range(n_heads):
+        for right in range(left + 1, n_heads):
+            p = probs[:, left, :].clamp_min(eps)
+            q = probs[:, right, :].clamp_min(eps)
+            middle = 0.5 * (p + q)
+            kl_p = (p * (p.log() - middle.log())).sum(dim=-1)
+            kl_q = (q * (q.log() - middle.log())).sum(dim=-1)
+            total += float((0.5 * (kl_p + kl_q)).mean())
+            pairs += 1
+    return total / max(1, pairs) / math.log(2.0)
 
 
 class DriftFormerLearner:
@@ -332,6 +353,114 @@ class DriftFormerLearner:
             self.learn_batch(X[start : start + block], y[start : start + block], t_start=start)
         self.warming = False
         self.detector = ADWIN(delta=self.config.adwin_delta)
+
+    def _standardize_array(self, array: np.ndarray) -> np.ndarray:
+        if self.standardizer.count > 1:
+            std = np.sqrt(self.standardizer.m2 / (self.standardizer.count - 1))
+        else:
+            std = np.ones_like(self.standardizer.mean)
+        return (array - self.standardizer.mean) / np.maximum(std, 1e-6)
+
+    def pretrain_ssl(
+        self,
+        X: Sequence[dict] | np.ndarray,
+        epochs: int = 1,
+        batch_size: int | None = None,
+    ) -> None:
+        """Train the encoder with the masked-feature objective only.
+
+        No labels are used: the supervised heads keep their initial weights, so
+        Stage 1 of DF-H stays label-free.
+        """
+        if isinstance(X, np.ndarray):
+            array = np.asarray(X, dtype=np.float64)
+        else:
+            array = np.vstack([self._to_array(x) for x in X])
+        if array.ndim == 1:
+            array = array.reshape(1, -1)
+        if len(array) == 0:
+            return
+        for row in array:
+            self.standardizer.update(row)
+        standardized = self._standardize_array(array).astype(np.float32)
+        batch = max(2, int(batch_size or self.config.batch_size))
+        rng = np.random.default_rng(self.config.seed)
+        head_params = [p for head in self.model.heads for p in head.parameters()]
+        previous = [p.requires_grad for p in head_params]
+        for p in head_params:
+            p.requires_grad_(False)
+        was_training = self.model.training
+        try:
+            for _ in range(max(1, int(epochs))):
+                self.model.train()
+                order = rng.permutation(len(standardized))
+                for start in range(0, len(order), batch):
+                    chunk = standardized[order[start : start + batch]]
+                    if len(chunk) < 2:
+                        continue
+                    mask_np = rng.random(chunk.shape) < self.config.mask_fraction
+                    empty = ~mask_np.any(axis=1)
+                    if empty.any():
+                        mask_np[empty, 0] = True
+                    mask = torch.as_tensor(mask_np, dtype=torch.bool, device=self.device)
+                    bins = self._feature_bins(chunk)
+                    _, ssl_logits, _ = self.model(self._tensor(chunk))
+                    loss = F.cross_entropy(ssl_logits[mask], bins[mask])
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                    self.optimizer.step()
+                    self.last_loss = float(loss.detach())
+                    self.loss_history.append(float(loss.detach()))
+        finally:
+            for p, flag in zip(head_params, previous):
+                p.requires_grad_(flag)
+            self.model.train(was_training)
+
+    def signal_snapshot(
+        self,
+        X: Sequence[dict] | np.ndarray,
+        window_index: int = 0,
+    ) -> dict[str, Any]:
+        """Deterministic label-free signals for one window of raw features."""
+        if isinstance(X, np.ndarray):
+            raw = np.asarray(X, dtype=np.float64)
+        else:
+            raw = np.vstack([self._to_array(x) for x in X])
+        if raw.ndim == 1:
+            raw = raw.reshape(1, -1)
+        standardized = self._standardize_array(raw).astype(np.float32)
+        x_tensor = self._tensor(standardized)
+        was_training = self.model.training
+        self.model.eval()
+        try:
+            with torch.no_grad():
+                logits, ssl_logits, cls_out = self.model(x_tensor)
+                probs = F.softmax(logits, dim=-1)
+                rng = np.random.default_rng([self.config.seed, int(window_index)])
+                mask_np = rng.random(standardized.shape) < self.config.mask_fraction
+                empty = ~mask_np.any(axis=1)
+                if empty.any():
+                    mask_np[empty, 0] = True
+                mask = torch.as_tensor(mask_np, dtype=torch.bool, device=self.device)
+                bins = self._feature_bins(standardized)
+                ssl_loss = F.cross_entropy(ssl_logits[mask], bins[mask])
+                active = probs[:, self.active_head, :].clamp_min(1e-12)
+                entropy = -(
+                    (active * active.log()).sum(dim=-1)
+                    / math.log(max(2, self.n_classes))
+                ).mean()
+                cls = cls_out.detach().cpu().numpy().astype(np.float64)
+        finally:
+            self.model.train(was_training)
+        return {
+            "ssl_loss": float(ssl_loss.detach()),
+            "head_disagreement": _mean_pairwise_js(probs),
+            "entropy": float(entropy),
+            "cls_mean": cls.mean(axis=0),
+            "cls_var": cls.var(axis=0),
+            "n_samples": int(len(raw)),
+        }
 
     def model_bytes(self) -> int:
         return int(sum(p.numel() * p.element_size() for p in self.model.parameters()))

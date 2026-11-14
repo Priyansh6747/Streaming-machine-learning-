@@ -12,8 +12,8 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 
 | | |
 |---|---|
-| **Status** | 6 concluded: Exp-01, Exp-02, **E01 metric v2 correction (clean panel)**, **E04 detector map first pass (5 seeds)**, **E17 real-stream detector check (5 seeds)**, **KDD'26 six-detector reproduction (50 trials)**; 2 scheduled (E03, E14); E15 replaced by E21; new DF-H track E18–E21 ([Roadmap v2](Roadmap-v2.md)) |
-| **Data artifacts** | `experiments/exp01/results.json` · `experiments/exp02/results.json` · `experiments/results/e01/` (**corrected metric, clean rerun**) · `experiments/results/e04/` (**detector map**) · `experiments/results/e17/` (**real-stream detector check**) · `experiments/results/kdd_bench_full/` (**KDD'26 reproduction**) · `experiments/results/_archive/e01_5model/` (**pre-fix panel, superseded**) |
+| **Status** | 12 concluded: Exp-01, Exp-02, **E01 metric v2 correction (clean panel)**, **E03 baseline ladder (11 seeds)**, **E04 detector map first pass (5 seeds)**, **E14 real-stream model check (provisional 5-seed slice)**, **E17 real-stream detector check (5 seeds)**, **KDD'26 six-detector reproduction (50 trials)**, **E18 deep-signal gate (negative)**, **E19 DF-H v1 pilot (gate failed)**, **E21 Delay Tax fixed-delay headline**, **E22 detector shootout (DF-H beats the requested classical panel)**; **E21 is the surviving headline** ([Roadmap v2](Roadmap-v2.md)) |
+| **Data artifacts** | `experiments/exp01/results.json` · `experiments/exp02/results.json` · `experiments/results/e01/` (**corrected metric, clean rerun**) · `experiments/results/e03/` (**baseline ladder**) · `experiments/results/e04/` (**detector map**) · `experiments/results/e14/` (**real-stream model check**) · `experiments/results/e17/` (**real-stream detector check**) · `experiments/results/e18/` + `experiments/data/deep_signals/pilot/` (**deep signal gate**) · `experiments/results/e19_kdd_pilot/` (**DF-H v1 pilot**) · `experiments/results/e21/` (**Delay Tax fixed-delay headline**) · `experiments/results/e22_detector_shootout/` (**detector shootout**) · `experiments/results/kdd_bench_full/` (**KDD'26 reproduction**) · `experiments/results/_archive/e01_5model/` (**pre-fix panel, superseded**) |
 | **Method / protocol** | [`thesis.md`](../Phase1:Experimentation/thesis.md) · [`streaming-vs-batch-metrics.md`](../Phase1:Experimentation/streaming-vs-batch-metrics.md) |
 | **Formatting note** | unicode math (τ, κ₀, Δκ, ≈, ≥) renders identically in Obsidian, GitHub, mkdocs |
 
@@ -33,6 +33,15 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 > “0 on 8/11” was an artefact of the τ-anchored rule. The legacy **294×** and
 > **24×** figures are retired as upper bounds; on the clean panel the worst
 > DeepRiver seed (217.9) is **0.74×** the best frozen seed (295.2).
+
+> **Detector track (2026-11-14).** E18/E19 are negative on their pre-registered
+> gates, but the focused **E22** shootout shows DF-H is **3rd overall (7.34)**,
+> ahead of HDDM-W (7.47), ADWIN (9.94), HDDM-A (11.34) and PageHinkley (12.53)
+> — behind only the KDD top two, SEED and STEPD — with a 0.04 FAR and a clear
+> feature-permutation win. **E21** is the surviving headline: a label-free Stage-1
+> warning in **70–513** samples vs **2,120–3,269** for the error-only panel at
+> `L = 2,000`. The detector is a strong feature-drift warning system, not a
+> top-2 universal detector.
 
 !!! warning "Metric correction — read this before quoting any number below"
     Sections 3a and 3b use the original `damage_area` definition, which
@@ -274,6 +283,200 @@ remains the hard case. Five seeds, one dataset, one injected mechanism — this 
 a warning, not a final ranking. The full write-up is
 [`E17-real-detector-map.md`](E17-real-detector-map.md).
 
+### 3f. E14 — the real-stream model check (5 seeds, 2026-11-14)
+
+E14 replayed the streaming-vs-frozen comparison on real features and labels:
+Elec2 (45,312 rows) and Phishing (1,250 rows), with label-swap and
+feature-permutation drift injected at a known point. Five seeds, 100 runs,
+metric v2. Pooled over 20 dataset × mechanism × seed cells:
+
+| Model | Accuracy | Cohen κ | `damage_ref` | `damage_full` | Recovery rate |
+|---|---:|---:|---:|---:|---:|
+| Frozen RF | 0.685 | 0.395 | 297.4 | 4,703.0 | 0.00 |
+| **ARF** | **0.875** | **0.724** | **198.0** | **2,684.8** | **0.20** |
+| HAT | 0.803 | 0.583 | 245.7 | 3,019.6 | 0.15 |
+| DriftFormer | 0.770 | 0.524 | 284.9 | 3,497.5 | 0.00 |
+| Oracle refit | 0.698 | 0.415 | 280.3 | 4,518.3 | 0.00 |
+
+**Verdict.** ARF leads on both datasets (Elec2 `damage_ref` 202.4 vs frozen
+295.0; Phishing 193.5 vs 299.8), and the provisional acceptance rules pass:
+pooled damage ratio **0.666×**, ARF lower in **18/20** cells, frozen recovered
+**0/20**, κ gain **+0.329**. DriftFormer beats frozen on κ but not on damage — on
+Elec2 it pays slightly more (314.7 vs 295.0). That is the expected negative that
+justifies using the deep model as a **signal extractor**, not as the KDD host.
+Two datasets, five seeds and one injected mechanism per stream: **provisional,
+not field-wide**. The full write-up is [`E14-real-streams.md`](E14-real-streams.md).
+
+### 3g. E03 — the baseline ladder (11 seeds, 2026-11-14)
+
+E03 ran the full 11-seed ladder on SEA and Hyperplane: frozen RF, three
+scheduled-retrain intervals, static and adaptive trees, ARF, Leveraging Bagging,
+ADWIN Bagging, and the timing oracle. 220 model runs, 220 episodes.
+
+| Model | Accuracy | Cohen κ | AUE | `damage_ref` | Recovery rate |
+|---|---:|---:|---:|---:|---:|
+| **Leveraging Bagging** | **0.857** | **0.707** | **−0.0469** | **455.7** | **1.000** |
+| HAT | 0.847 | 0.685 | −0.0447 | 489.2 | 0.955 |
+| ARF | 0.839 | 0.671 | −0.0368 | 575.4 | 0.591 |
+| ADWIN Bagging | 0.853 | 0.698 | −0.0293 | 614.1 | 1.000 |
+| Hoeffding Tree | 0.844 | 0.679 | −0.0200 | 700.8 | 0.955 |
+| Scheduled RF, 1k | 0.855 | 0.702 | −0.0161 | 733.5 | 1.000 |
+| Scheduled RF, 5k | 0.850 | 0.692 | −0.0056 | 824.1 | 1.000 |
+| Scheduled RF, 20k | 0.838 | 0.667 | −0.0021 | 849.4 | 0.682 |
+| Frozen RF | 0.810 | 0.609 | +0.0004 | 871.7 | 0.000 |
+| Oracle refit | 0.811 | 0.609 | 0.0000 | 864.3 | 0.000 |
+
+**Verdict.** Every streaming adapter pays less damage than frozen RF and than
+every scheduled-retrain interval. The best streaming adapter is **Leveraging
+Bagging (455.7)**, then HAT (489.2) and ARF (575.4); the 1k scheduled model is
+the best batch baseline (733.5) but still pays **1.6×** the LB damage. The
+pre-registered acceptance cell passes: ARF's AUE (−0.0368) is better than
+scheduled-5k's (−0.0056).
+
+**Phase-noise caveat.** The scheduled models recover by construction at each
+retrain tick, so recovery rate is not the comparison — `damage_ref` is. The
+phase-noise test is **inconclusive**: the refit buffer (12,000) is longer than
+the 1k and 5k intervals, so recovery lag is buffer-dominated, not phase-driven;
+only the 20k cell satisfies the design and it has one observation. The honest
+conclusion is that the ladder orders the models, not that recovery is uniform
+over a retrain interval. Artifact:
+`experiments/results/e03/summary.json` and `schedule_test.json`.
+
+### 3h. E18 — the deep signal gate (80 cells, 2026-11-14)
+
+A frozen SSL-pretrained DriftFormer encoder was asked whether its label-free
+signals beat the raw error rate on 2 datasets × 4 drift types × 2 transitions ×
+5 trials. The pre-registered AUC gate was one deep signal at **≥ 0.75** and
+**≥ 0.10 above** the error rate.
+
+| Signal | AUC | vs error |
+|---|---:|---:|
+| `feature_ks` (classical control) | **0.628** | +0.029 |
+| `embedding_shift` | **0.616** | +0.017 |
+| `embedding_var_shift` | 0.599 | +0.000 |
+| `error_rate` | 0.598 | — |
+| `ssl_loss` | 0.532 | −0.067 |
+
+**Verdict: FAIL.** Best deep signal **0.616**, far short of 0.75. The deep view
+has power on feature permutation (`embedding_var_shift` 0.781), but the error
+rate is stronger there (0.879); label-only drift stays with Stage 2. A
+FAR-calibrated timing diagnostic at 0.1/1k shows Stage 1 detects feature
+permutation 2–5× earlier than error and detects feature filtering when error is
+blind — but the classical `feature_ks` control is often just as fast, so the
+deep marginal value is unproven. Full page:
+[`E18-deep-signals.md`](E18-deep-signals.md).
+
+![E18 signal gate: overall AUC and drift-type breakdown](figures/e18-signal-gate.png)
+
+*E18 — the deep signals cluster around the error-rate baseline overall; the
+feature-permutation cell is where they have real power, but the error rate is
+stronger there.*
+
+![E18 timing diagnostic at 0.1 FAR/1k](figures/e18-timing.png)
+
+*E18 timing — feature signals alarm before the error rate on feature
+permutation, and detect feature filtering where the error rate misses. “miss”
+means no alarm inside the 2,500-sample budget; percentages mark hit rates below
+100%.*
+
+### 3i. E19 — DF-H v1 pilot (80 cells, 2026-11-14)
+
+Rule-based fusion of Stage 1 (deep, classical, both) with SEED, STEPD, ADWIN
+and HDDM-A on the same 80 cells.
+
+| Detector | Mean F1 | FAR/1k | Overall rank |
+|---|---:|---:|---:|
+| STEPD | **0.281** | 0.05 | **5.22** |
+| SEED | 0.267 | 0.06 | **5.44** |
+| **DFH = 2of3_both** | 0.223 | **0.04** | **7.09** |
+| `2of3_deep` | 0.221 | 0.04 | 7.12 |
+| HDDM-W | 0.170 | 0.28 | 7.31 |
+| `OR_deep` | 0.178 | 0.15 | 7.72 |
+| `S1_both` | 0.160 | 0.13 | 8.50 |
+| `AND_deep` | 0.201 | **0.01** | 8.53 |
+| ADWIN | 0.117 | 0.11 | 9.59 |
+| `2of3_nodeep` (control) | 0.154 | 0.03 | 9.97 |
+
+**Verdict: FAIL.** DFH is **3rd**, not top-2; it wins no feature cell as the
+primary, is **tied 5th–7th on Covtype** (average position 6.0; rank value
+7.44), and passes only the FAR check (0.04 vs ADWIN 0.11). Ablations own
+feature cells (`AND_deep` abrupt permutation 1.50; `S1_both` gradual filtering
+1.00), and DFH beats the no-feature control by 2.9 ranks — so the feature
+monitor adds information, but the fixed 2-of-3 rule is not top-2. **No full E20
+run**; E21 Delay Tax is the next headline. Full page:
+[`E19-hybrid-detector.md`](E19-hybrid-detector.md).
+
+![E19 overall rank and F1–FAR trade-off](figures/e19-overall-rank.png)
+
+*E19 — DFH is third overall, behind STEPD and SEED, with the lowest FAR of the
+competitive rows.*
+
+![E19 feature-cell ranks and per-dataset robustness](figures/e19-feature-cells.png)
+
+*E19 — the ablations own feature cells, but DFH is tied 5th–7th on Covtype and
+tied 3rd–4th on Electricity, so the strict dataset-robustness bar fails.*
+
+### 3j. E21 — the Delay Tax, fixed-delay headline (2026-11-14)
+
+The surviving contribution. An error-only detector cannot react until the
+post-drift labels arrive, so its detection time is floor-bound at `τ + L`. A
+label-free Stage 1 monitor is not. This is the fixed-delay Lemma-1 synthesis on
+the same 80 KDD cells as E19.
+
+At `L = 2,000` samples, detection delay after onset:
+
+| Cell | Stage 1 deep | Stage 1 classical | SEED | STEPD | ADWIN |
+|---|---:|---:|---:|---:|---:|
+| Covtype, abrupt | **70** | 90 | 2,130 | 2,120 | 2,472 |
+| Covtype, gradual | **306** | 406 | 2,710 | 2,616 | — |
+| Electricity, abrupt | **76** | 196 | 2,129 | 2,180 | 3,269 |
+| Electricity, gradual | **293** | 513 | 2,701 | 2,694 | — |
+
+**Verdict: the label tax is real, and Stage 1 does not pay it.** Stage 1 warns
+**4–30× earlier** than the error-only panel at `L = 2,000`; its delay is flat in
+`L`, while every error-only detector shifts by `L`. The honest limit: Stage 1 is
+blind to label-only drift, so the result is a **warning/confirmation split**
+(`T_warn` vs `T_confirm`), not a standalone detector. The full
+stochastic/partial/selective/batch regime matrix is scaffolded but not yet run.
+Full page: [`E21-delay-detector.md`](E21-delay-detector.md).
+
+![E21 — the label tax: error-only detection shifts by L; label-free warning does not](figures/e21-delay-floor.png)
+
+*E21 fixed-delay headline. Flat blue/gray lines are label-free Stage 1; dashed
+red/orange/purple lines are error-only detectors at `base + L`.*
+
+### 3k. E22 — detector shootout (80 cells, 2026-11-14)
+
+A focused capability check on the datasets in the repo: our DF-H and Stage-1
+monitor against **ADWIN, HDDM-A, HDDM-W and PageHinkley**, with SEED/STEPD as the
+KDD reference.
+
+| Detector | Mean F1 | FAR/1k | Overall rank |
+|---|---:|---:|---:|
+| **STEPD** (ref) | **0.281** | 0.05 | **5.44** |
+| **SEED** (ref) | 0.267 | 0.06 | **5.59** |
+| **DF-H (ours)** | **0.223** | **0.04** | **7.34** |
+| HDDM-W | 0.170 | 0.28 | 7.47 |
+| Stage 1 both | 0.160 | 0.13 | 8.66 |
+| Stage 1 deep | 0.144 | 0.12 | 9.00 |
+| ADWIN | 0.117 | 0.11 | 9.94 |
+| HDDM-A | 0.128 | 0.04 | 11.34 |
+| PageHinkley | 0.018 | 0.01 | 12.53 |
+
+**Verdict: DF-H beats the requested classical panel.** It is **3rd overall**,
+ahead of HDDM-W (7.47), ADWIN (9.94), HDDM-A (11.34) and PageHinkley (12.53),
+with the lowest FAR of the high-F1 rows. On feature permutation it beats every
+requested classical detector (**5.8 abrupt / 5.5 gradual** vs 8.8–16.0). It does
+**not** beat SEED/STEPD, HDDM-W wins Covtype (6.1 vs 7.9) and abrupt filtering
+(4.0 vs 11.5), and the Stage-1-only variants are the right tool on filtering.
+Full page: [`E22-detector-shootout.md`](E22-detector-shootout.md).
+
+![E22 overall rank and F1–FAR trade-off](figures/e22-overall.png)
+
+*E22 — DF-H is third overall and sits at low FAR; SEED/STEPD remain ahead.
+HDDM-W buys F1 with a much higher false-alarm rate; PageHinkley barely alarms
+and barely scores.*
+
 ---
 
 ## 4. Verdict registry — one conclusion per experiment
@@ -289,8 +492,12 @@ experiments are listed so the roadmap is visible, with their acceptance bar.
 | **E04** ✅ *(first pass, 5 seeds)* | Which detector works for which drift shape, and does the host matter? | 4 generators × 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **HDDM-A raw is best for all four shapes; balanced score 0.683 abrupt, 0.842 gradual, 0.883 incremental, 0.500 recurring; recurring is hardest; EWMA raises false alarms** | One sensible default exists **on the static host and synthetic generators**; recurring drift is the hard case. A scoring bug that made a never-ringing detector look perfect was found and fixed. E17 shows the default is host-conditional on real Elec2; the full 11-seed matrix and tuning are pending |
 | **E17** ✅ *(real stream, 5 seeds)* | Does the E04 detector default survive on real data? | Elec2 label-swap, 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **On static HT, HDDM-A raw wins all four (F1 0.933/0.960/0.960/0.787); on adaptive HAT, ADWIN wins abrupt (1.000 vs 0.400) and recurring (0.770 vs 0.593); best-host mean F1 ADWIN 0.935 vs HDDM-A 0.910** | The synthetic default is **host-conditional**; “wins all four” does not transfer to the adaptive host. Recurring remains hardest. The 50-trial KDD'26 run confirms SEED/STEPD (2.12) beat HDDM-A (3.87); ABCD/ABCD(X) is cited from the paper, not re-run |
 | **KDD'26** ✅ *(reproduction, 50 trials)* | Does HDDM-A remain the best detector on the paper's real-data benchmark? | 7 real datasets × 4 drift types × abrupt/gradual × 6 detectors, 50 trials | **SEED and STEPD tie for first (avg rank 2.12; mean F1 0.300/0.303); HDDM-A is fourth (3.87; 0.155), behind HDDM-W (3.56); DDM 4.54; ADWIN 4.80** | HDDM-A is **not** the best detector on real data. The ranking reproduces the KDD'26 paper and the F1 values match its tables. ABCD/ABCD(X) is cited from the paper, not re-run |
-| **E03** ⏳ | Does streaming also beat a *scheduled-retrain* batch model (the honest industrial baseline)? | SEA + baseline ladder | *pending* | acceptance: streaming recovery ≪ retrain interval r_next − τ |
-| **E14** ⏳ | Does the win survive on **real** streams (Phishing, Covertype, Airlines, CreditCard, Elec2)? | 5 real streams, post-dip protocol | *pending* | acceptance: streaming ≥ frozen on post-drift windows |
+| **E03** ✅ *(11 seeds)* | Does streaming also beat a *scheduled-retrain* batch model (the honest industrial baseline)? | SEA + Hyperplane, 10-model ladder, 11 seeds, 220 runs | **Every streaming adapter beats frozen and every scheduled interval on `damage_ref`: LB 455.7, HAT 489.2, ARF 575.4 vs scheduled-1k 733.5 and frozen 871.7; acceptance AUE passes (ARF −0.0368 vs scheduled-5k −0.0056)** | The ladder confirms the damage ordering at 11 seeds. **Phase-noise claim is inconclusive**: the 12k refit buffer dominates the 1k/5k intervals; only the 20k cell is valid (n=1) |
+| **E14** ✅ *(provisional, 2 datasets × 5 seeds)* | Does the streaming win survive on **real** streams, and can DriftFormer host? | Elec2 + Phishing, label-swap + feature-permutation, 5 seeds, 100 runs | **ARF leads both datasets: `damage_ref` 198.0 vs frozen 297.4 (0.666×), lower in 18/20 cells, κ 0.724 vs 0.395; frozen recovered 0/20; DriftFormer κ 0.524 and does not beat ARF** | Streaming adaptation survives the first real-stream check; DriftFormer is a **signal extractor, not the host**. Provisional: 2 datasets, 5 seeds; expansion deferred |
+| **E18** ❌ *(signal gate, 80 cells)* | Does a label-free deep signal beat the error rate? | Covtype + Electricity × 4 drift types × 2 transitions × 5 trials | **Best deep AUC 0.616 vs error 0.598; feature permutation 0.781 vs 0.879; label-only ~0.51; timing at 0.1/1k: feature permutation 72–414 vs error 184–1,033; feature filtering detected where error is blind; `feature_ks` competitive** | **Gate FAIL.** Deep is a warning channel, not standalone; classical control travels to E19 |
+| **E19** ❌ *(DF-H v1 pilot, 80 cells)* | Does DF-H fusion beat the scalar panel? | Same 80 cells; Stage 1 deep/classical/both + SEED/STEPD/ADWIN/HDDM-A | **DFH 3rd (rank 7.09; F1 0.223; FAR 0.04) behind STEPD 5.22 and SEED 5.44; no primary feature-cell win; Covtype tied 5th–7th; ablations `AND_deep` 1.50 abrupt permutation and `S1_both` 1.00 gradual filtering; beats no-feature control 9.97** | **Gate FAIL.** Feature monitor adds value but not top-2; no full E20; E21 is next |
+| **E21** ✅ *(fixed-delay headline)* | Does label delay create a floor for error-only detectors that a label-free warning avoids? | Same 80 KDD cells; Stage 1 vs SEED/STEPD/ADWIN at L = 0…10k | **At L = 2k: Stage 1 deep 70–513 samples vs SEED/STEPD 2,120–2,710 and ADWIN 2,472–3,269; Stage 1 flat in L, error-only shifts by L** | **The surviving headline.** Label-free warning is not floor-bound; the honest result is `T_warn` vs `T_confirm`, not a standalone detector. Full regime matrix scaffolded, not run |
+| **E22** ✅ *(detector shootout)* | What is DF-H capable of against ADWIN / HDDM-A / HDDM-W / PageHinkley? | Same 80 cells; requested classical panel + SEED/STEPD reference | **DFH 3rd (7.34; F1 0.223; FAR 0.04) ahead of HDDM-W 7.47, ADWIN 9.94, HDDM-A 11.34, PageHinkley 12.53; behind STEPD 5.44/SEED 5.59; feature permutation 5.8/5.5 vs panel 8.8–16.0; Covtype HDDM-W 6.1 vs DFH 7.9** | **Capability proven vs the requested panel**, not top-2; feature filtering better in the Stage-1-only ablation |
 | **E15** ⏳ *(replaced by E21)* | The **Delay Tax**: do delayed/rare labels starve batch retraining while streaming keeps working? | label-delay sweep | *pending — replaced by E21* | acceptance: streaming quality degrades slower under delay; E21 adds the DF-H detector benchmark |
 
 *Scope guard: Exp-01 is deliberately the easiest possible version of the claim
@@ -347,13 +554,24 @@ larger sample, and streaming still wins the run outright.
 
 - Measured numbers: `experiments/exp01/results.json` · `experiments/exp02/results.json` ·
   `experiments/results/e01/summary.json` (**corrected metric**) ·
+  `experiments/results/e03/summary.json` + `schedule_test.json` (**baseline ladder**) ·
   `experiments/results/e04/detections.jsonl` (**detector map raw counts**) ·
-  `experiments/results/e17/detector_report.json` (**real-stream detector check**)
+  `experiments/results/e14/summary.json` (**real-stream model check**) ·
+  `experiments/results/e17/detector_report.json` (**real-stream detector check**) ·
+  `experiments/results/e18/summary.json` + `detection.json` (**deep signal gate**) ·
+  `experiments/results/e19_kdd_pilot/ranking.json` + `summary.csv` (**DF-H v1 pilot**) ·
+  `experiments/results/e21/delay_floor.json` (**Delay Tax headline**) ·
+  `experiments/results/e22_detector_shootout/ranking.json` + `summary.csv` (**detector shootout**)
 - Full write-ups: [`exp01-deepriver-vs-frozen-sea.md`](../Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md) ·
   [`exp02-seed-sweep-sea.md`](../Phase1:Experimentation/exp02-seed-sweep-sea.md) ·
   [`E01-metric-v2.md`](E01-metric-v2.md) (**correction**) ·
   [`E04-detector-map.md`](E04-detector-map.md) (**detector map**) ·
-  [`E17-real-detector-map.md`](E17-real-detector-map.md) (**real-stream check**)
+  [`E14-real-streams.md`](E14-real-streams.md) (**real-stream model check**) ·
+  [`E17-real-detector-map.md`](E17-real-detector-map.md) (**real-stream check**) ·
+  [`E18-deep-signals.md`](E18-deep-signals.md) (**deep signal gate**) ·
+  [`E19-hybrid-detector.md`](E19-hybrid-detector.md) (**DF-H v1 pilot**) ·
+  [`E21-delay-detector.md`](E21-delay-detector.md) (**Delay Tax headline**) ·
+  [`E22-detector-shootout.md`](E22-detector-shootout.md) (**detector shootout**)
 - Benchmark reproduction: `experiments/kdd_bench.py` and `experiments/kdd_env/`
   (KDD'26 14-detector protocol; six-detector 50-trial run complete, ABCD/ABCD(X)
   arm pending; artifact `experiments/results/kdd_bench_full/`)
@@ -362,5 +580,8 @@ larger sample, and streaming still wins the run outright.
 - Milestone records: [`Sept9.md`](Sept9.md) (Exp-01)
 - Figure sources: `experiments/scripts/make_results_figures.py` ·
   `experiments/scripts/make_exp01_summary_chart.py` ·
+  `experiments/scripts/make_e18_e19_figures.py` (**E18/E19**) ·
+  `experiments/scripts/make_e21_delay_figure.py` (**E21**) ·
+  `experiments/scripts/make_e22_report_figures.py` (**E22**) ·
   `experiments/scripts/exp02_seed_sweep_sea.py --figure-only` ·
   `experiments/results/e01/figures/model_comparison.png` (E01)

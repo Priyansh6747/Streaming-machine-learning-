@@ -80,6 +80,9 @@ experiments/
 | `scripts/exp02_seed_sweep_sea.py` | Exp-02: the same experiment as a loop over 11 seeds. Writes `results.json` **and** re-renders the 9-figure suite. Flags: `--require-cuda`, `--limit` (dev slice), `--figure-only` (regenerate all figures from the committed artifact with **no rerun**), `--figures-dir`. |
 | `scripts/make_exp01_summary_chart.py` | Figure generator: the Exp-01 recovery-time vs damage-area summary chart. |
 | `scripts/make_results_figures.py` | Figure generator for `docs/Reports/Results.md` — process-flow and headline-scoreboard figures. |
+| `scripts/make_e18_e19_figures.py` | Figure generator for E18/E19 — AUC gate, FAR-calibrated timing diagnostic, overall rank/FAR, feature-cell and per-dataset robustness. |
+| `scripts/make_e21_delay_figure.py` | Figure generator for E21 — label-free warning vs error-only detection under fixed label delay `L`, from the E19 trial artifacts. |
+| `scripts/make_e22_report_figures.py` | Figure generator for E22 — overall rank/F1-FAR and feature-cell/drift-type profile against the requested classical panel. |
 | `scripts/make_sept9_report_graphs.py` | Figure generator for the Sept-9 milestone report — roadmap and expected-vs-measured charts. |
 | `figures/make_thesis_schematic.py` | Draws the *illustrative* three-curve recovery schematic (streaming / scheduled / frozen) used in `thesis.md` and the README. Note it lives in `figures/`, not `scripts/` — the only figure script not in `scripts/`. |
 

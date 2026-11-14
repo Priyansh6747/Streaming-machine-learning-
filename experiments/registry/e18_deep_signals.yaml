@@ -1,0 +1,78 @@
+exp_id: e18
+title: "E18 — label-free deep signal extraction"
+description: >
+  Extract the DF-H Stage-1 signal family (SSL loss, embedding shift, head
+  disagreement, entropy, internal ADWIN, feature KS) from a frozen SSL-pretrained
+  DriftFormer encoder on SEA, Hyperplane and two Elec2 drift mechanisms. The
+  harness also records the raw error-rate baseline for every window. The
+  go/no-go gate is evaluated by the E18 report, not by this run's summary.
+seeds: "0-2"
+need_proba: false
+streams:
+  - generator: sea
+    shape: abrupt
+    n_samples: 30000
+    warm_up: 12000
+    noise: 0.1
+    position: 20000
+    concept_a: 0
+    concept_b: 1
+  - generator: hyperplane
+    shape: abrupt
+    n_samples: 30000
+    warm_up: 12000
+    noise: 0.1
+    position: 20000
+    params: {n_features: 10}
+  - generator: elec2
+    shape: abrupt
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    mechanism: label_swap
+    params: {swap_from: 0, swap_to: 1}
+  - generator: elec2
+    shape: abrupt
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    mechanism: feature_permutation
+models:
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+detectors: []
+detector_hosts: []
+detector_channels: []
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+deep_signals:
+  enabled: true
+  baseline_model: ht
+  window_size: 500
+  stride: 100
+  reference_fraction: 0.2
+  mask_fraction: 0.15
+  adwin_delta: 0.002
+  ks_reference_size: 2000
+  epochs: 1
+  encoder:
+    d_model: 64
+    n_heads: 4
+    n_layers: 2
+    ffn: 128
+    n_heads_bank: 4
+    n_bins: 8
+    dropout: 0.0
+    block_size: 32
+    batch_size: 128
+    ring_size: 4096
+    reservoir_size: 8192
+    mask_fraction: 0.15
+    device: cpu
+acceptance: {}

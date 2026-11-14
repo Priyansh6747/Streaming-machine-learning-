@@ -1,0 +1,48 @@
+{
+  "protocol": "KDD-2026 drift detection benchmark (reproduction)",
+  "datasets": [
+    "Covtype",
+    "Electricity"
+  ],
+  "missing": [],
+  "drift_types": [
+    "class_prior",
+    "label_swap",
+    "feature_permutation",
+    "feature_filtering"
+  ],
+  "transitions": [
+    "abrupt",
+    "gradual"
+  ],
+  "trials": 5,
+  "detectors": [
+    "ADWIN",
+    "HDDMAverage",
+    "HDDMWeighted",
+    "PageHinkley",
+    "SEED",
+    "STEPD"
+  ],
+  "signal": "correct",
+  "gradual_anchor": "code",
+  "params": "hypertuned",
+  "max_instances": 100000,
+  "seed": 12,
+  "workers": 8,
+  "start_method": "fork",
+  "jvm_xmx": "512m",
+  "deep_signals": "experiments/data/deep_signals/pilot",
+  "fusion_far": 0.1,
+  "confirm_window": 2000,
+  "refractory": 2000,
+  "started": "2026-11-14T18:42:07",
+  "command": "/home/sovereign/Documents/Obsidian Vault/major/experiments/kdd_bench.py run --datasets Covtype,Electricity --trials 5 --signal correct --gradual-anchor code --detectors ADWIN,HDDMAverage,HDDMWeighted,PageHinkley,SEED,STEPD --deep-signals experiments/data/deep_signals/pilot --out experiments/results/e22_detector_shootout --workers 8",
+  "git_sha": "0cad03b",
+  "capymoa_version": "0.15.1",
+  "numpy_version": "2.4.6",
+  "finished": "2026-11-14T18:42:52",
+  "n_rows": 1280,
+  "n_tasks_completed": 80,
+  "n_task_failures": 0
+}

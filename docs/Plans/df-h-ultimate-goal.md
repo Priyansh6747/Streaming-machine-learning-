@@ -10,6 +10,19 @@ controls and evidence; the detector track is re-centred on DF-H.
 > Readable summary: [Roadmap v2](../Reports/Roadmap-v2.md). Evidence snapshot:
 > [Nov 14 post-mid-term report](../Reports/Nov14.md).
 
+> **Status update (2026-11-14):** E18 and E19 ran and failed their
+> pre-registered gates (best deep AUC 0.616 vs error 0.598; DF-H 3rd overall,
+> 7.09, behind STEPD/SEED). E20 is not run under the pilot-first rule. E21 now
+> carries the headline: the fixed-delay Lemma-1 synthesis shows label-free
+> Stage 1 warning at **70–513** samples vs **2,120–3,269** for the error-only
+> panel at `L = 2,000`; the full regimes remain scaffolded. **E22** adds the
+> focused capability check: DF-H is **3rd overall (7.34)**, ahead of HDDM-W,
+> ADWIN, HDDM-A and PageHinkley, behind only SEED/STEPD. See
+> [E18](../Reports/E18-deep-signals.md),
+> [E19](../Reports/E19-hybrid-detector.md),
+> [E21](../Reports/E21-delay-detector.md) and
+> [E22](../Reports/E22-detector-shootout.md).
+
 ---
 
 ## 0. The decision

@@ -1,0 +1,135 @@
+{
+  "experiment": "e21",
+  "lemma": "Lemma 1 \u2014 fixed label delay",
+  "label": "Stage 1 is label-free; error-only delay is base + L",
+  "source": "experiments/results/e19_kdd_pilot/trials.csv + summary.csv",
+  "l_values": [
+    0,
+    100,
+    500,
+    2000,
+    10000
+  ],
+  "cells": [
+    {
+      "dataset": "Covtype",
+      "transition": "abrupt",
+      "stage1": {
+        "S1_deep": {
+          "base_delay": 69.8,
+          "hit_rate": 1.0,
+          "n": 5
+        },
+        "S1_classical": {
+          "base_delay": 89.8,
+          "hit_rate": 1.0,
+          "n": 5
+        }
+      },
+      "error_only": {
+        "ADWIN": {
+          "base_delay": 472.3333333333333
+        },
+        "HDDMAverage": {
+          "base_delay": 625.75
+        },
+        "SEED": {
+          "base_delay": 130.0
+        },
+        "STEPD": {
+          "base_delay": 120.4
+        }
+      }
+    },
+    {
+      "dataset": "Covtype",
+      "transition": "gradual",
+      "stage1": {
+        "S1_deep": {
+          "base_delay": 306.4,
+          "hit_rate": 1.0,
+          "n": 5
+        },
+        "S1_classical": {
+          "base_delay": 406.4,
+          "hit_rate": 1.0,
+          "n": 5
+        }
+      },
+      "error_only": {
+        "ADWIN": {
+          "base_delay": null
+        },
+        "HDDMAverage": {
+          "base_delay": 1377.0
+        },
+        "SEED": {
+          "base_delay": 710.0
+        },
+        "STEPD": {
+          "base_delay": 616.0
+        }
+      }
+    },
+    {
+      "dataset": "Electricity",
+      "transition": "abrupt",
+      "stage1": {
+        "S1_deep": {
+          "base_delay": 76.0,
+          "hit_rate": 1.0,
+          "n": 5
+        },
+        "S1_classical": {
+          "base_delay": 196.0,
+          "hit_rate": 1.0,
+          "n": 5
+        }
+      },
+      "error_only": {
+        "ADWIN": {
+          "base_delay": 1269.0
+        },
+        "HDDMAverage": {
+          "base_delay": 501.3333333333333
+        },
+        "SEED": {
+          "base_delay": 129.0
+        },
+        "STEPD": {
+          "base_delay": 179.75
+        }
+      }
+    },
+    {
+      "dataset": "Electricity",
+      "transition": "gradual",
+      "stage1": {
+        "S1_deep": {
+          "base_delay": 293.4,
+          "hit_rate": 1.0,
+          "n": 5
+        },
+        "S1_classical": {
+          "base_delay": 513.4,
+          "hit_rate": 1.0,
+          "n": 5
+        }
+      },
+      "error_only": {
+        "ADWIN": {
+          "base_delay": null
+        },
+        "HDDMAverage": {
+          "base_delay": 2358.0
+        },
+        "SEED": {
+          "base_delay": 701.4
+        },
+        "STEPD": {
+          "base_delay": 694.4
+        }
+      }
+    }
+  ]
+}

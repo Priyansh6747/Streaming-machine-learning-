@@ -70,6 +70,12 @@ for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUME
 
 import numpy as np
 
+from .driftlab.fusion import (
+    alarms_from_windows,
+    build_hybrid_runs,
+    calibrate_threshold,
+)
+
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_DATA_DIR = REPO / "experiments" / "data" / "kdd"
 DEFAULT_OUT_DIR = REPO / "experiments" / "results" / "kdd_bench"
@@ -208,6 +214,16 @@ class DriftEpisode:
     filter_threshold: float
 
 
+@dataclass(frozen=True)
+class TrialStream:
+    X: np.ndarray
+    y: np.ndarray
+    index: np.ndarray
+    episode: DriftEpisode
+    n_samples: int
+    feature_names: list[str]
+
+
 def should_apply_drift(index: int, episode: DriftEpisode, rng: Any) -> bool:
     if index >= episode.onset + episode.width:
         return True
@@ -324,6 +340,144 @@ def _fit_episode(
     )
 
 
+def build_trial_stream(
+    task: dict[str, Any],
+    data: tuple[np.ndarray, np.ndarray, list[str]],
+) -> TrialStream:
+    """Build one KDD trial in pure NumPy, with the runner's exact RNG order.
+
+    The returned arrays contain only the instances that survive the drift
+    transform (``class_prior`` and ``feature_filtering`` can drop rows).
+    ``index`` maps each kept row back to its position in the original shuffled
+    stream, which is the time coordinate used by the KDD detector metrics.
+    """
+    dataset = str(task["dataset"])
+    drift_type = str(task["drift_type"])
+    transition = str(task["transition"])
+    X_all, y_all, feature_names = data
+    rng = np.random.default_rng(
+        [
+            int(task["seed"]),
+            int(task["trial"]),
+            DRIFT_TYPES.index(drift_type),
+            TRANSITIONS.index(transition),
+        ]
+    )
+    order = rng.permutation(len(y_all))
+    X = X_all[order]
+    y = y_all[order]
+    max_instances = int(task.get("max_instances") or len(y))
+    if len(y) > max_instances:
+        X = X[:max_instances]
+        y = y[:max_instances]
+    n_samples = len(y)
+    episode = _fit_episode(
+        X,
+        y,
+        drift_type,
+        transition,
+        MAX_DELAY[dataset],
+        rng,
+    )
+    kept_X: list[np.ndarray] = []
+    kept_y: list[int] = []
+    kept_index: list[int] = []
+    for index in range(n_samples):
+        x = X[index]
+        label = int(y[index])
+        if should_apply_drift(index, episode, rng):
+            transformed = transform_instance(
+                x,
+                label,
+                drift_type,
+                episode,
+                rng,
+            )
+            if transformed is None:
+                continue
+            x, label = transformed
+        kept_X.append(x)
+        kept_y.append(int(label))
+        kept_index.append(index)
+    if kept_X:
+        X_out = np.asarray(kept_X, dtype=X_all.dtype)
+    else:
+        X_out = np.empty((0, X_all.shape[1]), dtype=X_all.dtype)
+    return TrialStream(
+        X=X_out,
+        y=np.asarray(kept_y, dtype=y_all.dtype),
+        index=np.asarray(kept_index, dtype=np.int64),
+        episode=episode,
+        n_samples=n_samples,
+        feature_names=list(feature_names),
+    )
+
+
+def _deep_signals_path(
+    root: Path,
+    dataset: str,
+    drift_type: str,
+    transition: str,
+    trial: int,
+) -> Path:
+    return root / dataset / f"{drift_type}__{transition}__t{trial:02d}.npz"
+
+
+def _load_deep_thresholds(
+    root: Path,
+    datasets: Iterable[str],
+    drift_types: Iterable[str],
+    transitions: Iterable[str],
+    trials: int,
+    far_per_1k: float,
+) -> dict[str, dict[str, float]]:
+    """Calibrate Stage-1 thresholds on pre-drift windows, per dataset."""
+    pooled: dict[str, dict[str, list[float]]] = {
+        dataset: {"deep": [], "classical": [], "both": []}
+        for dataset in datasets
+    }
+    strides: dict[str, int] = {}
+    for dataset in datasets:
+        for drift_type in drift_types:
+            for transition in transitions:
+                for trial in range(trials):
+                    path = _deep_signals_path(
+                        root, dataset, drift_type, transition, trial
+                    )
+                    if not path.exists():
+                        continue
+                    with np.load(path) as payload:
+                        if "ssl_loss_z" not in payload.files:
+                            continue
+                        onset = int(payload["onset"])
+                        ends = payload["window_end_index"]
+                        pre = ends < onset
+                        if not pre.any():
+                            continue
+                        deep = np.maximum(
+                            payload["ssl_loss_z"], payload["embedding_shift_z"]
+                        )
+                        if "feature_ks_z" in payload.files:
+                            classical = payload["feature_ks_z"]
+                        else:
+                            classical = np.zeros_like(deep)
+                        both = np.maximum(deep, classical)
+                        pooled[dataset]["deep"].extend(deep[pre].tolist())
+                        pooled[dataset]["classical"].extend(classical[pre].tolist())
+                        pooled[dataset]["both"].extend(both[pre].tolist())
+                        strides[dataset] = int(payload["stride"]) if "stride" in payload.files else 100
+    thresholds: dict[str, dict[str, float]] = {}
+    for dataset, groups in pooled.items():
+        if not groups["deep"]:
+            continue
+        stride = strides.get(dataset, 100)
+        thresholds[dataset] = {
+            name: calibrate_threshold(values, far_per_1k, samples_per_window=stride)
+            for name, values in groups.items()
+        }
+    return thresholds
+
+
 def _worker_init(data_dir: str, datasets: list[str], jvm_xmx: str) -> None:
     os.environ["JAVA_TOOL_OPTIONS"] = f"-Xmx{jvm_xmx}"
     import capymoa  # noqa: F401
@@ -350,7 +504,6 @@ def _build_detectors(
 
 def _run_trial(task: dict[str, Any]) -> list[dict[str, Any]]:
     from capymoa.classifier import HoeffdingTree
-    from capymoa.core import LabeledInstance
     from capymoa.stream import NumpyStream
 
     dataset = task["dataset"]
@@ -360,25 +513,16 @@ def _run_trial(task: dict[str, Any]) -> list[dict[str, Any]]:
     signal = task["signal"]
     gradual_anchor = task["gradual_anchor"]
     params_mode = task["params_mode"]
-    max_instances = task["max_instances"]
     detector_names = task["detectors"]
 
-    X, y, feature_names = _DATA[dataset]
-    rng = np.random.default_rng([task["seed"], trial, DRIFT_TYPES.index(drift_type), TRANSITIONS.index(transition)])
-    order = rng.permutation(len(y))
-    X = X[order]
-    y = y[order]
-    if len(y) > max_instances:
-        X = X[:max_instances]
-        y = y[:max_instances]
-    n_samples = len(y)
-
-    episode = _fit_episode(X, y, drift_type, transition, MAX_DELAY[dataset], rng)
+    trial_stream = build_trial_stream(task, _DATA[dataset])
+    episode = trial_stream.episode
+    n_samples = trial_stream.n_samples
     stream = NumpyStream(
-        X=X,
-        y=y,
+        X=trial_stream.X,
+        y=trial_stream.y,
         dataset_name=dataset,
-        feature_names=feature_names,
+        feature_names=trial_stream.feature_names,
     )
     schema = stream.get_schema()
     learner = HoeffdingTree(schema=schema)
@@ -387,20 +531,9 @@ def _run_trial(task: dict[str, Any]) -> list[dict[str, Any]]:
     errors: dict[str, str] = {}
     min_training = int(n_samples * 0.25)
 
-    index = 0
-    while stream.has_more_instances() and index < n_samples:
+    for position in range(len(trial_stream.y)):
         instance = stream.next_instance()
-        if should_apply_drift(index, episode, rng):
-            transformed = transform_instance(instance.x, int(instance.y_index), drift_type, episode, rng)
-            if transformed is None:
-                index += 1
-                continue
-            x_new, y_new = transformed
-            if y_new != int(instance.y_index):
-                instance = LabeledInstance.from_array(schema, x_new, y_new)
-            elif not np.array_equal(x_new, instance.x):
-                instance = LabeledInstance.from_array(schema, x_new, y_new)
-
+        index = int(trial_stream.index[position])
         if index > min_training:
             prediction = learner.predict(instance)
             if signal == "error":
@@ -418,7 +551,6 @@ def _run_trial(task: dict[str, Any]) -> list[dict[str, Any]]:
                     errors[name] = f"{type(exc).__name__}: {exc}"
 
         learner.train(instance)
-        index += 1
 
     if gradual_anchor == "paper":
         end = episode.onset + episode.width
@@ -440,12 +572,86 @@ def _run_trial(task: dict[str, Any]) -> list[dict[str, Any]]:
                 "transition": transition,
                 "trial": trial,
                 "detector": name,
+                "family": "scalar",
                 "onset": episode.onset,
                 "width": episode.width,
+                "t_warn": "",
+                "t_confirm": "",
+                "n_warn": 0,
                 "error": errors.get(name, ""),
                 **metrics,
             }
         )
+
+    deep_dir = task.get("deep_signals_dir")
+    thresholds = (task.get("deep_thresholds") or {}).get(dataset)
+    if deep_dir and thresholds:
+        path = _deep_signals_path(
+            Path(deep_dir), dataset, drift_type, transition, trial
+        )
+        if path.exists():
+            with np.load(path) as payload:
+                if "ssl_loss_z" in payload.files:
+                    window_end = payload["window_end_index"]
+                    deep_score = np.maximum(
+                        payload["ssl_loss_z"], payload["embedding_shift_z"]
+                    )
+                    if "feature_ks_z" in payload.files:
+                        classical_score = payload["feature_ks_z"]
+                    else:
+                        classical_score = np.zeros_like(deep_score)
+                    both_score = np.maximum(deep_score, classical_score)
+                    refractory = int(task.get("refractory", 2_000))
+                    s1_deep = alarms_from_windows(
+                        window_end,
+                        deep_score,
+                        thresholds["deep"],
+                        refractory=refractory,
+                    )
+                    s1_classical = alarms_from_windows(
+                        window_end,
+                        classical_score,
+                        thresholds["classical"],
+                        refractory=refractory,
+                    )
+                    s1_both = alarms_from_windows(
+                        window_end,
+                        both_score,
+                        thresholds["both"],
+                        refractory=refractory,
+                    )
+                    for run in build_hybrid_runs(
+                        s1_deep,
+                        s1_classical,
+                        s1_both,
+                        alarms,
+                        window=int(task.get("confirm_window", 2_000)),
+                        refractory=refractory,
+                    ):
+                        metrics = evaluate_alarms(
+                            run.alarms,
+                            onset=episode.onset,
+                            end=end,
+                            max_delay=MAX_DELAY[dataset],
+                            n_samples=n_samples,
+                        )
+                        rows.append(
+                            {
+                                "dataset": dataset,
+                                "drift_type": drift_type,
+                                "transition": transition,
+                                "trial": trial,
+                                "detector": run.name,
+                                "family": "fusion",
+                                "onset": episode.onset,
+                                "width": episode.width,
+                                "t_warn": min(run.warnings) if run.warnings else "",
+                                "t_confirm": min(run.alarms) if run.alarms else "",
+                                "n_warn": len(run.warnings),
+                                "error": "",
+                                **metrics,
+                            }
+                        )
     return rows
 
 
@@ -733,6 +939,44 @@ def cmd_run(args: argparse.Namespace) -> int:
     if unknown_transitions:
         raise SystemExit(f"unknown transitions: {', '.join(unknown_transitions)}")
 
+    deep_dir = Path(args.deep_signals) if args.deep_signals else None
+    deep_thresholds: dict[str, dict[str, float]] = {}
+    if deep_dir is not None:
+        if not deep_dir.exists():
+            raise SystemExit(f"deep-signals directory not found: {deep_dir}")
+        deep_thresholds = _load_deep_thresholds(
+            deep_dir,
+            available,
+            drift_types,
+            transitions,
+            args.trials,
+            args.fusion_far,
+        )
+        missing_deep = [
+            dataset for dataset in available if dataset not in deep_thresholds
+        ]
+        if missing_deep:
+            print(
+                f"warning: no deep signals for {', '.join(missing_deep)}; "
+                "fusion rows will be skipped for those datasets",
+                file=sys.stderr,
+            )
+        required = {"SEED", "ADWIN", "HDDMAverage"} - set(detectors)
+        if required:
+            print(
+                f"warning: fusion needs {', '.join(sorted(required))} in --detectors; "
+                "missing sources contribute no votes",
+                file=sys.stderr,
+            )
+        print(
+            "deep thresholds: "
+            + ", ".join(
+                f"{dataset}={{{', '.join(f'{name}:{value:.2f}' for name, value in values.items())}}}"
+                for dataset, values in sorted(deep_thresholds.items())
+            ),
+            flush=True,
+        )
+
     tasks = [
         {
             "dataset": dataset,
@@ -745,6 +989,10 @@ def cmd_run(args: argparse.Namespace) -> int:
             "max_instances": args.max_instances,
             "detectors": detectors,
             "seed": args.seed,
+            "deep_signals_dir": str(deep_dir) if deep_dir else None,
+            "deep_thresholds": deep_thresholds,
+            "confirm_window": args.confirm_window,
+            "refractory": args.refractory,
         }
         for dataset in available
         for drift_type in drift_types
@@ -783,6 +1031,10 @@ def cmd_run(args: argparse.Namespace) -> int:
         "workers": args.workers,
         "start_method": args.start_method,
         "jvm_xmx": args.jvm_xmx,
+        "deep_signals": str(deep_dir) if deep_dir else None,
+        "fusion_far": args.fusion_far,
+        "confirm_window": args.confirm_window,
+        "refractory": args.refractory,
         "started": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "command": " ".join(sys.argv),
     }
@@ -807,8 +1059,12 @@ def cmd_run(args: argparse.Namespace) -> int:
         "transition",
         "trial",
         "detector",
+        "family",
         "onset",
         "width",
+        "t_warn",
+        "t_confirm",
+        "n_warn",
         "tp",
         "fp",
         "fn",
@@ -925,6 +1181,10 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--resume", action="store_true")
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--limit", type=int, default=None)
+    run.add_argument("--deep-signals", default=None, help="directory of E18 signal .npz files")
+    run.add_argument("--fusion-far", type=float, default=0.1, help="Stage-1 FAR target per 1k")
+    run.add_argument("--confirm-window", type=int, default=2_000)
+    run.add_argument("--refractory", type=int, default=2_000)
     run.set_defaults(func=cmd_run)
     return parser
 

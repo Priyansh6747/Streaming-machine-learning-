@@ -94,14 +94,39 @@ The model is never "finished" — it is permanently mid-training.
   — the **current** headline: frozen recovered **0/11**, DeepRiver's corrected
   `damage_ref` is **74.8 vs 515.0** samples·κ (**≈6.9×**), and the legacy **294×**
   is retired as an upper bound.
+- [E03 — Baseline ladder](Reports/Results.md)
+  — at 11 seeds and 220 runs, every streaming adapter pays less drift damage
+  than frozen and than every scheduled-retrain clock; the phase-noise test
+  remains inconclusive because the refit buffer dominates the 1k/5k clocks.
 - [E04 — Detector map](Reports/E04-detector-map.md)
   — the synthetic map: eight detectors across four drift shapes and four
   generators; **HDDM-A on the raw signal is the best default on the static host**,
   recurring drift is the hard case, and smoothing raises false alarms.
+- [E14 — Real-stream model check](Reports/E14-real-streams.md)
+  — ARF leads both real datasets and the deep model does not beat it: the
+  evidence for using DriftFormer as a **signal extractor, not the host**.
+  Provisional five-seed slice with acceptance rules.
 - [E17 — Real-stream detector map](Reports/E17-real-detector-map.md)
   — the same eight detectors on real Elec2 records; HDDM-A keeps its four-shape
   win on the static host, but **ADWIN wins abrupt and recurring on the adaptive
   host**, so the default is host-conditional.
+- [E18 — Deep signal gate](Reports/E18-deep-signals.md)
+  — the pre-registered AUC gate **failed** (best deep 0.616 vs error 0.598), but
+  at 0.1/1k FAR the feature signals detect feature drift earlier than error and
+  detect feature filtering where error is blind; the classical KS control is
+  competitive.
+- [E19 — DF-H v1 pilot](Reports/E19-hybrid-detector.md)
+  — DF-H ranks **3rd overall** (7.09) behind STEPD and SEED; FAR passes and it
+  beats the no-feature control, but top-2 and the primary feature-cell test
+  fail. The full E20 matrix is not run.
+- [E21 — Delay Tax detector](Reports/E21-delay-detector.md)
+  — the surviving headline: at `L = 2,000`, label-free Stage 1 warns in
+  **70–513** samples while SEED/STEPD take **2,120–2,710** and ADWIN
+  **2,472–3,269**. The error-only panel pays the label tax; Stage 1 does not.
+- [E22 — Detector shootout](Reports/E22-detector-shootout.md)
+  — the direct capability check on our data: DF-H is **3rd overall (7.34)**,
+  ahead of HDDM-W, ADWIN, HDDM-A and PageHinkley; only SEED/STEPD lead. It owns
+  feature permutation against the requested panel, with **0.04 FAR**.
 - [Exp-01: DeepRiver rolling vs frozen batch on SEA](Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)
   — the first atomic experiment (legacy metric; superseded by E01).
 - [Exp-02: the 11-seed sweep](Phase1:Experimentation/exp02-seed-sweep-sea.md)

@@ -126,7 +126,12 @@ nav:
       - "Results (global)": "Reports/Results.md"
       - "E01 — Metric v2 correction": "Reports/E01-metric-v2.md"
       - "E04 — Detector map": "Reports/E04-detector-map.md"
+      - "E14 — Real-stream model check": "Reports/E14-real-streams.md"
       - "E17 — Real-stream detector map": "Reports/E17-real-detector-map.md"
+      - "E18 — Deep signal gate": "Reports/E18-deep-signals.md"
+      - "E19 — DF-H v1 pilot": "Reports/E19-hybrid-detector.md"
+      - "E21 — Delay Tax detector": "Reports/E21-delay-detector.md"
+      - "E22 — Detector shootout": "Reports/E22-detector-shootout.md"
   - "Milestones":
       - "Sept 9": "Reports/Sept9.md"
       - "Mid-term report": "Reports/mid_term.md"

@@ -38,3 +38,10 @@ def test_device_override_creates_missing_params():
     config = _config([{"id": "dr", "type": "deepriver_rolling"}])
     _apply_device_override(config, "auto")
     assert config.models[0]["params"]["device"] == "auto"
+
+
+def test_device_override_updates_deep_signal_encoder():
+    config = _config([])
+    config.deep_signals = {"enabled": True, "encoder": {"device": "cpu"}}
+    _apply_device_override(config, "cuda")
+    assert config.deep_signals["encoder"]["device"] == "cuda"

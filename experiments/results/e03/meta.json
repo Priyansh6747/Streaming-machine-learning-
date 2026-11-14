@@ -2,7 +2,7 @@
   "schema": "driftlab/2",
   "exp_id": "e03",
   "config_hash": "606bcb62eca67ce7acefb84ad969ec48a1acb08af053cd3f72c3d8697401fc90",
-  "git_sha": "ed2c144e91bcea99f33635f4cee220ee4158f4c0",
+  "git_sha": "0cad03befc21682a6a03264b7c1b2d1d4a467e3e",
   "versions": {
     "python": "3.12.3",
     "river": "0.25.0",
@@ -12,7 +12,7 @@
     "scipy": "1.18.1",
     "deep_river": "0.3.4"
   },
-  "started_unix": 1794583072.2136073,
+  "started_unix": 1794640376.105436,
   "resumed": true,
   "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
   "argv": [

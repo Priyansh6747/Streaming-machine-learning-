@@ -9,6 +9,21 @@ centred on one artefact.
 > beat the KDD'26 detector benchmark on its own protocol *and* win the
 > delayed-label setting where error-only detectors are provably floor-bound.
 
+> **Status update (2026-11-14):** the E18 signal gate and the E19 v1 pilot both
+> ran and **failed their pre-registered gates**. E18's best deep AUC was 0.616
+> vs the error rate's 0.598; E19's DF-H ranked **3rd** (7.09) behind STEPD and
+> SEED, with FAR below ADWIN but no primary feature-cell win. The full E20
+> matrix is not justified by the pilot-first rule. The feature monitor retains a
+> real early-warning advantage on feature drift, and the Delay Tax benchmark
+> (E21) is now the headline: the fixed-delay Lemma-1 synthesis shows Stage 1
+> warning at **70–513** samples vs **2,120–3,269** for the error-only panel at
+> `L = 2,000`. The full regime matrix and Lemmas 2–3 are scaffolded but not run.
+> **E22** adds the focused capability check on the data in the repo: DF-H is
+> **3rd overall (7.34)**, ahead of HDDM-W, ADWIN, HDDM-A and PageHinkley, and
+> behind only SEED/STEPD; it owns feature permutation with a 0.04 FAR. See
+> [E18](E18-deep-signals.md), [E19](E19-hybrid-detector.md),
+> [E21](E21-delay-detector.md) and [E22](E22-detector-shootout.md).
+
 ---
 
 ## 1. Why the goal changed

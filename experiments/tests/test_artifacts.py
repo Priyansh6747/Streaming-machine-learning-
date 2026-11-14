@@ -27,11 +27,13 @@ def test_artifact_writer_roundtrip(tmp_path: Path):
     writer.add_episode({"model": "m", "aue": 0.1})
     writer.add_detection({"detector": "adwin", "f1": 0.5})
     writer.add_series("y", np.asarray([0, 1, 1], dtype=np.int8))
+    writer.add_signal("ssl_loss", np.asarray([0.5, 0.7], dtype=np.float32))
     writer.finalize({"ok": True})
     assert (out / "meta.json").exists()
     assert (out / "episodes.jsonl").exists()
     assert (out / "detections.jsonl").exists()
     assert (out / "series.npz").exists()
+    assert (out / "signals.npz").exists()
     assert (out / "summary.json").exists()
     assert (out / "results.json").exists()
 
@@ -108,3 +110,34 @@ def test_seed_cache_roundtrip(tmp_path: Path):
     assert detections == []
     assert "s0_seed0_err" in resumed.series_items()
     assert "s0_seed1_err" not in resumed.series_items()
+
+
+def test_signal_seed_cache_roundtrip(tmp_path: Path):
+    repo = tmp_path
+    out = repo / "experiments" / "results" / "x01"
+    writer = ArtifactWriter(
+        exp_id="x01",
+        out_dir=out,
+        repo=repo,
+        config={"exp_id": "x01"},
+        config_hash="abc",
+    )
+    writer.add_signal("s0_seed0_signals_ssl_loss", np.asarray([1.0, 2.0]))
+    writer.add_signal("s0_seed1_signals_ssl_loss", np.asarray([3.0]))
+    writer.save_seed_cache(
+        "s0_seed0",
+        {"models": [], "episodes": [], "detections": []},
+        "s0_seed0_",
+    )
+    resumed = ArtifactWriter(
+        exp_id="x01",
+        out_dir=out,
+        repo=repo,
+        config={"exp_id": "x01"},
+        config_hash="abc",
+        resume=True,
+    )
+    resumed.load_seed_caches({"s0_seed0"})
+    signals = resumed.signal_items()
+    assert "s0_seed0_signals_ssl_loss" in signals
+    assert "s0_seed1_signals_ssl_loss" not in signals

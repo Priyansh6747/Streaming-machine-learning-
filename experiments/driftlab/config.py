@@ -94,9 +94,11 @@ class ExperimentConfig:
     detector_delays: list[int] = field(default_factory=lambda: [0])
     model_delays: list[int] = field(default_factory=lambda: [0])
     raw: dict[str, Any] = field(default_factory=dict)
+    deep_signals: dict[str, Any] = field(default_factory=dict)
+    hybrid: dict[str, Any] = field(default_factory=dict)
 
     def as_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "exp_id": self.exp_id,
             "title": self.title,
             "description": self.description,
@@ -111,6 +113,11 @@ class ExperimentConfig:
             "seeds": self.seeds,
             "acceptance": self.acceptance,
         }
+        if self.deep_signals:
+            payload["deep_signals"] = self.deep_signals
+        if self.hybrid:
+            payload["hybrid"] = self.hybrid
+        return payload
 
     @property
     def config_hash(self) -> str:
@@ -210,6 +217,8 @@ def load_config(path: str | Path) -> ExperimentConfig:
         detector_delays=[int(v) for v in (raw.get("detector_delays") or [0])],
         model_delays=[int(v) for v in (raw.get("model_delays") or [0])],
         raw=raw,
+        deep_signals=dict(raw.get("deep_signals") or {}),
+        hybrid=dict(raw.get("hybrid") or {}),
     )
 
 

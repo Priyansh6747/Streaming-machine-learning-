@@ -39,6 +39,9 @@ def _apply_device_override(config, device: str) -> None:
             spec["params"] = params
         if "device" in params or str(spec.get("type")) in {"driftformer", "deepriver_rolling"}:
             params["device"] = device
+    if config.deep_signals.get("enabled", False):
+        encoder = config.deep_signals.setdefault("encoder", {})
+        encoder["device"] = device
 
 
 def main(argv: list[str] | None = None) -> int:

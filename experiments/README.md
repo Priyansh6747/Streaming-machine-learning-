@@ -76,7 +76,16 @@ uv run python -m experiments.run --exp e15
 # E17: detector map on a real stream (Elec2, 4 shapes, 8 detectors)
 uv run python -m experiments.run --exp e17
 
+# E18: label-free deep signals on SEA, Hyperplane and Elec2 (Stage 1)
+uv run python -m experiments.run --exp e18
+uv run python -m experiments.run --exp e18 --limit 1500 --seeds 0 \
+    --out experiments/results/_smoke/e18
+
 # Derived analyses (no new model runs)
+uv run python experiments/scripts/make_e18_e19_figures.py   # E18/E19 report figures
+uv run python experiments/scripts/make_e21_delay_figure.py   # E21 fixed-delay headline
+uv run python experiments/scripts/make_e22_report_figures.py  # E22 detector shootout figures
+uv run pytest experiments/tests/test_label_regimes.py -q      # label schedules
 uv run python -m experiments.detector_report   # E04 best detector per shape + host correlation
 uv run python -m experiments.detector_report --exp e17   # same report for the real-stream map
 uv run python -m experiments.schedule_report   # E03 scheduled-retrain phase-noise KS test
@@ -125,6 +134,45 @@ benchmark code, which feeds correctness instead. `--gradual-anchor paper`
 uses the public code's `(onset, onset)` window. `--resume` continues an
 interrupted sweep.
 
+### DF-H Stage-1 signal precompute (E18)
+
+The KDD pilot needs the deep signals cached before the detector run, so
+`kdd_env` never imports torch:
+
+```bash
+# cache one SSL encoder per dataset (experiments/checkpoints/deep/)
+uv run python -m experiments.deep_kdd pretrain --datasets Covtype,Electricity
+
+# 80-trial pilot: 2 datasets x 4 drift types x 2 transitions x 5 trials
+uv run python -m experiments.deep_kdd prepare-signals \
+    --datasets Covtype,Electricity --trials 5 \
+    --out experiments/data/deep_signals/pilot
+
+# AUC table + go/no-go gate
+uv run python -m experiments.deep_kdd report \
+    --signals experiments/data/deep_signals/pilot \
+    --out experiments/results/e18
+
+# FAR-calibrated timing diagnostic (secondary, post-gate)
+uv run python -m experiments.deep_kdd detect \
+    --signals experiments/data/deep_signals/pilot \
+    --out experiments/results/e18 --far 0.1 --budget 2500
+
+# E19: DF-H v1 fusion on the same 80 trials
+./experiments/kdd.sh run --datasets Covtype,Electricity --trials 5 \
+    --signal correct --gradual-anchor code \
+    --detectors SEED,STEPD,ADWIN,HDDMAverage,HDDMWeighted \
+    --deep-signals experiments/data/deep_signals/pilot \
+    --out experiments/results/e19_kdd_pilot --workers 8
+
+# E22: focused shootout against the requested classical panel
+./experiments/kdd.sh run --datasets Covtype,Electricity --trials 5 \
+    --signal correct --gradual-anchor code \
+    --detectors ADWIN,HDDMAverage,HDDMWeighted,PageHinkley,SEED,STEPD \
+    --deep-signals experiments/data/deep_signals/pilot \
+    --out experiments/results/e22_detector_shootout --workers 8
+```
+
 Every run accepts `--seeds 0-4` to cut the matrix, `--limit N` for a smoke slice,
 `--out DIR` to redirect artifacts, `--resume` to continue from cached seed units,
 `--device cuda` (or `auto`) to point DeepRiver/DriftFormer at the GPU, and
@@ -142,6 +190,7 @@ experiments/results/<exp_id>/
   episodes.jsonl     per episode × model (AUE, damage, recovery)
   detections.jsonl   per detector × host × channel × delay (F1, NDT, FAR)
   series.npz         per-sample predictions, errors, rolling kappa, probabilities
+  signals.npz        per-window DF-H Stage-1 signals (E18 runs only)
   figures/*.png      re-rendered from the artifact only
   cache/             per-(stream, seed) immutable units used by --resume
 ```

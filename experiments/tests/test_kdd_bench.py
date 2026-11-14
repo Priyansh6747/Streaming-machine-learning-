@@ -6,7 +6,12 @@ import numpy as np
 import pytest
 
 from experiments.kdd_bench import (
+    DRIFT_TYPES,
+    MAX_DELAY,
+    TRANSITIONS,
     DriftEpisode,
+    _fit_episode,
+    build_trial_stream,
     evaluate_alarms,
     should_apply_drift,
     transform_instance,
@@ -126,3 +131,98 @@ def test_metrics_gradual_window_anchored_at_end():
     assert inside["tp"] == 1
     assert outside["tp"] == 0
     assert outside["fp"] == 1
+
+
+def _data(n: int = 240, n_features: int = 3):
+    rng = np.random.default_rng(11)
+    X = rng.normal(size=(n, n_features)).astype(np.float32)
+    y = rng.integers(0, 2, size=n).astype(np.int32)
+    return X, y, [f"f{index}" for index in range(n_features)]
+
+
+def _task(
+    drift_type: str,
+    transition: str = "abrupt",
+    trial: int = 0,
+    seed: int = 3,
+    max_instances: int = 1_000,
+) -> dict:
+    return {
+        "dataset": "Electricity",
+        "drift_type": drift_type,
+        "transition": transition,
+        "trial": trial,
+        "seed": seed,
+        "max_instances": max_instances,
+    }
+
+
+@pytest.mark.parametrize("drift_type", DRIFT_TYPES)
+@pytest.mark.parametrize("transition", TRANSITIONS)
+def test_build_trial_stream_matches_reference_loop(drift_type: str, transition: str):
+    data = _data()
+    task = _task(drift_type, transition)
+    stream = build_trial_stream(task, data)
+
+    X_all, y_all, _ = data
+    rng = np.random.default_rng(
+        [
+            task["seed"],
+            task["trial"],
+            DRIFT_TYPES.index(drift_type),
+            TRANSITIONS.index(transition),
+        ]
+    )
+    order = rng.permutation(len(y_all))
+    X = X_all[order]
+    y = y_all[order]
+    episode = _fit_episode(
+        X,
+        y,
+        drift_type,
+        transition,
+        MAX_DELAY["Electricity"],
+        rng,
+    )
+    kept_x = []
+    kept_y = []
+    kept_index = []
+    for index in range(len(y)):
+        x = X[index]
+        label = int(y[index])
+        if should_apply_drift(index, episode, rng):
+            transformed = transform_instance(x, label, drift_type, episode, rng)
+            if transformed is None:
+                continue
+            x, label = transformed
+        kept_x.append(x)
+        kept_y.append(label)
+        kept_index.append(index)
+
+    assert stream.episode == episode
+    assert stream.n_samples == len(y)
+    assert np.array_equal(stream.index, np.asarray(kept_index))
+    assert np.array_equal(stream.y, np.asarray(kept_y))
+    assert np.array_equal(stream.X, np.asarray(kept_x, dtype=X_all.dtype))
+
+
+def test_build_trial_stream_is_deterministic():
+    data = _data()
+    first = build_trial_stream(_task("feature_filtering"), data)
+    second = build_trial_stream(_task("feature_filtering"), data)
+    assert np.array_equal(first.X, second.X)
+    assert np.array_equal(first.y, second.y)
+    assert np.array_equal(first.index, second.index)
+    assert first.episode == second.episode
+
+
+def test_build_trial_stream_respects_max_instances():
+    stream = build_trial_stream(_task("label_swap", max_instances=120), _data(240))
+    assert stream.n_samples == 120
+    assert int(stream.index.max()) < 120
+
+
+@pytest.mark.parametrize("drift_type", ["class_prior", "feature_filtering"])
+def test_build_trial_stream_drops_rows(drift_type: str):
+    stream = build_trial_stream(_task(drift_type), _data(400))
+    assert len(stream.y) < stream.n_samples

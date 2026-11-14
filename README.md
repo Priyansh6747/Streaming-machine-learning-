@@ -12,7 +12,7 @@ learners (DeepRiver) as the experimental subject.
 | Status | |
 |---|---|
 | Phase 0 — research & literature | ✅ complete |
-| Phase 1 — experimentation | 🔬 concluded: single-seed pilot, 11-seed sweep, **E01 corrected metric**, **E04 detector map**, **E17 real-stream detector check**, **KDD'26 six-detector reproduction**; **DF-H detector track (E18–E21) is the new ultimate goal** |
+| Phase 1 — experimentation | 🔬 concluded: single-seed pilot, 11-seed sweep, **E01 corrected metric**, **E03 baseline ladder**, **E04 detector map**, **E14 real-stream model check**, **E17 real-stream detector check**, **KDD'26 six-detector reproduction**; **DF-H pilots E18/E19 both failed their gates**; E20 not run; **E21 fixed-delay headline: Stage 1 70–513 vs error-only 2,120–3,269 at L=2k**; **E22: DF-H 3rd, beats ADWIN/HDDM-A/HDDM-W/PageHinkley** |
 
 ---
 
@@ -115,6 +115,14 @@ the new concept is.*
 
 ![Exp-01 measured recovery time and legacy damage area](docs/Phase1:Experimentation/figures/exp01-damage-area-vs-recovery.png)
 
+The baseline ladder (E03, 11 seeds, 220 runs) then priced the honest industrial
+alternative: **every streaming adapter paid less damage than frozen and than
+every scheduled-retrain interval** — Leveraging Bagging **455.7**, HAT **489.2**,
+ARF **575.4** vs the best schedule (1k) **733.5** and frozen **871.7**. The
+scheduled models recover by construction at each tick, so `damage_ref` is the
+comparison. The phase-noise test is inconclusive: the 12k refit buffer is longer
+than the 1k/5k clocks, so only the 20k cell is valid (and has one observation).
+
 The detector map (E04, 5-seed first pass) then asked which early-warning signal
 catches which kind of change. Across four synthetic generators, four drift shapes,
 two hosts and eight detectors, **HDDM-A on the raw mistake stream is the best
@@ -140,19 +148,35 @@ the Delay Tax are the next step (below).
 
 ## Where this is going
 
-1. **DF-H — the ultimate goal.** A two-stage detector that combines a label-free
-   deep monitor (SSL loss, embedding shift, head disagreement) with supervised
-   confirmation (SEED/STEPD/ADWIN/HDDM-A). The target is **top-2 on the KDD'26
-   benchmark**, with wins on feature-permutation/filtering and recurring drift,
-   and no worse false alarms than ADWIN.
-2. **The signal gate.** Before any benchmark run, measure whether the deep
-   signals actually beat the raw error-rate baseline on held-out data. If they
-   do not, the deep track falls back to a classical feature monitor.
-3. **The Delay Tax benchmark.** Fixed, stochastic, partial, selective and batch
-   labels; DF-H vs the strong scalar detectors; lemmas 1–3 measured. This is the
-   novel contribution and the part no published benchmark covers.
-4. **The final report.** Re-centred on the detector: measurement lab → DF-H
-   benchmark → delay-tax results → minimal system/demo.
+**Pilot reality check (2026-11-14).** The signal gate and the DF-H v1 pilot are
+done and both are negative: the best deep signal reached AUC **0.616** against
+the error-rate **0.598**, and the DF-H fusion ranked **3rd** (7.09) behind STEPD
+(5.22) and SEED (5.44), failing the top-2 gate. The feature monitor still detects
+feature drift 2–5× earlier at a controlled false-alarm rate, and the ablation
+variants own feature cells, but the full E20 matrix is not justified. **E21 now
+supplies the surviving result:** at `L = 2,000`, the label-free Stage 1 warns in
+**70–513** samples while SEED/STEPD take **2,120–2,710** and ADWIN
+**2,472–3,269**. The warning is not floor-bound; the detector is a supporting
+warning/confirmation result. **E22** gives the direct capability proof on the
+data we have: DF-H is **3rd overall (7.34)**, ahead of HDDM-W (7.47), ADWIN
+(9.94), HDDM-A (11.34) and PageHinkley (12.53); only SEED/STEPD are ahead. It
+owns feature permutation against that panel, with a 0.04 FAR.
+
+1. **DF-H — the detector hypothesis.** A two-stage detector that combines a
+   label-free feature monitor (deep SSL/embedding signals or a classical KS
+   control) with supervised confirmation (SEED/STEPD/ADWIN/HDDM-A). The pilot
+   did **not** reach top-2; the feature monitor's value is early warning on
+   feature drift, not overall rank.
+2. **The signal gate.** Done — **negative**. The deep signals did not beat the
+   error rate by the pre-registered margin; the classical feature-KS control is
+   competitive and is the honest Stage 1 for any v2.
+3. **The Delay Tax benchmark.** The fixed-delay Lemma-1 headline is measured
+   ([E21](docs/Reports/E21-delay-detector.md)): at `L = 2,000`, Stage 1 warns in
+   70–513 samples vs 2,120–3,269 for the error-only panel. Stochastic, partial,
+   selective and batch regimes plus Lemmas 2–3 are scaffolded and remain the
+   next extension. This is the novel contribution no published benchmark covers.
+4. **The final report.** Re-centred on the measurement lab and the delay-tax
+   result, with the detector as a supporting negative/ablation study.
 
 The older breadth-first experiments (E05, E08–E13) are deferred; E15 is replaced
 by E21. The full plan is [Roadmap v2](docs/Reports/Roadmap-v2.md).

@@ -568,6 +568,76 @@ def _acceptance_verdicts(
     return verdicts
 
 
+def _extract_deep_signals(
+    writer: ArtifactWriter,
+    config: ExperimentConfig,
+    stream: StreamData,
+    stream_idx: int,
+    seed: int,
+    warm: int,
+    host_runs: dict[str, ModelRun],
+) -> None:
+    from .deep.signals import DeepSignalMonitor, SignalConfig
+    from .deep.train import DriftFormerConfig, DriftFormerLearner
+
+    settings = config.deep_signals
+    encoder_params = dict(settings.get("encoder") or {})
+    encoder_params.setdefault("device", "cpu")
+    learner = DriftFormerLearner(
+        "dfh_encoder",
+        stream.feature_keys,
+        n_classes=max(stream.y) + 1,
+        config=DriftFormerConfig.from_dict(encoder_params),
+        seed=seed,
+    )
+    learner.pretrain_ssl(
+        stream.X[:warm],
+        epochs=int(settings.get("epochs", 1)),
+        batch_size=settings.get("batch_size"),
+    )
+    signal_config = SignalConfig(
+        window_size=int(settings.get("window_size", 500)),
+        stride=int(settings.get("stride", 100)),
+        reference_fraction=float(settings.get("reference_fraction", 0.2)),
+        mask_fraction=float(
+            settings.get("mask_fraction", encoder_params.get("mask_fraction", 0.15))
+        ),
+        adwin_delta=float(
+            settings.get("adwin_delta", encoder_params.get("adwin_delta", 0.002))
+        ),
+        ks_reference_size=int(settings.get("ks_reference_size", 2_000)),
+    )
+    try:
+        series = DeepSignalMonitor(signal_config).extract(learner, stream.X[warm:])
+    except ValueError as exc:
+        print(f"  deep signals skipped: {exc}", flush=True)
+        return
+
+    prefix = f"s{stream_idx}_seed{seed}_signals_"
+    arrays = series.as_arrays(prefix)
+    baseline_id = str(settings.get("baseline_model", "ht"))
+    host = host_runs.get(baseline_id)
+    if host is not None:
+        errors = np.asarray(host.errors[warm:], dtype=np.float64)
+        error_rate = np.asarray(
+            [
+                float(np.nanmean(errors[int(start) : int(end)]))
+                if np.isfinite(errors[int(start) : int(end)]).any()
+                else 0.0
+                for start, end in zip(series.starts, series.ends)
+            ],
+            dtype=np.float64,
+        )
+        arrays[f"{prefix}error_rate"] = np.nan_to_num(error_rate)
+    for key, values in arrays.items():
+        writer.add_signal(key, values)
+    print(
+        f"  deep signals: {len(series.starts)} windows, "
+        f"{len(series.values)} signals, reference={series.reference_windows}",
+        flush=True,
+    )
+
+
 def run_experiment(
     config: ExperimentConfig,
     repo: Path,
@@ -755,6 +825,17 @@ def run_experiment(
                     )
                     writer.add_model_run(per_seed[-1])
 
+            if config.deep_signals.get("enabled", False):
+                _extract_deep_signals(
+                    writer,
+                    config,
+                    stream,
+                    stream_idx,
+                    seed,
+                    warm,
+                    host_runs_delay0,
+                )
+
             if config.detectors:
                 host_runs = host_runs_delay0
                 delta_max = delta_max_for(stream.meta["shape"], config.metrics)
@@ -854,6 +935,12 @@ def run_experiment(
         "per_seed": per_seed,
         "limits": {"limit": limit, "need_proba": need_proba},
     }
+    if config.deep_signals:
+        summary["deep_signals"] = {
+            "enabled": bool(config.deep_signals.get("enabled", False)),
+            "config": config.deep_signals,
+            "n_arrays": len(writer.signal_items()),
+        }
     writer.rewrite_rows(per_seed, episode_rows, detection_rows)
     writer.finalize(summary)
     writer.write_index_entry()

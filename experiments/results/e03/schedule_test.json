@@ -1,0 +1,60 @@
+{
+  "recovery_horizon": 30000,
+  "buffer_note": "Recovery lag is measured to the configured recovery horizon while damage_ref stays on the damage window. With a refit buffer longer than the retrain interval, lag is buffer-dominated and is not expected to be uniform over [0, every].",
+  "scheduled_phase_noise": [
+    {
+      "model": "scheduled_rf_1k",
+      "every": 1000,
+      "buffer_window": 12000,
+      "n": 14,
+      "mean_recovery": 6575.0,
+      "min_recovery": 2884.0,
+      "max_recovery": 12130.0,
+      "expected_uniform_mean": 500.0,
+      "ks_statistic": 1.0,
+      "ks_p_value": 0.0,
+      "uniform_not_rejected": false,
+      "note": "not uniform over the retrain interval; the refit buffer dominates the lag"
+    },
+    {
+      "model": "scheduled_rf_5k",
+      "every": 5000,
+      "buffer_window": 12000,
+      "n": 14,
+      "mean_recovery": 8926.642857142857,
+      "min_recovery": 4949.0,
+      "max_recovery": 13815.0,
+      "expected_uniform_mean": 2500.0,
+      "ks_statistic": 0.9898,
+      "ks_p_value": 2.6389575261256966e-28,
+      "uniform_not_rejected": false,
+      "note": "not uniform over the retrain interval; the refit buffer dominates the lag"
+    },
+    {
+      "model": "scheduled_rf_20k",
+      "every": 20000,
+      "buffer_window": 12000,
+      "n": 12,
+      "mean_recovery": 9683.0,
+      "min_recovery": 6056.0,
+      "max_recovery": 16849.0,
+      "expected_uniform_mean": 10000.0,
+      "ks_statistic": 0.3501666666666666,
+      "ks_p_value": 0.08066545255969881,
+      "uniform_not_rejected": true,
+      "note": "uniform phase not rejected"
+    }
+  ],
+  "model_aue": {
+    "frozen_rf": -0.00066,
+    "scheduled_rf_1k": -0.015960000000000002,
+    "scheduled_rf_5k": -0.00612,
+    "scheduled_rf_20k": -0.00018000000000000034,
+    "ht": -0.01658,
+    "hat": -0.04728,
+    "arf": -0.03578,
+    "lb": -0.04184,
+    "adwin_bagging": -0.02842,
+    "oracle_ref": 0.0
+  }
+}

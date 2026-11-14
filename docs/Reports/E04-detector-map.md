@@ -75,8 +75,10 @@ table, not against KDD tables.*
 
 ## 5. Findings
 
-1. **HDDM-A raw is a sensible default.** It wins all four shapes, keeps false
-   alarms below 0.031 per 1,000 examples, and catches 73–95% of changes.
+1. **HDDM-A raw is a sensible default on the static host and these synthetic
+   generators.** It wins all four shapes, keeps false alarms below 0.031 per
+   1,000 examples, and catches 73–95% of changes. The real-stream follow-up
+   (E17) shows this does not transfer to the adaptive host — see §8.
 2. **Recurring change is the hard case.** Its best balanced score is 0.50 with
    40% alarm precision: it rings often enough to catch changes, but also rings
    when the stream has only switched back to a concept it has seen before.
@@ -101,12 +103,16 @@ table, not against KDD tables.*
 
 - It is a **5-seed first pass**, not the pre-registered 11-seed matrix.
 - It uses **default detector settings**; no tuning. E05/S06 are for that.
-- It is **synthetic only**; no real streams, no label delay.
+- It is **synthetic only**; no real streams, no label delay. A first real-stream
+  check is E17 (one dataset, one injected mechanism), not a full external-validity
+  test.
 - The balanced score uses **episode recall**, not the KDD benchmark's
   multi-alarm recall. Raw counts are in `detections.jsonl` if a different
   definition is needed.
-- The E04 config has no acceptance rule, so the printed `"pass": true` is
-  vacuous. Do not quote it as a pass.
+- The E04 config has no acceptance rule, so the committed artifact's
+  `"pass": true` is vacuous. Do not quote it as a pass. The harness now reports
+  `pass: null` with an explicit "nothing was asserted" note for empty
+  `acceptance` blocks; the committed E04 artifact predates that fix.
 
 ## 7. Reproduce
 
@@ -120,3 +126,27 @@ uv run python -m experiments.run --exp e04 --figure-only
 `experiments/results/e04/detections.jsonl` (raw counts),
 `experiments/results/e04/detector_report.json` (**corrected report**),
 `experiments/results/e04/figures/`.
+
+## 8. Follow-up — E17 on real Elec2 (2026-11-13)
+
+The synthetic default is **host-conditional** on real data. Eight detectors were
+replayed on 45,312 real Elec2 records, shuffled per seed, with a known label-swap
+drift injected at `τ = 22,656`; five seeds, the same two hosts.
+
+| Drift shape | HDDM-A, static HT | ADWIN, static HT | HDDM-A, adaptive HAT | ADWIN, adaptive HAT |
+|---|---:|---:|---:|---:|
+| Abrupt | **0.933** | 0.452 | 0.400 | **1.000** |
+| Gradual | **0.960** | 0.495 | 1.000 | 1.000 |
+| Incremental | **0.960** | 0.842 | **1.000** | 0.971 |
+| Recurring | **0.787** | 0.508 | 0.593 | **0.770** |
+
+On the static Hoeffding Tree, HDDM-A repeats the four-shape win. On the adaptive
+HAT it does not: ADWIN wins abrupt and recurring, ties gradual, and loses only
+incremental. The best-host mean F1 is ADWIN **0.935** vs HDDM-A **0.910**. The
+one-sided Hoeffding test can miss an abrupt change that the adaptive learner
+repairs quickly; ADWIN's two-sided window comparison still sees it. Recurring
+remains the hard case.
+
+Five seeds, one dataset and one injected mechanism: this is a warning about the
+scope of the E04 claim, not a final ranking. Full write-up:
+[`E17-real-detector-map.md`](E17-real-detector-map.md).

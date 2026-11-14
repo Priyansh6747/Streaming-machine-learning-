@@ -113,10 +113,13 @@ def evaluate_window(
     band: float = 0.95,
     stretch: int = 500,
     shift: int = 0,
+    recovery_horizon: int | None = None,
 ) -> WindowMetrics:
     n = len(kappa)
     analysis_lo = max(0, episode.start + shift)
     hi = min(n, analysis_lo + max(1, window))
+    horizon = max(1, window, int(recovery_horizon or 0))
+    recovery_hi = min(n, analysis_lo + horizon)
     segment = np.asarray(kappa[analysis_lo:hi], dtype=float)
     finite = np.isfinite(segment)
 
@@ -160,7 +163,7 @@ def evaluate_window(
     recovery_sample = None
     if exit_sample is not None:
         run = 0
-        for t in range(exit_sample, hi):
+        for t in range(exit_sample, recovery_hi):
             value = kappa[t]
             if np.isfinite(value) and value >= threshold:
                 run += 1

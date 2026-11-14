@@ -2,7 +2,7 @@
   "schema": "driftlab/2",
   "exp_id": "e01",
   "config_hash": "59f2cd79598f6bca82c00882bb6f680b552b9669485467cc09e9ef567ec834d6",
-  "git_sha": "dc974c0dde5f8a67e14bb8466bf5c15690315698",
+  "git_sha": "ed2c144e91bcea99f33635f4cee220ee4158f4c0",
   "versions": {
     "python": "3.12.3",
     "river": "0.25.0",
@@ -12,7 +12,8 @@
     "scipy": "1.18.1",
     "deep_river": "0.3.4"
   },
-  "started_unix": 1794478291.4448533,
+  "started_unix": 1794500512.0635083,
+  "resumed": false,
   "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
   "argv": [
     "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",

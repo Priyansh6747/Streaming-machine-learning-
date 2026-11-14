@@ -12,7 +12,7 @@ learners (DeepRiver) as the experimental subject.
 | Status | |
 |---|---|
 | Phase 0 — research & literature | ✅ complete |
-| Phase 1 — experimentation | 🔬 three concluded: single-seed pilot, 11-seed sweep, **E01 corrected metric**; **E04 detector map first pass**; baseline ladder and Delay Tax next |
+| Phase 1 — experimentation | 🔬 concluded: single-seed pilot, 11-seed sweep, **E01 corrected metric**, **E04 detector map**, **E17 real-stream detector check**, **KDD'26 six-detector reproduction**; **DF-H detector track (E18–E21) is the new ultimate goal** |
 
 ---
 
@@ -92,12 +92,12 @@ rerunning the identical experiment on **11 seeds**. The frozen model recovered o
 **none of the eleven**. The original damage-area metric reported **294×**, but E01
 showed that was an **upper bound**: the integral was truncated on seeds where the
 recovery rule collapsed. The corrected metric uses a fixed 5,000-sample window and
-a shared reference level: **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ — a
-**≈ 7.1×** gap (**≈ 11.6×** over the rest of the stream). The worst streaming seed
-beats the best frozen seed by only **1.27×**, so the old **24×** worst-case claim
-is retired too. Recovery is **7/11** seeds with a real excursion (177–4,462
-samples); the old 835 was seed luck. The claim generalised; the magnitude did not
-— which is the honest version of the result.
+a shared reference level: **74.8 ± 61.8** vs **515.0 ± 97.1** samples·κ — a
+**≈ 6.9×** gap (**≈ 10.8×** over the rest of the stream). On the clean panel the
+worst streaming seed (217.9) is **0.74×** the best frozen seed (295.2), so the old
+**24×** worst-case claim is retired too. Recovery is **8/11** seeds with a real
+excursion (285–4,279 samples); the old 835 was seed luck. The claim generalised;
+the magnitude did not — which is the honest version of the result.
 
 ![E01 corrected metric: damage_ref and AUE per model](docs/Phase1:Experimentation/figures/e01-metric-v2-model-comparison.png)
 
@@ -116,31 +116,46 @@ the new concept is.*
 ![Exp-01 measured recovery time and legacy damage area](docs/Phase1:Experimentation/figures/exp01-damage-area-vs-recovery.png)
 
 The detector map (E04, 5-seed first pass) then asked which early-warning signal
-catches which kind of change. Across four generators, four drift shapes, two hosts
-and eight detectors, **HDDM-A on the raw mistake stream is the best default for all
-four shapes**; recurring drift is the hard case (balanced score 0.50) and
-incremental is the easiest (0.88). Smoothing the mistake signal raises false alarms
-without improving the ranking. The full 11-seed matrix and detector tuning are next.
+catches which kind of change. Across four synthetic generators, four drift shapes,
+two hosts and eight detectors, **HDDM-A on the raw mistake stream is the best
+default on the static host**; recurring drift is the hard case (balanced score
+0.50) and incremental is the easiest (0.88). The real-stream check (E17, Elec2,
+five seeds) repeats that four-shape win on the static host
+(0.93/0.96/0.96/0.79), but on the adaptive HAT host **ADWIN wins abrupt (1.00 vs
+0.40) and recurring (0.77 vs 0.59)**; the best-host mean is ADWIN 0.935 vs
+HDDM-A 0.910. The default is therefore **host-conditional**, not universal.
+Smoothing the mistake signal raises false alarms without improving the ranking.
+The 7-dataset KDD'26 reproduction is no longer hypothetical: a 50-trial,
+six-detector run ranks **SEED/STEPD at 2.12** and **HDDM-A at 3.87**,
+reproducing the paper's tables. The ABCD/ABCD(X) arm is cited from the paper
+rather than re-run; the full 11-seed matrix and detector tuning are still next.
 
-Honest caveat: these experiments use one deliberately simple synthetic stream family,
-two-to-eight models, no scheduled-retrain baseline and no label delay — existence
-evidence and a first map, not yet a field-wide claim. Real datasets, the full baseline
-ladder and the Delay Tax are the next step (below).
+Honest caveat: the main recovery experiments use one deliberately simple synthetic
+stream family; the detector check adds one real dataset (E17) but still has no
+scheduled-retrain baseline and no label delay — existence evidence and a first map,
+not yet a field-wide claim. Real datasets beyond E17, the full baseline ladder and
+the Delay Tax are the next step (below).
 
 ---
 
 ## Where this is going
 
-1. **Real drifting datasets** — Elec2, Phishing, Forest Covertype, Airlines,
-   CreditCard fraud — where drift has no ground-truth timestamp and the win must be
-   shown on post-dip behaviour instead.
-2. **The full baseline ladder** — frozen, scheduled-retrain, and oracle-tuned batch,
-   reported side by side so no one can accuse us of picking an easy opponent.
-3. **Real statistics** — ✅ the ≥10-seed requirement is met (Exp-02 ran 11 seeds on
-   one stream); what remains is Friedman + Nemenyi *across datasets and learners*,
-   with honest effect sizes, to turn the seed sweep into cross-dataset significance.
-4. **The Delay Tax itself** — label-delay sweeps (the STUDD-style experiment), where
-   batch retraining starves and streaming must keep working on yesterday's labels.
+1. **DF-H — the ultimate goal.** A two-stage detector that combines a label-free
+   deep monitor (SSL loss, embedding shift, head disagreement) with supervised
+   confirmation (SEED/STEPD/ADWIN/HDDM-A). The target is **top-2 on the KDD'26
+   benchmark**, with wins on feature-permutation/filtering and recurring drift,
+   and no worse false alarms than ADWIN.
+2. **The signal gate.** Before any benchmark run, measure whether the deep
+   signals actually beat the raw error-rate baseline on held-out data. If they
+   do not, the deep track falls back to a classical feature monitor.
+3. **The Delay Tax benchmark.** Fixed, stochastic, partial, selective and batch
+   labels; DF-H vs the strong scalar detectors; lemmas 1–3 measured. This is the
+   novel contribution and the part no published benchmark covers.
+4. **The final report.** Re-centred on the detector: measurement lab → DF-H
+   benchmark → delay-tax results → minimal system/demo.
+
+The older breadth-first experiments (E05, E08–E13) are deferred; E15 is replaced
+by E21. The full plan is [Roadmap v2](docs/Reports/Roadmap-v2.md).
 
 ---
 

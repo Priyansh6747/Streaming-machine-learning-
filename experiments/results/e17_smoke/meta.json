@@ -1,0 +1,212 @@
+{
+  "schema": "driftlab/2",
+  "exp_id": "e17",
+  "config_hash": "80806571e70839b6cd679fc25bde562c06b5048ac886d259a3b780b1a383f58a",
+  "git_sha": "ed2c144e91bcea99f33635f4cee220ee4158f4c0",
+  "versions": {
+    "python": "3.12.3",
+    "river": "0.25.0",
+    "torch": "2.5.1+cu124",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "deep_river": "0.3.4"
+  },
+  "started_unix": 1794570458.719809,
+  "resumed": false,
+  "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
+  "argv": [
+    "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",
+    "--exp",
+    "e17",
+    "--seeds",
+    "0",
+    "--limit",
+    "4000",
+    "--out",
+    "experiments/results/e17_smoke"
+  ],
+  "config": {
+    "exp_id": "e17",
+    "title": "Detector map on a real stream (Elec2)",
+    "description": "The E04 detector matrix replayed on River's Elec2 electricity-market stream: real features and labels, 45,312 records. Rows are shuffled per seed and a known label-swap drift is injected at a fixed position in each of the four temporal shapes, so detection ground truth stays exact while the error stream keeps real-world class overlap and noise.\n",
+    "streams": [
+      {
+        "generator": "elec2",
+        "shape": "abrupt",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 22656,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1
+        },
+        "episodes": [
+          {
+            "start": 22656,
+            "end": 22656,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "elec2",
+        "shape": "gradual",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 22656,
+        "position_jitter": 0,
+        "width": 2000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1
+        },
+        "episodes": [
+          {
+            "start": 22656,
+            "end": 24656,
+            "kind": "gradual"
+          }
+        ]
+      },
+      {
+        "generator": "elec2",
+        "shape": "incremental",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 22656,
+        "position_jitter": 0,
+        "width": 10000,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1,
+          "n_steps": 10
+        },
+        "episodes": [
+          {
+            "start": 22656,
+            "end": 32656,
+            "kind": "incremental"
+          }
+        ]
+      },
+      {
+        "generator": "elec2",
+        "shape": "recurring",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 22656,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1
+        },
+        "episodes": [
+          {
+            "start": 22656,
+            "end": 22656,
+            "kind": "recurring"
+          },
+          {
+            "start": 30656,
+            "end": 30656,
+            "kind": "recurring"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "id": "ht",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingTreeClassifier"
+        }
+      },
+      {
+        "id": "hat",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingAdaptiveTreeClassifier"
+        }
+      }
+    ],
+    "detectors": [
+      "adwin",
+      "kswin",
+      "page_hinkley",
+      "ddm",
+      "eddm",
+      "fhddm",
+      "hddm_a",
+      "hddm_w"
+    ],
+    "detector_hosts": [
+      "ht",
+      "hat"
+    ],
+    "detector_channels": [
+      "raw",
+      "ewma"
+    ],
+    "detector_delays": [
+      0
+    ],
+    "model_delays": [
+      0
+    ],
+    "metrics": {
+      "rolling_window": 1000,
+      "band": 0.95,
+      "stretch": 500,
+      "window": 5000,
+      "recovery_horizon": null,
+      "delta_max": {
+        "abrupt": 1000,
+        "gradual": 2000,
+        "incremental": 4000,
+        "recurring": 2000
+      },
+      "ewma_alpha": 0.01
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "acceptance": {}
+  }
+}

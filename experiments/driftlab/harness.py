@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import time
 from dataclasses import dataclass, replace
@@ -562,7 +563,8 @@ def _acceptance_verdicts(
     elif checks:
         verdicts["pass"] = all(checks)
     else:
-        verdicts["pass"] = True
+        verdicts["pass"] = None
+        verdicts["note"] = "no acceptance rules defined; nothing was asserted"
     return verdicts
 
 
@@ -573,27 +575,55 @@ def run_experiment(
     limit: int | None = None,
     seeds: Sequence[int] | None = None,
     need_proba: bool | None = None,
+    resume: bool = False,
 ) -> dict[str, Any]:
     out = Path(out_dir) if out_dir else repo / "experiments" / "results" / config.exp_id
+    if resume and (out / "meta.json").exists():
+        existing = json.loads((out / "meta.json").read_text())
+        if existing.get("config_hash") != config.config_hash:
+            raise SystemExit(
+                f"{out}: config hash changed; rerun without --resume or use --out"
+            )
     writer = ArtifactWriter(
         exp_id=config.exp_id,
         out_dir=out,
         repo=repo,
         config=config.as_dict(),
         config_hash=config.config_hash,
+        resume=resume,
     )
     writer.write_meta()
     seeds = list(seeds) if seeds else list(config.seeds)
     need_proba = bool(config.raw.get("need_proba", True)) if need_proba is None else need_proba
     model_specs = _ensure_host_specs(config)
+    allowed_units = {
+        f"s{stream_idx}_seed{seed}"
+        for stream_idx in range(len(config.streams))
+        for seed in seeds
+    }
 
     per_seed: list[dict[str, Any]] = []
     episode_rows: list[dict[str, Any]] = []
     detection_rows: list[dict[str, Any]] = []
-    done_seeds: list[int] = []
+    if resume:
+        cached_models, cached_episodes, cached_detections = writer.load_seed_caches(
+            allowed_units
+        )
+        per_seed.extend(cached_models)
+        episode_rows.extend(cached_episodes)
+        detection_rows.extend(cached_detections)
+    completed = writer.completed_units() & allowed_units if resume else set()
+    done_units: list[str] = sorted(completed)
 
     for stream_idx, stream_cfg in enumerate(config.streams):
         for seed in seeds:
+            unit = f"s{stream_idx}_seed{seed}"
+            if unit in completed:
+                print(f"[{config.exp_id}] skip {unit} (cached)", flush=True)
+                continue
+            model_start = len(per_seed)
+            episode_start = len(episode_rows)
+            detection_start = len(detection_rows)
             print(
                 f"[{config.exp_id}] stream {stream_idx + 1}/{len(config.streams)} "
                 f"{stream_cfg.generator}/{stream_cfg.shape} seed {seed}",
@@ -676,6 +706,11 @@ def run_experiment(
                             band=float(config.metrics["band"]),
                             stretch=int(config.metrics["stretch"]),
                             shift=delay,
+                            recovery_horizon=(
+                                int(config.metrics["recovery_horizon"])
+                                if config.metrics.get("recovery_horizon")
+                                else None
+                            ),
                         )
                         row = {
                             "stream": stream_idx,
@@ -768,20 +803,29 @@ def run_experiment(
                             writer.add_detection(row)
                             detection_rows.append(row)
 
-            done_seeds.append(seed)
+            writer.save_seed_cache(
+                unit,
+                {
+                    "models": per_seed[model_start:],
+                    "episodes": episode_rows[episode_start:],
+                    "detections": detection_rows[detection_start:],
+                },
+                f"{unit}_",
+            )
+            done_units.append(unit)
             writer.write_partial(
                 {
                     "status": "in progress",
                     "stream": stream_idx,
                     "streams_total": len(config.streams),
                     "seed": seed,
-                    "seeds_done": list(done_seeds),
+                    "units_done": list(done_units),
                     "models_done": len(per_seed),
                     "episodes": len(episode_rows),
                     "detections": len(detection_rows),
                 }
             )
-            print(f"[{config.exp_id}] seed {seed} done", flush=True)
+            print(f"[{config.exp_id}] {unit} done", flush=True)
 
     model_summary = _summarize_models(per_seed)
     detector_summary, detector_by_shape = _summarize_detections(detection_rows)
@@ -810,6 +854,7 @@ def run_experiment(
         "per_seed": per_seed,
         "limits": {"limit": limit, "need_proba": need_proba},
     }
+    writer.rewrite_rows(per_seed, episode_rows, detection_rows)
     writer.finalize(summary)
     writer.write_index_entry()
     return summary

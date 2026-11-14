@@ -8,6 +8,7 @@ report recomputes precision, recall and F1 from the raw TP/FP/episode counts in
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -42,8 +43,11 @@ def _mean(items: list[dict], key: str) -> float | None:
     return float(np.mean(values)) if values else None
 
 
-def main() -> int:
-    exp_dir = REPO / "experiments" / "results" / "e04"
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Recompute detector metrics from detections.jsonl")
+    parser.add_argument("--exp", default="e04", help="experiment id (default: e04)")
+    args = parser.parse_args(argv)
+    exp_dir = REPO / "experiments" / "results" / args.exp
     rows = [
         json.loads(line)
         for line in (exp_dir / "detections.jsonl").read_text().splitlines()

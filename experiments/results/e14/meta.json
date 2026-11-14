@@ -1,0 +1,201 @@
+{
+  "schema": "driftlab/2",
+  "exp_id": "e14",
+  "config_hash": "8190e9f708c712be3b97f903ad18cf7dc4cd4063445380bff99a4590facd01ab",
+  "git_sha": "ed2c144e91bcea99f33635f4cee220ee4158f4c0",
+  "versions": {
+    "python": "3.12.3",
+    "river": "0.25.0",
+    "torch": "2.5.1+cu124",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "deep_river": "0.3.4"
+  },
+  "started_unix": 1794579875.24696,
+  "resumed": false,
+  "platform": "Linux-7.1.5-76070105-generic-x86_64-with-glibc2.39",
+  "argv": [
+    "/home/sovereign/Documents/Obsidian Vault/major/experiments/run.py",
+    "--exp",
+    "e14",
+    "--seeds",
+    "0-4",
+    "--device",
+    "cuda"
+  ],
+  "config": {
+    "exp_id": "e14",
+    "title": "External validity on real streams",
+    "description": "River's offline Phishing data and Elec2 (small download), shuffled and then injected with label-swap or feature-permutation drift at a known point, using the KDD-2026 simulation protocol.\n",
+    "streams": [
+      {
+        "generator": "elec2",
+        "shape": "abrupt",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1
+        },
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "elec2",
+        "shape": "abrupt",
+        "n_samples": 45312,
+        "warm_up": 9062,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 30000,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "feature_permutation",
+        "params": {},
+        "episodes": [
+          {
+            "start": 30000,
+            "end": 30000,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "phishing",
+        "shape": "abrupt",
+        "n_samples": 1250,
+        "warm_up": 250,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 625,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "label_swap",
+        "params": {
+          "swap_from": 0,
+          "swap_to": 1
+        },
+        "episodes": [
+          {
+            "start": 625,
+            "end": 625,
+            "kind": "abrupt"
+          }
+        ]
+      },
+      {
+        "generator": "phishing",
+        "shape": "abrupt",
+        "n_samples": 1250,
+        "warm_up": 250,
+        "noise": 0.0,
+        "seed": 0,
+        "position": 625,
+        "position_jitter": 0,
+        "width": 0,
+        "period": 8000,
+        "n_episodes": 2,
+        "concept_a": null,
+        "concept_b": null,
+        "mechanism": "feature_permutation",
+        "params": {},
+        "episodes": [
+          {
+            "start": 625,
+            "end": 625,
+            "kind": "abrupt"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "id": "frozen_rf",
+        "type": "frozen_rf",
+        "params": {
+          "n_estimators": 100
+        }
+      },
+      {
+        "id": "arf",
+        "type": "river",
+        "params": {
+          "class": "ARFClassifier"
+        }
+      },
+      {
+        "id": "hat",
+        "type": "river",
+        "params": {
+          "class": "HoeffdingAdaptiveTreeClassifier"
+        }
+      },
+      {
+        "id": "driftformer",
+        "type": "driftformer",
+        "params": {
+          "block_size": 32,
+          "d_model": 64,
+          "n_layers": 2,
+          "ssl_weight": 0.3,
+          "device": "cuda"
+        }
+      }
+    ],
+    "detectors": [],
+    "detector_hosts": [],
+    "detector_channels": [],
+    "detector_delays": [
+      0
+    ],
+    "model_delays": [
+      0
+    ],
+    "metrics": {
+      "rolling_window": 200,
+      "band": 0.95,
+      "stretch": 100,
+      "window": 600,
+      "recovery_horizon": null,
+      "delta_max": {
+        "abrupt": 1000,
+        "gradual": 2000,
+        "incremental": 4000,
+        "recurring": 2000
+      },
+      "ewma_alpha": 0.01
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "acceptance": {}
+  }
+}

@@ -60,6 +60,7 @@ metrics:
   band: 0.95
   stretch: 500
   window: 5000
+  recovery_horizon: 30000
 acceptance:
   baseline_model: scheduled_rf_5k
   treatment_model: arf

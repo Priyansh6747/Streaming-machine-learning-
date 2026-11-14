@@ -1,0 +1,49 @@
+{
+  "protocol": "KDD-2026 drift detection benchmark (reproduction)",
+  "datasets": [
+    "Asfault",
+    "Covtype",
+    "Electricity",
+    "GasSensorArray",
+    "NOAA",
+    "Posture",
+    "Rialto"
+  ],
+  "missing": [],
+  "drift_types": [
+    "class_prior",
+    "label_swap",
+    "feature_permutation",
+    "feature_filtering"
+  ],
+  "transitions": [
+    "abrupt",
+    "gradual"
+  ],
+  "trials": 10,
+  "detectors": [
+    "ADWIN",
+    "DDM",
+    "HDDMAverage",
+    "HDDMWeighted",
+    "SEED",
+    "STEPD"
+  ],
+  "signal": "correct",
+  "gradual_anchor": "code",
+  "params": "hypertuned",
+  "max_instances": 100000,
+  "seed": 12,
+  "workers": 12,
+  "start_method": "fork",
+  "jvm_xmx": "512m",
+  "started": "2026-11-13T20:01:08",
+  "command": "/home/sovereign/Documents/Obsidian Vault/major/experiments/kdd_bench.py run --datasets all --trials 10 --workers 12 --detectors ADWIN,DDM,HDDMAverage,HDDMWeighted,SEED,STEPD --signal correct --gradual-anchor code --out experiments/results/kdd_bench_codeconfig",
+  "git_sha": "ed2c144",
+  "capymoa_version": "0.15.1",
+  "numpy_version": "2.4.6",
+  "finished": "2026-11-13T20:04:20",
+  "n_rows": 3360,
+  "n_tasks_completed": 560,
+  "n_task_failures": 0
+}

@@ -15,6 +15,7 @@ DEFAULT_METRICS: dict[str, Any] = {
     "band": 0.95,
     "stretch": 500,
     "window": 5_000,
+    "recovery_horizon": None,
     "delta_max": {
         "abrupt": 1_000,
         "gradual": 2_000,

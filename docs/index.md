@@ -78,7 +78,6 @@ The model is never "finished" — it is permanently mid-training.
 
 - [Landscape](Phase0:Research/research/01-landscape.md)
 - [Delayed labels](Phase0:Research/research/02-delayed-labels.md)
-- [Perplexity prompts](Phase0:Research/research/perplexity-prompts.md)
 
 **Exploratory bridges** (adjacent areas considered): see
 [explore/README](Phase0:Research/explore/README.md).
@@ -87,14 +86,22 @@ The model is never "finished" — it is permanently mid-training.
 
 ### Phase 1 — Experimentation
 
+- [Roadmap v2 — DF-H](Reports/Roadmap-v2.md)
+  — the new ultimate goal: a label-free deep monitor plus supervised
+  confirmation, targeting the KDD'26 detector benchmark and the delayed-label
+  setting.
 - [E01 — Metric v2 correction](Reports/E01-metric-v2.md)
   — the **current** headline: frozen recovered **0/11**, DeepRiver's corrected
-  `damage_ref` is **70.6 vs 504.4** samples·κ (**≈7.1×**), and the legacy **294×**
+  `damage_ref` is **74.8 vs 515.0** samples·κ (**≈6.9×**), and the legacy **294×**
   is retired as an upper bound.
 - [E04 — Detector map](Reports/E04-detector-map.md)
-  — eight detectors across four drift shapes and four generators; **HDDM-A on the
-  raw signal is the best default**, recurring drift is the hard case, and smoothing
-  raises false alarms.
+  — the synthetic map: eight detectors across four drift shapes and four
+  generators; **HDDM-A on the raw signal is the best default on the static host**,
+  recurring drift is the hard case, and smoothing raises false alarms.
+- [E17 — Real-stream detector map](Reports/E17-real-detector-map.md)
+  — the same eight detectors on real Elec2 records; HDDM-A keeps its four-shape
+  win on the static host, but **ADWIN wins abrupt and recurring on the adaptive
+  host**, so the default is host-conditional.
 - [Exp-01: DeepRiver rolling vs frozen batch on SEA](Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md)
   — the first atomic experiment (legacy metric; superseded by E01).
 - [Exp-02: the 11-seed sweep](Phase1:Experimentation/exp02-seed-sweep-sea.md)

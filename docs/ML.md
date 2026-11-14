@@ -628,8 +628,8 @@ never recovers — always integrates the full window.
    (frozen). Both the **294×** mean ratio and the **24×** worst-vs-best ratio were
    **upper bounds**; both are **retired**.
 2. E01 corrected it with a fixed 5,000-sample window and a panel-shared `κ_ref`:
-   `damage_ref` **70.6 ± 66.5** vs **504.4 ± 104.1** (**≈7.1×**); `damage_full`
-   **293.9 vs 3,408.1** (**≈11.6×**); worst-vs-best **1.27×**. See
+   `damage_ref` **74.8 ± 61.8** vs **515.0 ± 97.1** (**≈6.9×**); `damage_full`
+   **321.4 vs 3,472.9** (**≈10.8×**); worst-vs-best **0.74×**. See
    [`Reports/E01-metric-v2.md`](Reports/E01-metric-v2.md).
 3. The claim that "damage area and dip depth are the trustworthy metrics" is **too
    generous** — the legacy damage area was *defined in terms of* the same τ-anchored

@@ -1,0 +1,15 @@
+{
+  "status": "in progress",
+  "stream": 3,
+  "streams_total": 4,
+  "seed": 0,
+  "units_done": [
+    "s0_seed0",
+    "s1_seed0",
+    "s2_seed0",
+    "s3_seed0"
+  ],
+  "models_done": 12,
+  "episodes": 15,
+  "detections": 88
+}

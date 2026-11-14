@@ -3,20 +3,20 @@
   "stream": 0,
   "streams_total": 1,
   "seed": 9,
-  "seeds_done": [
-    42,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9
+  "units_done": [
+    "s0_seed42",
+    "s0_seed0",
+    "s0_seed1",
+    "s0_seed2",
+    "s0_seed3",
+    "s0_seed4",
+    "s0_seed5",
+    "s0_seed6",
+    "s0_seed7",
+    "s0_seed8",
+    "s0_seed9"
   ],
-  "models_done": 55,
-  "episodes": 55,
+  "models_done": 33,
+  "episodes": 33,
   "detections": 0
 }

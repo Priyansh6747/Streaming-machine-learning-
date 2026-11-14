@@ -1,0 +1,77 @@
+exp_id: e17
+title: "Detector map on a real stream (Elec2)"
+description: >
+  The E04 detector matrix replayed on River's Elec2 electricity-market stream:
+  real features and labels, 45,312 records. Rows are shuffled per seed and a
+  known label-swap drift is injected at a fixed position in each of the four
+  temporal shapes, so detection ground truth stays exact while the error stream
+  keeps real-world class overlap and noise.
+seeds: "0-4"
+need_proba: false
+streams:
+  - generator: elec2
+    shape: abrupt
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    width: 0
+    period: 8000
+    n_episodes: 2
+    mechanism: label_swap
+    params: {swap_from: 0, swap_to: 1}
+  - generator: elec2
+    shape: gradual
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    width: 2000
+    period: 8000
+    n_episodes: 2
+    mechanism: label_swap
+    params: {swap_from: 0, swap_to: 1}
+  - generator: elec2
+    shape: incremental
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    width: 10000
+    period: 8000
+    n_episodes: 2
+    mechanism: label_swap
+    params: {swap_from: 0, swap_to: 1, n_steps: 10}
+  - generator: elec2
+    shape: recurring
+    n_samples: 45312
+    warm_up: 9062
+    noise: 0.0
+    position: 22656
+    width: 0
+    period: 8000
+    n_episodes: 2
+    mechanism: label_swap
+    params: {swap_from: 0, swap_to: 1}
+models:
+  - id: ht
+    type: river
+    params: {class: HoeffdingTreeClassifier}
+  - id: hat
+    type: river
+    params: {class: HoeffdingAdaptiveTreeClassifier}
+detectors: [adwin, kswin, page_hinkley, ddm, eddm, fhddm, hddm_a, hddm_w]
+detector_hosts: [ht, hat]
+detector_channels: [raw, ewma]
+metrics:
+  rolling_window: 1000
+  band: 0.95
+  stretch: 500
+  window: 5000
+  ewma_alpha: 0.01
+  delta_max:
+    abrupt: 1000
+    gradual: 2000
+    incremental: 4000
+    recurring: 2000
+acceptance: {}

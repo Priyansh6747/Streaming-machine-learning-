@@ -4,4 +4,5 @@ site/
 __pycache__/
 experiments/checkpoints/
 experiments/results/**/cache/
+experiments/data/kdd/
 data/raw/

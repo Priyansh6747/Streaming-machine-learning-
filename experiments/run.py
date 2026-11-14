@@ -30,6 +30,17 @@ def _resolve_config(value: str) -> Path:
     raise SystemExit(f"no config found for {value!r} in {registry}")
 
 
+def _apply_device_override(config, device: str) -> None:
+    """Point the deep models at a torch device without editing YAML."""
+    for spec in config.models:
+        params = spec.get("params")
+        if params is None:
+            params = {}
+            spec["params"] = params
+        if "device" in params or str(spec.get("type")) in {"driftformer", "deepriver_rolling"}:
+            params["device"] = device
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a DriftLab experiment")
     parser.add_argument("--exp", help="registry id or prefix (e.g. e01)")
@@ -37,17 +48,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seeds", help="override seeds: '42', '0-10', or '0,1,2'")
     parser.add_argument("--limit", type=int, default=None, help="stream length override (smoke test)")
     parser.add_argument("--out", help="output directory override")
+    parser.add_argument(
+        "--device",
+        help="override torch device for deep models: auto, cpu, cuda, cuda:0",
+    )
     parser.add_argument("--need-proba", dest="need_proba", action="store_true", default=None)
     parser.add_argument("--no-proba", dest="need_proba", action="store_false")
     parser.add_argument("--summary-only", action="store_true", help="print the summary and exit")
     parser.add_argument("--figure-only", action="store_true", help="re-render figures from a committed artifact")
     parser.add_argument("--report", action="store_true", help="print a compact report from the artifact")
+    parser.add_argument("--resume", action="store_true", help="resume a run from cached seed units")
     args = parser.parse_args(argv)
 
     if not args.exp and not args.config:
         parser.error("one of --exp or --config is required")
     config_path = Path(args.config) if args.config else _resolve_config(args.exp)
     config = load_config(config_path)
+    if args.device:
+        _apply_device_override(config, args.device)
+        print(f"device override: {args.device}", flush=True)
     seeds = parse_seeds(args.seeds) if args.seeds else None
     repo = Path(__file__).resolve().parents[1]
     out = Path(args.out) if args.out else repo / "experiments" / "results" / config.exp_id
@@ -85,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
         limit=args.limit,
         seeds=seeds,
         need_proba=args.need_proba,
+        resume=args.resume,
     )
     print(json.dumps(summary.get("acceptance", {}), indent=2, default=str))
     if args.summary_only:

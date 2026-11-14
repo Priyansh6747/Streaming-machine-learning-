@@ -1,7 +1,7 @@
 # E01 — Metric v2 correction (Exp-01/02 revision)
 
-**Status:** concluded (current artifact uses a four-model shared reference; a clean
-two-model rerun is pending) · **Artifact:** `experiments/results/e01/` ·
+**Status:** concluded (clean three-model panel: DeepRiver, frozen RF, timing
+oracle) · **Artifact:** `experiments/results/e01/` ·
 **Command:** `uv run python -m experiments.run --exp e01`
 
 ---
@@ -47,51 +47,52 @@ band is `0.95·κ_ref` with a 500-sample stretch.
 | Frozen | `RandomForestClassifier(100)`, fit once on the warm-up |
 | Oracle | RF refit at `τ` on the last 12k pre-drift samples (knows *when*) |
 
-The official row is DeepRiver vs frozen. The current artifact also contains
-HT/HAT because of a host-default bug that has since been fixed; the clean rerun
-will contain only DeepRiver, frozen, and the oracle.
+The panel is DeepRiver, frozen RF, and the timing oracle. The earlier artifact
+that also contained HT/HAT — caused by a host-default bug that has since been
+fixed — is archived at `experiments/results/_archive/e01_5model/`; every number
+below comes from the clean rerun.
 
 ## 4. Results
 
 ### 4.1 Aggregate, 11 seeds
 
-| Metric | DeepRiver | Frozen RF | Timing oracle | HT | HAT |
-|---|---:|---:|---:|---:|---:|
-| Full-run accuracy | **0.8830 ± 0.0021** | 0.8539 ± 0.0017 | 0.8540 ± 0.0016 | 0.8722 ± 0.0019 | 0.8730 ± 0.0030 |
-| Full-run Cohen κ | **0.7530 ± 0.0044** | 0.6850 ± 0.0035 | 0.6855 ± 0.0033 | 0.7270 ± 0.0043 | 0.7285 ± 0.0062 |
-| AUE | **−0.0472 ± 0.0058** | +0.0010 ± 0.0027 | 0 (reference) | −0.0052 ± 0.0024 | −0.0094 ± 0.0066 |
-| **`damage_ref`** (5k window) | **70.6 ± 66.5** | **504.4 ± 104.1** | 494.4 ± 103.2 | 457.0 ± 99.3 | 414.5 ± 94.5 |
-| `damage_full` (rest of stream) | **293.9 ± 210.8** | **3,408.1 ± 583.4** | 3,360.6 ± 528.7 | 1,201.7 ± 550.3 | 968.6 ± 357.1 |
-| Recovery rate | **7/11 (0.636)** | **0/11 (0.000)** | 0/11 | 1/11 | 1/11 |
-| Recovery time, recovered seeds | 177–4,462; mean 2,017 | never | never | 3,302 | 3,380 |
+| Metric | DeepRiver | Frozen RF | Timing oracle |
+|---|---:|---:|---:|
+| Full-run accuracy | **0.8830 ± 0.0021** | 0.8539 ± 0.0017 | 0.8543 ± 0.0016 |
+| Full-run Cohen κ | **0.7530 ± 0.0044** | 0.6850 ± 0.0035 | 0.6860 ± 0.0033 |
+| AUE | **−0.0472 ± 0.0058** | +0.0010 ± 0.0027 | 0 (reference) |
+| **`damage_ref`** (5k window) | **74.8 ± 61.8** | **515.0 ± 97.1** | 505.0 ± 97.6 |
+| `damage_full` (rest of stream) | **321.4 ± 203.8** | **3,472.9 ± 559.7** | 3,425.4 ± 506.8 |
+| Recovery rate | **8/11 (0.727)** | **0/11 (0.000)** | 0/11 |
+| Recovery time, recovered seeds | 285–4,279; mean 1,502 | never | never |
 
 ![E01 metric v2 — damage_ref and AUE per model](../Phase1:Experimentation/figures/e01-metric-v2-model-comparison.png)
 
 *The two panels are deliberately separate: `damage_ref` is the primary damage
 metric, AUE is the excess over the timing oracle. AUE is negative for DeepRiver
-because the timing oracle is weak (its `damage_ref` is 494, almost identical to
+because the timing oracle is weak (its `damage_ref` is 505, almost identical to
 frozen), not because DeepRiver is impossible.*
 
 ### 4.2 Per-seed `damage_ref`
 
 | Seed | DeepRiver | Frozen RF |
 |---:|---:|---:|
-| 42 | 47.8 | 503.9 |
-| 0 | 15.2 | 366.6 |
-| 1 | 13.6 | 501.3 |
-| 2 | 34.5 | 484.2 |
-| 3 | 165.4 | 571.6 |
-| 4 | 42.8 | 504.8 |
-| 5 | 87.4 | 585.8 |
-| 6 | 22.2 | 284.8 |
-| 7 | 56.9 | 560.2 |
-| 8 | 66.4 | 519.0 |
-| 9 | 224.1 | 666.3 |
-| **mean ± SD** | **70.6 ± 66.5** | **504.4 ± 104.1** |
+| 42 | 51.7 | 514.2 |
+| 0 | 25.1 | 402.6 |
+| 1 | 13.1 | 498.5 |
+| 2 | 46.1 | 509.5 |
+| 3 | 159.6 | 565.9 |
+| 4 | 55.4 | 522.5 |
+| 5 | 80.1 | 578.2 |
+| 6 | 24.8 | 295.2 |
+| 7 | 71.3 | 586.7 |
+| 8 | 77.9 | 531.9 |
+| 9 | 217.9 | 660.0 |
+| **mean ± SD** | **74.8 ± 61.8** | **515.0 ± 97.1** |
 
-DeepRiver's damage is lower on **11/11** seeds. The worst DeepRiver seed (224.1)
-is only **1.27×** better than the best frozen seed (284.8), not 24×. The mean
-gap is **7.1×**, and the full-stream gap is **11.6×**.
+DeepRiver's damage is lower on **11/11** seeds. With the clean panel the
+worst DeepRiver seed (217.9) sits below the best frozen seed (295.2) — **0.74×**
+its damage. The mean gap is **6.9×**, and the full-stream gap is **10.8×**.
 
 ## 5. Verdict
 
@@ -102,29 +103,30 @@ gap is **7.1×**, and the full-stream gap is **11.6×**.
 | AUE vs timing oracle | ratio or better | DeepRiver −0.0472, frozen +0.0010 | **PASS** — mechanism, not upper bound |
 
 **The claim survives; the magnitude shrinks.** A streaming model that keeps
-learning pays about **7× less damage** in the pre-registered window than a frozen
-model (≈12× over the rest of the stream), and the frozen model never recovers.
-The old **294×** and **24×** are retired.
+learning pays about **6.9× less damage** in the pre-registered window than a
+frozen model (**10.8×** over the rest of the stream), and the frozen model never
+recovers. The old **294×** and **24×** are retired.
 
 ## 6. What this retires
 
-- **294× mean damage gap** → corrected to **7.1×** (`damage_ref`) or **11.6×**
-  (`damage_full`), on the current four-model shared reference.
-- **24× worst-vs-best** → corrected to **1.27×**. The worst-case claim was a
-  truncation artefact; do not repeat it.
-- **“835 samples”** → seed 42 still recovers in 834 samples under the corrected
-  rule, but recovery is **7/11**, with values 177–4,462. The number was seed luck;
-  the distribution is the result.
+- **294× mean damage gap** → corrected to **6.9×** (`damage_ref`) or **10.8×**
+  (`damage_full`) on the clean panel.
+- **24× worst-vs-best** → retired. The worst DeepRiver seed is **0.74×** the best
+  frozen seed; the worst-case claim was a truncation artefact. The earlier
+  four-model panel's 1.27× is superseded by the clean rerun.
+- **“835 samples”** → seed 42 still recovers in 835 samples under the corrected
+  rule, but recovery is **8/11**, with values **285–4,279**. The number was seed
+  luck; the distribution is the result.
 - **“Damage area and dip depth are the trustworthy metrics”** → too generous.
   `damage_ref` is the trustworthy one; `damage_full` is the one that prices the
   whole stream; recovery time is meaningful only conditional on an exit.
 
 ## 7. Caveats to keep in the report
 
-1. **Panel composition.** The current artifact's `κ_ref` includes HT/HAT because
-   of a default-host bug. The qualitative verdict is unchanged, but the exact
-   `damage_ref` values will move when the clean two-model panel is rerun. Label
-   the current numbers as a four-model panel until then.
+1. **Panel composition (resolved).** The panel is DeepRiver, frozen RF, and the
+   timing oracle. The pre-fix four-model artifact is kept at
+   `experiments/results/_archive/e01_5model/` for auditability; the numbers here
+   are the clean rerun and supersede it.
 2. **AUE is not an upper bound.** The timing oracle knows *when* the drift
    happened but is refit only on pre-drift data; its damage is almost identical
    to frozen. AUE therefore measures “excess over a weak oracle,” not “distance

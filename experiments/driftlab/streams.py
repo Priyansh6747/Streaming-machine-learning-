@@ -191,7 +191,10 @@ def apply_mechanism(
         source = int(cfg.params.get("swap_from", 0))
         target = int(cfg.params.get("swap_to", 1))
         for t in range(cfg.position, len(y)):
-            if y[t] == source:
+            if y[t] != source:
+                continue
+            weight = mixing_weight(t, cfg)
+            if weight >= 1.0 or rng.random() < weight:
                 y[t] = target
         return X, y
 
@@ -199,6 +202,9 @@ def apply_mechanism(
         keys = list(X[0].keys())
         order = rng.permutation(len(keys))
         for t in range(cfg.position, len(X)):
+            weight = mixing_weight(t, cfg)
+            if weight < 1.0 and rng.random() >= weight:
+                continue
             original = X[t]
             X[t] = {keys[i]: original[keys[int(order[i])]] for i in range(len(keys))}
         return X, y
@@ -212,7 +218,7 @@ def apply_mechanism(
             if not (
                 i >= cfg.position
                 and y[i] == source
-                and rng.random() < skip
+                and rng.random() < skip * mixing_weight(i, cfg)
             )
         ]
         return [X[i] for i in keep], [y[i] for i in keep]

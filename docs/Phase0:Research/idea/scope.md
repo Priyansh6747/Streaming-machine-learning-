@@ -337,7 +337,7 @@ detectors miss it while the hybrid's delayed confirmation catches it.
 
 | ❌ Out of scope | ✅ Instead |
 |---|---|
-| Deep learning / `deep-river` | Classical models + ensembles (River) |
+| Deep learning as the benchmark classifier | Deep models are permitted **only as label-free signal extractors** for the hybrid detector (DF-H); the benchmark host stays classical (Hoeffding Tree / ARF / HAT) |
 | Regression, clustering, recsys | **Classification only** |
 | Distributed *training* (parameter servers, federated) | Single-node service; replica *divergence measurement* is in scope |
 | Building a streaming framework | Use River; we build the *harness and system around it* |
@@ -347,6 +347,12 @@ detectors miss it while the hybrid's delayed confirmation catches it.
 | Novel theorem-proving beyond the four lemmas | Lemmas; anything harder degrades to empirical |
 
 The single most common way student projects fail is scope creep, not difficulty.
+
+> **Scope amendment (2026-11-14):** DF-H uses a deep encoder as a **label-free
+> feature monitor**, not as the benchmark classifier. The classical host remains
+> the measured learner. This implements the hybrid architecture in §6.5 and
+> keeps the classical baseline comparison intact. If the deep monitor is
+> disallowed, the same fusion runs on a classical PCA/KS feature monitor.
 
 ---
 

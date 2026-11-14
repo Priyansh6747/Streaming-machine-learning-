@@ -5,7 +5,7 @@ are going about it, and what we have actually finished — written so that someo
 who understands “the world changes under a model” but has no machine-learning
 background can follow it.
 
-**Last updated:** 2026-11-12.
+**Last updated:** 2026-11-13.
 
 ---
 
@@ -109,16 +109,18 @@ new model; a measured model before a claim.
 | **2026-09-12** | Repeated the same comparison on 11 different random runs. | The claim was not a one-off: the frozen system never recovered in any of the 11 runs. The repeat also exposed a flaw in how we measured damage. | It showed the result was not a one-off and told us where to look for our own mistakes. |
 | **2026-09-22** | Wrote the viva preparation brief: what is done, what is weak, what to say if challenged. | A written list of weaknesses, including the damage-measurement flaw, before an examiner could find them. | It turned a hidden defect into a known, fixable item. |
 | **2026-09-23 → 2026-11-11** | Planning and design for the next round; no new measured result was published in this window. | A concrete plan for a reusable experiment lab and a fairer metric. | It kept the project from adding more results on top of a ruler we did not trust. |
-| **2026-11-12** | Built the reusable experiment lab; fixed the damage ruler; re-ran the 11-repeat comparison as **E01**; wrote the correction into the documentation. | The corrected headline: frozen recovered **0/11**; the learning system had a real recovery on **7/11**; damage was **≈7.1×** lower over a fixed stretch after the change, **≈11.6×** lower over the rest of the stream. | It replaced an inflated **294×** with a defensible **≈7×**, and made every number re-runnable from a saved file. |
+| **2026-11-12** | Built the reusable experiment lab; fixed the damage ruler; re-ran the 11-repeat comparison as **E01** on a clean three-model panel; wrote the correction into the documentation. | The corrected headline: frozen recovered **0/11**; the learning system had a real recovery on **8/11**; damage was **≈6.9×** lower over a fixed stretch after the change, **≈10.8×** lower over the rest of the stream. | It replaced an inflated **294×** with a defensible **≈7×**, and made every number re-runnable from a saved file. |
+| **2026-11-13** | Re-ran the detector map on real Elec2 records (**E17**); built an isolated, parallel reproduction of the KDD'26 14-detector benchmark. | On the static host HDDM-A wins all four shapes again (0.93/0.96/0.96/0.79); on the adaptive host ADWIN wins sudden (1.00 vs 0.40) and recurring (0.77 vs 0.59). The 10-trial and 50-trial KDD runs agree: SEED/STEPD 2.12, HDDM-W 3.56, HDDM-A 3.87; the F1 values match the paper's tables. The ABCD/ABCD(X) arm is skipped and cited from the paper. | It shows the synthetic default is host-conditional, and gives us a real-data ranking where SEED and STEPD beat HDDM-A. |
 
 ### What changed because of E01
 
 - The old **294×** damage gap was a side effect of a ruler that cut off the
   learning system’s damage. It is **retired**.
-- The old **24×** “worst run vs best run” claim did not survive. The corrected
-  worst-vs-best gap is **1.27×**, not 24×.
+- The old **24×** “worst run vs best run” claim did not survive. On the clean
+  panel the worst learning-system run still pays **0.74×** the damage of the
+  best frozen run, so the comparison is categorical the other way.
 - The old **“11/11 recovered”** counted “never left its normal band” as a
-  recovery. The corrected count is **7/11 real recoveries**.
+  recovery. The corrected count is **8/11 real recoveries**.
 - The old **835-example recovery** was one lucky run. It was never the result;
   the pattern across runs is the result.
 
@@ -127,8 +129,8 @@ new model; a measured model before a claim.
 - The frozen system recovered on **0 of 11** runs. This is the strongest and
   most stable finding.
 - The learning system’s damage was lower on **11 of 11** runs.
-- The mean corrected gap is **≈7×** in the fixed window and **≈12×** over the
-  rest of the stream.
+- The mean corrected gap is **≈6.9×** in the fixed window and **≈10.8×** over
+  the rest of the stream.
 - The learning system still wins the overall averages: **88.3% vs 85.4%**
   correct, with a better agreement score that corrects for chance.
 
@@ -186,6 +188,42 @@ kinds of change: **HDDM-A**, using the raw mistake signal.
 
 Full technical write-up: [E04 — Detector map](E04-detector-map.md).
 
+### The real-stream detector check (E17)
+
+We re-ran the same eight alarms on real electricity-market records (Elec2,
+45,312 rows), shuffled, with a known label-swap change injected halfway through.
+Five repeats, the same two hosts.
+
+| Kind of change | HDDM-A, static host | ADWIN, static host | HDDM-A, adaptive host | ADWIN, adaptive host |
+|---|---:|---:|---:|---:|
+| Sudden | **0.93** | 0.45 | 0.40 | **1.00** |
+| Gradual | **0.96** | 0.50 | 1.00 | 1.00 |
+| Incremental | **0.96** | 0.84 | **1.00** | 0.97 |
+| Recurring | **0.79** | 0.51 | 0.59 | **0.77** |
+
+**Plain reading:** on the static learner, HDDM-A keeps its four-shape win. On
+the adaptive learner, ADWIN wins sudden and recurring change. The adaptive
+learner can repair the mistake rate quickly enough that HDDM-A's one-sided test
+misses the change; ADWIN compares windows two-sidedly and still rings. The
+“HDDM-A is the default” claim is therefore true for the static host, not
+universally. Five repeats and one real dataset: a warning, not a final ranking.
+Full write-up: [E17 — Real-stream detector map](E17-real-detector-map.md).
+
+### The KDD'26 benchmark fast pilot
+
+We reproduced the paper's Monte Carlo protocol on seven real datasets at both
+ten and fifty trials, with the six fastest detectors. The 50-trial run
+confirms the pilot: **SEED and STEPD tie for first** (average rank 2.12; mean
+F1 0.300 and 0.303), **HDDM-W is third** (3.56; 0.163), and **HDDM-A is fourth**
+(3.87; 0.155). DDM (4.54) and ADWIN (4.80) follow. HDDM-A is clearly not the
+best detector on real data.
+
+The F1 values also reproduce the paper's tables — for example abrupt feature
+permutation is 0.572/0.526/0.313 for SEED/STEPD/HDDM-A here vs 0.61/0.53/0.36
+published. The ABCD/ABCD(X) arm is **not re-run**: it is the expensive part of
+the matrix, it overheats the laptop CPU, and the paper's published result is
+used for that cell instead.
+
 ---
 
 ## 6. How the project has benefited
@@ -218,18 +256,29 @@ gap is around seven times in the fixed window.**
 
 ## 8. What is next
 
+The detector track is now the project's ultimate goal. The question is no longer
+"which single alarm is best" — it is "can a label-free deep monitor plus a
+supervised confirmation beat the detector benchmark, and what happens when the
+labels arrive late?"
+
+**Ultimate goal:** build **DF-H** — a two-stage detector that combines a
+label-free deep representation monitor with supervised confirmation — and show
+that it (a) is top-2 on the KDD'26 benchmark with wins on the feature and
+recurring cells, and (b) keeps the most detection power under delayed, partial
+and selective labels.
+
 In order:
 
-1. **Which early-warning signal works for which kind of change.** A map of
-   alarms and change types, with false-alarm rates.
-2. **The honest competition.** Add a system retrained on a fixed calendar and a
-   system allowed to peek at when the change happened.
-3. **The learning decision system.** A compact model that remembers earlier
-   situations and stays calibrated.
-4. **The cost of late answers.** Delay the correct answers and measure what
-   breaks first.
-5. **Real-world records.** Move from computer-generated streams to real data.
-6. **The final report.** Only from saved, re-runnable numbers.
+1. **Signal gate (E18).** Extract the deep signals, measure their AUC against
+   the error-rate baseline on held-out data. If they add nothing, stop.
+2. **DF-H v1 (E19).** Rule-based fusion; synthetic + Elec2 + a small KDD pilot.
+3. **DF-H v2 (E20).** Learned fusion, leave-one-dataset-out, full KDD 50-trial.
+4. **Delay Tax benchmark (E21).** Fixed, stochastic, partial, selective and
+   batch labels; DF-H vs the strong scalar detectors; lemmas 1–3.
+5. **Final report.** Only from saved, re-runnable numbers.
+
+The older breadth-first experiments (E05, E08–E13) are deferred; E15 is replaced
+by E21. See [Roadmap v2](Roadmap-v2.md) for the full plan and gates.
 
 ---
 

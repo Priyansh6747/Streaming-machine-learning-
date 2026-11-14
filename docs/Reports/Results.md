@@ -12,8 +12,8 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 
 | | |
 |---|---|
-| **Status** | 3 concluded: Exp-01, Exp-02, **E01 metric v2 correction**; **E04 detector map first pass (5 seeds)**; 3 scheduled |
-| **Data artifacts** | `experiments/exp01/results.json` · `experiments/exp02/results.json` · `experiments/results/e01/` (**corrected metric**) · `experiments/results/e04/` (**detector map**) |
+| **Status** | 6 concluded: Exp-01, Exp-02, **E01 metric v2 correction (clean panel)**, **E04 detector map first pass (5 seeds)**, **E17 real-stream detector check (5 seeds)**, **KDD'26 six-detector reproduction (50 trials)**; 2 scheduled (E03, E14); E15 replaced by E21; new DF-H track E18–E21 ([Roadmap v2](Roadmap-v2.md)) |
+| **Data artifacts** | `experiments/exp01/results.json` · `experiments/exp02/results.json` · `experiments/results/e01/` (**corrected metric, clean rerun**) · `experiments/results/e04/` (**detector map**) · `experiments/results/e17/` (**real-stream detector check**) · `experiments/results/kdd_bench_full/` (**KDD'26 reproduction**) · `experiments/results/_archive/e01_5model/` (**pre-fix panel, superseded**) |
 | **Method / protocol** | [`thesis.md`](../Phase1:Experimentation/thesis.md) · [`streaming-vs-batch-metrics.md`](../Phase1:Experimentation/streaming-vs-batch-metrics.md) |
 | **Formatting note** | unicode math (τ, κ₀, Δκ, ≈, ≥) renders identically in Obsidian, GitHub, mkdocs |
 
@@ -25,14 +25,14 @@ global verdict (§1) is re-stated over all concluded experiments whenever one la
 > change — a model that was trained once and frozen does not.**
 > Across **11 seeds**: the frozen model recovered on **0 of 11** runs. The
 > corrected metric (E01) prices the damage over a fixed 5,000-sample window with
-> a panel-shared reference: **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ, a
-> **≈ 7.1×** gap. Over the rest of the stream the gap is **≈ 11.6×**
-> (**293.9** vs **3,408.1**). The streaming model also wins the overall
+> a panel-shared reference: **74.8 ± 61.8** vs **515.0 ± 97.1** samples·κ, a
+> **≈ 6.9×** gap. Over the rest of the stream the gap is **≈ 10.8×**
+> (**321.4** vs **3,472.9**). The streaming model also wins the overall
 > averages: **88.3% vs 85.4%** accuracy, **0.753 vs 0.685** Cohen Kappa.
-> Recovery is **7/11** seeds with a real excursion (177–4,462 samples); the old
+> Recovery is **8/11** seeds with a real excursion (285–4,279 samples); the old
 > “0 on 8/11” was an artefact of the τ-anchored rule. The legacy **294×** and
-> **24×** figures are retired as upper bounds; the corrected worst-vs-best ratio
-> is **1.27×** (224.1 vs 284.8).
+> **24×** figures are retired as upper bounds; on the clean panel the worst
+> DeepRiver seed (217.9) is **0.74×** the best frozen seed (295.2).
 
 !!! warning "Metric correction — read this before quoting any number below"
     Sections 3a and 3b use the original `damage_area` definition, which
@@ -52,9 +52,9 @@ any other way.*
 | | Streaming model (keeps learning) | Frozen model (trained once) |
 |---|---|---|
 | Reacts to change on its own? | **Yes** — adapts on its own error signal | **No** — waits for a human to retrain |
-| Recovery after the drift at τ | **7/11 seeds** with a real excursion; 177–4,462 samples | **never** — 0 of 11 seeds recovered |
-| Skill lost, corrected `damage_ref` (5k window) | **70.6 ± 66.5** samples·κ (worst 224.1) | **504.4 ± 104.1** samples·κ (best 284.8) |
-| Skill lost over the rest of the stream (`damage_full`) | **293.9 ± 210.8** samples·κ | **3,408.1 ± 583.4** samples·κ |
+| Recovery after the drift at τ | **8/11 seeds** with a real excursion; 285–4,279 samples | **never** — 0 of 11 seeds recovered |
+| Skill lost, corrected `damage_ref` (5k window) | **74.8 ± 61.8** samples·κ (worst 217.9) | **515.0 ± 97.1** samples·κ (best 295.2) |
+| Skill lost over the rest of the stream (`damage_full`) | **321.4 ± 203.8** samples·κ | **3,472.9 ± 559.7** samples·κ |
 | Overall quality (full run, 48k samples) | **0.883** acc · **0.753** κ | 0.854 acc · 0.685 κ |
 
 ---
@@ -187,33 +187,33 @@ conditional on a real band exit.
 
 | Metric (11 seeds) | DeepRiver | Frozen RF |
 |---|---:|---:|
-| **`damage_ref`** (5k window, primary) | **70.6 ± 66.5** (worst 224.1) | **504.4 ± 104.1** (best 284.8) |
-| **`damage_full`** (rest of stream) | **293.9 ± 210.8** | **3,408.1 ± 583.4** |
+| **`damage_ref`** (5k window, primary) | **74.8 ± 61.8** (worst 217.9) | **515.0 ± 97.1** (best 295.2) |
+| **`damage_full`** (rest of stream) | **321.4 ± 203.8** | **3,472.9 ± 559.7** |
 | `AUE` vs timing oracle | **−0.0472 ± 0.0058** | +0.0010 ± 0.0027 |
-| `recovery_rate` | **7/11** | **0/11** |
-| Recovery time, recovered seeds | 177–4,462 (mean 2,017) | never |
+| `recovery_rate` | **8/11** | **0/11** |
+| Recovery time, recovered seeds | 285–4,279 (mean 1,502) | never |
 | Full-run accuracy / Cohen κ | **0.883 / 0.753** | 0.854 / 0.685 |
 
 ![E01 metric v2 — damage_ref and AUE per model](../Phase1:Experimentation/figures/e01-metric-v2-model-comparison.png)
 
 *Figure 8 — the corrected comparison. Left: `damage_ref`; right: AUE against the
 timing oracle. AUE is secondary because the timing oracle knows when the drift
-happened but not what the new concept is; its own damage (494) is almost identical
+happened but not what the new concept is; its own damage (505) is almost identical
 to frozen. The primary result is the `damage_ref` gap.*
 
 **Verdict.** Frozen recovered on **0/11** seeds. DeepRiver's `damage_ref` was lower
-on **11/11** seeds, with a **≈7.1×** mean gap and a **≈11.6×** full-stream gap. The
-worst DeepRiver seed beat the best frozen seed by only **1.27×**, so the legacy
-**24×** worst-case claim is retired along with the **294×** mean. The clean headline
-is: *the frozen model never recovers, and the streaming model pays roughly one
-seventh of the fixed-window damage.* The full write-up is
+on **11/11** seeds, with a **≈6.9×** mean gap and a **≈10.8×** full-stream gap. On
+the clean panel the worst DeepRiver seed (217.9) is **0.74×** the best frozen seed
+(295.2), so the legacy **24×** worst-case claim is retired along with the **294×**
+mean. The clean headline is: *the frozen model never recovers, and the streaming
+model pays roughly one seventh of the fixed-window damage.* The full write-up is
 [`E01-metric-v2.md`](E01-metric-v2.md).
 
-!!! note "Panel caveat"
-    The current E01 artifact's shared reference includes HT/HAT because of a
-    default-host bug that has since been fixed. The qualitative verdict is
-    unchanged; the exact `damage_ref` values will move when the clean two-model
-    panel is rerun.
+!!! note "Clean panel"
+    The E01 rerun contains only DeepRiver, frozen RF, and the timing oracle. The
+    earlier artifact that also included HT/HAT (a since-fixed host-default bug) is
+    archived at `experiments/results/_archive/e01_5model/` and is superseded by
+    the numbers above.
 
 ### 3d. E04 — detector map, first pass (5 seeds, 2026-11-12)
 
@@ -249,6 +249,31 @@ pre-registered matrix. The full write-up is
     TP/FP/episode counts and treats zero alarms as F1 = 0. The “KSWIN perfect”
     result is retired.
 
+### 3e. E17 — the detector map on a real stream (Elec2, 5 seeds, 2026-11-13)
+
+E04's eight detectors were replayed on real electricity-market records: 45,312
+rows of Elec2, shuffled per seed, with a known label-swap drift injected at
+`τ = 22,656`. This is the first real-data check of the detector map. Mean over
+5 seeds, raw channel, corrected balanced score:
+
+| Drift shape | HDDM-A, static HT | ADWIN, static HT | HDDM-A, adaptive HAT | ADWIN, adaptive HAT |
+|---|---:|---:|---:|---:|
+| Abrupt | **0.933** | 0.452 | 0.400 | **1.000** |
+| Gradual | **0.960** | 0.495 | 1.000 | 1.000 |
+| Incremental | **0.960** | 0.842 | **1.000** | 0.971 |
+| Recurring | **0.787** | 0.508 | 0.593 | **0.770** |
+
+**Verdict.** The E04 default is **host-conditional on real data**. On the static
+Hoeffding Tree, HDDM-A repeats the synthetic result and wins all four shapes. On
+the adaptive HAT it does not: ADWIN wins abrupt (1.000 vs 0.400) and recurring
+(0.770 vs 0.593), ties gradual, and loses only incremental. Across the better
+host/channel per detector, mean F1 is ADWIN **0.935** vs HDDM-A **0.910**. The
+one-sided Hoeffding test can miss an abrupt change that an adaptive learner
+repairs quickly; ADWIN's two-sided window comparison still sees it. Recurring
+remains the hard case. Five seeds, one dataset, one injected mechanism — this is
+a warning, not a final ranking. The full write-up is
+[`E17-real-detector-map.md`](E17-real-detector-map.md).
+
 ---
 
 ## 4. Verdict registry — one conclusion per experiment
@@ -260,11 +285,13 @@ experiments are listed so the roadmap is visible, with their acceptance bar.
 |---|---|---|---|---|
 | **Exp-01** ✅ *(legacy metric)* | Can a streaming deep learner beat a *frozen* batch model on a drifting stream? | SEA, one abrupt drift, 2 models, seed 42 | **Streaming wins** — recovers in 835 samples (frozen: never); legacy damage 31 vs 3,307 | Weakest form of the claim **confirmed**. The 835/damage numbers are superseded by E01 |
 | **Exp-02** ✅ *(legacy metric)* | Is the 835-sample recovery a fluke of one seed? | SEA, one abrupt drift, 2 models, **11 seeds** | **Streaming wins on every seed** — frozen recovered **0/11**; legacy damage **13 ± 31** vs **3,710 ± 592** (≈294×; 24× worst-vs-best) | The claim **generalises**; the legacy magnitudes are **upper bounds** and retired by E01. Frozen still wins the stationary phase (κ₀ 0.767 vs 0.751) |
-| **E01** ✅ | Does the corrected metric preserve the Exp-01/02 verdict? | SEA abrupt, **11 seeds**, metric v2 | **Frozen recovered 0/11; DeepRiver `damage_ref` lower 11/11; 70.6 ± 66.5 vs 504.4 ± 104.1 (≈7.1×); `damage_full` 293.9 vs 3,408.1 (≈11.6×); recovery 7/11; worst-vs-best 1.27×** | The claim **survives**, the magnitude shrinks. **294× and 24× retired.** AUE is secondary: the timing oracle is weak (damage 494). Current panel includes HT/HAT; clean two-model rerun pending |
-| **E04** ✅ *(first pass, 5 seeds)* | Which detector works for which drift shape, and does the host matter? | 4 generators × 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **HDDM-A raw is best for all four shapes; balanced score 0.683 abrupt, 0.842 gradual, 0.883 incremental, 0.500 recurring; recurring is hardest; EWMA raises false alarms** | One sensible default exists; recurring drift is the hard case. A scoring bug that made a never-ringing detector look perfect was found and fixed. Full 11-seed matrix and tuning pending |
+| **E01** ✅ | Does the corrected metric preserve the Exp-01/02 verdict? | SEA abrupt, **11 seeds**, metric v2, clean panel | **Frozen recovered 0/11; DeepRiver `damage_ref` lower 11/11; 74.8 ± 61.8 vs 515.0 ± 97.1 (≈6.9×); `damage_full` 321.4 vs 3,472.9 (≈10.8×); recovery 8/11; worst-vs-best 0.74×** | The claim **survives**, the magnitude shrinks. **294× and 24× retired.** AUE is secondary: the timing oracle is weak (damage 505). Panel is DeepRiver + frozen + oracle; the pre-fix four-model artifact is archived |
+| **E04** ✅ *(first pass, 5 seeds)* | Which detector works for which drift shape, and does the host matter? | 4 generators × 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **HDDM-A raw is best for all four shapes; balanced score 0.683 abrupt, 0.842 gradual, 0.883 incremental, 0.500 recurring; recurring is hardest; EWMA raises false alarms** | One sensible default exists **on the static host and synthetic generators**; recurring drift is the hard case. A scoring bug that made a never-ringing detector look perfect was found and fixed. E17 shows the default is host-conditional on real Elec2; the full 11-seed matrix and tuning are pending |
+| **E17** ✅ *(real stream, 5 seeds)* | Does the E04 detector default survive on real data? | Elec2 label-swap, 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds | **On static HT, HDDM-A raw wins all four (F1 0.933/0.960/0.960/0.787); on adaptive HAT, ADWIN wins abrupt (1.000 vs 0.400) and recurring (0.770 vs 0.593); best-host mean F1 ADWIN 0.935 vs HDDM-A 0.910** | The synthetic default is **host-conditional**; “wins all four” does not transfer to the adaptive host. Recurring remains hardest. The 50-trial KDD'26 run confirms SEED/STEPD (2.12) beat HDDM-A (3.87); ABCD/ABCD(X) is cited from the paper, not re-run |
+| **KDD'26** ✅ *(reproduction, 50 trials)* | Does HDDM-A remain the best detector on the paper's real-data benchmark? | 7 real datasets × 4 drift types × abrupt/gradual × 6 detectors, 50 trials | **SEED and STEPD tie for first (avg rank 2.12; mean F1 0.300/0.303); HDDM-A is fourth (3.87; 0.155), behind HDDM-W (3.56); DDM 4.54; ADWIN 4.80** | HDDM-A is **not** the best detector on real data. The ranking reproduces the KDD'26 paper and the F1 values match its tables. ABCD/ABCD(X) is cited from the paper, not re-run |
 | **E03** ⏳ | Does streaming also beat a *scheduled-retrain* batch model (the honest industrial baseline)? | SEA + baseline ladder | *pending* | acceptance: streaming recovery ≪ retrain interval r_next − τ |
 | **E14** ⏳ | Does the win survive on **real** streams (Phishing, Covertype, Airlines, CreditCard, Elec2)? | 5 real streams, post-dip protocol | *pending* | acceptance: streaming ≥ frozen on post-drift windows |
-| **E15** ⏳ | The **Delay Tax**: do delayed/rare labels starve batch retraining while streaming keeps working? | label-delay sweep | *pending* | acceptance: streaming quality degrades slower under delay |
+| **E15** ⏳ *(replaced by E21)* | The **Delay Tax**: do delayed/rare labels starve batch retraining while streaming keeps working? | label-delay sweep | *pending — replaced by E21* | acceptance: streaming quality degrades slower under delay; E21 adds the DF-H detector benchmark |
 
 *Scope guard: Exp-01 is deliberately the easiest possible version of the claim
 (one synthetic stream, no scheduled retrain, no label delay, single seed). Each
@@ -308,9 +335,9 @@ even larger than the thesis sketched.*
 triggered. Exp-01 showed the effect exists on one seed; Exp-02 shows the *claim*
 holds on all eleven — the frozen model never recovers. The specific 835-sample
 figure was seed luck and is retired. **E01 supersedes the damage magnitudes:** the
-legacy 294×/24× are upper bounds; the corrected gaps are ≈7.1× (`damage_ref`) and
-≈11.6× (`damage_full`), and the worst-vs-best ratio is only 1.27×. The claim that
-the gap survives a worst-case-vs-best-case comparison is **retired**. The one
+legacy 294×/24× are upper bounds; the corrected gaps are ≈6.9× (`damage_ref`) and
+≈10.8× (`damage_full`), and on the clean panel the worst DeepRiver seed is 0.74×
+the best frozen seed. The legacy worst-vs-best framing is **retired**. The one
 control expectation Exp-01 refuted (batch winning steady state) is restored by the
 larger sample, and streaming still wins the run outright.
 
@@ -320,11 +347,16 @@ larger sample, and streaming still wins the run outright.
 
 - Measured numbers: `experiments/exp01/results.json` · `experiments/exp02/results.json` ·
   `experiments/results/e01/summary.json` (**corrected metric**) ·
-  `experiments/results/e04/detections.jsonl` (**detector map raw counts**)
+  `experiments/results/e04/detections.jsonl` (**detector map raw counts**) ·
+  `experiments/results/e17/detector_report.json` (**real-stream detector check**)
 - Full write-ups: [`exp01-deepriver-vs-frozen-sea.md`](../Phase1:Experimentation/exp01-deepriver-vs-frozen-sea.md) ·
   [`exp02-seed-sweep-sea.md`](../Phase1:Experimentation/exp02-seed-sweep-sea.md) ·
   [`E01-metric-v2.md`](E01-metric-v2.md) (**correction**) ·
-  [`E04-detector-map.md`](E04-detector-map.md) (**detector map**)
+  [`E04-detector-map.md`](E04-detector-map.md) (**detector map**) ·
+  [`E17-real-detector-map.md`](E17-real-detector-map.md) (**real-stream check**)
+- Benchmark reproduction: `experiments/kdd_bench.py` and `experiments/kdd_env/`
+  (KDD'26 14-detector protocol; six-detector 50-trial run complete, ABCD/ABCD(X)
+  arm pending; artifact `experiments/results/kdd_bench_full/`)
 - Thesis + pre-registered expectations: [`thesis.md`](../Phase1:Experimentation/thesis.md)
 - Protocol & metric definitions: [`streaming-vs-batch-metrics.md`](../Phase1:Experimentation/streaming-vs-batch-metrics.md)
 - Milestone records: [`Sept9.md`](Sept9.md) (Exp-01)

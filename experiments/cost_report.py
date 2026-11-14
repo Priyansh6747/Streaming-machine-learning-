@@ -13,8 +13,16 @@ def main() -> int:
     results_dir = REPO / "experiments" / "results"
     rows: list[dict] = []
     for summary_path in sorted(results_dir.glob("*/summary.json")):
+        name = summary_path.parent.name
+        relative = summary_path.relative_to(results_dir)
+        if (
+            name == "e16_cost"
+            or name.endswith("_smoke")
+            or any(part.startswith("_") for part in relative.parts)
+        ):
+            continue
         summary = json.loads(summary_path.read_text())
-        exp_id = summary.get("exp_id") or summary_path.parent.name
+        exp_id = summary.get("exp_id") or name
         for model, values in (summary.get("models") or {}).items():
             rows.append(
                 {
@@ -36,8 +44,14 @@ def main() -> int:
     (out_dir / "summary.json").write_text(
         json.dumps({"exp_id": "e16", "rows": rows}, indent=2)
     )
+    fieldnames: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fieldnames:
+                fieldnames.append(key)
+    fieldnames = fieldnames or ["exp_id", "model"]
     with (out_dir / "cost.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]) if rows else ["exp_id", "model"])
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
     for row in rows:

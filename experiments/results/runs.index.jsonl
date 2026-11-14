@@ -4,3 +4,9 @@
 {"exp_id": "e01", "config_hash": "59f2cd79598f6bca82c00882bb6f680b552b9669485467cc09e9ef567ec834d6", "finished_unix": 1794479555.828604, "out_dir": "experiments/results/e01"}
 {"exp_id": "e02", "config_hash": "6da445782d890a77e8d958e65ba3077fe3114f2c8fe441d313863d1f4bdc00be", "finished_unix": 1794483287.0353286, "out_dir": "experiments/results/e02"}
 {"exp_id": "e04", "config_hash": "b9fae4c70ae8b36106df994f129f29808abe68fb6209e4d7d486bcc1ab5e03f0", "finished_unix": 1794488449.3640816, "out_dir": "experiments/results/e04"}
+{"exp_id": "e01", "config_hash": "59f2cd79598f6bca82c00882bb6f680b552b9669485467cc09e9ef567ec834d6", "finished_unix": 1794501760.104775, "out_dir": "experiments/results/e01"}
+{"exp_id": "e03", "config_hash": "798924faba042ed8324158571b2da3c93dad62a58e31a6568a4adf6a29ea9b6a", "finished_unix": 1794506283.106181, "out_dir": "experiments/results/e03"}
+{"exp_id": "e17", "config_hash": "80806571e70839b6cd679fc25bde562c06b5048ac886d259a3b780b1a383f58a", "finished_unix": 1794570474.985029, "out_dir": "experiments/results/e17_smoke"}
+{"exp_id": "e17", "config_hash": "80806571e70839b6cd679fc25bde562c06b5048ac886d259a3b780b1a383f58a", "finished_unix": 1794571345.7372828, "out_dir": "experiments/results/e17"}
+{"exp_id": "e14", "config_hash": "8190e9f708c712be3b97f903ad18cf7dc4cd4063445380bff99a4590facd01ab", "finished_unix": 1794579823.5702264, "out_dir": "/tmp/commandcode-1000/-home-sovereign-Documents-Obsidian-Vault-major/14981387-0eaf-4cb3-a9ec-3af77a3f8db7/scratchpad/e14_gpu_smoke"}
+{"exp_id": "e14", "config_hash": "8190e9f708c712be3b97f903ad18cf7dc4cd4063445380bff99a4590facd01ab", "finished_unix": 1794580613.2178836, "out_dir": "experiments/results/e14"}

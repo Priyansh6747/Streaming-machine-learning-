@@ -1,0 +1,31 @@
+{
+  "status": "in progress",
+  "stream": 3,
+  "streams_total": 4,
+  "seed": 4,
+  "units_done": [
+    "s0_seed0",
+    "s0_seed1",
+    "s0_seed2",
+    "s0_seed3",
+    "s0_seed4",
+    "s1_seed0",
+    "s1_seed1",
+    "s1_seed2",
+    "s1_seed3",
+    "s1_seed4",
+    "s2_seed0",
+    "s2_seed1",
+    "s2_seed2",
+    "s2_seed3",
+    "s2_seed4",
+    "s3_seed0",
+    "s3_seed1",
+    "s3_seed2",
+    "s3_seed3",
+    "s3_seed4"
+  ],
+  "models_done": 100,
+  "episodes": 100,
+  "detections": 0
+}

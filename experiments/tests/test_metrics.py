@@ -94,6 +94,34 @@ def test_window_exit_and_recovery():
     assert result.damage_ref > 0
 
 
+def test_recovery_beyond_damage_window_needs_horizon():
+    kappa = np.concatenate([np.full(10, 0.8), np.full(15, 0.5), np.full(15, 0.8)])
+    err = np.zeros(40)
+    oracle = np.zeros(40)
+    episode = EpisodeSpec(10, 10, "abrupt")
+
+    short = evaluate_window(
+        kappa, err, oracle, episode, kappa_ref=0.8, window=10, band=0.9, stretch=3
+    )
+    assert short.recovery_samples is None
+    assert short.recovery_rate == 0.0
+
+    long = evaluate_window(
+        kappa,
+        err,
+        oracle,
+        episode,
+        kappa_ref=0.8,
+        window=10,
+        band=0.9,
+        stretch=3,
+        recovery_horizon=30,
+    )
+    assert long.recovery_samples == 15
+    assert long.recovery_rate == 1.0
+    assert long.damage_ref == pytest.approx(short.damage_ref)
+
+
 def test_aue_excess_error():
     kappa = np.full(50, 0.8)
     err = np.zeros(50)

@@ -78,6 +78,9 @@ extra_javascript:
 nav:
   - Home: index.md
   - "Progress log": "Reports/progress.md"
+  - "Plan":
+      - "DF-H — ultimate goal": "Plans/df-h-ultimate-goal.md"
+      - "Roadmap v2 — summary": "Reports/Roadmap-v2.md"
   - "Phase 0 — Research":
       - Notes:
           - "Streaming learning": "Phase0:Research/notes/01-streaming-learning.md"
@@ -99,10 +102,11 @@ nav:
               - "DPL survey (Gomes 2022)": "Phase0:Research/literature_review/papers/gomes-2022-dpl-survey.md"
               - "KDD 2026 drift benchmark": "Phase0:Research/literature_review/papers/kdd2026-drift-benchmark.md"
               - "Gamma-Weibull (AGU 2026)": "Phase0:Research/literature_review/papers/agu-2026-gamma-weibull.md"
+              - "Batch- vs instance-incremental (Read 2012)": "Phase0:Research/literature_review/papers/read-2012-batch-vs-instance.md"
+              - "When to retrain (Dasari 2026)": "Phase0:Research/literature_review/papers/dasari-2026-when-to-retrain.md"
       - Research:
           - "Landscape": "Phase0:Research/research/01-landscape.md"
           - "Delayed labels": "Phase0:Research/research/02-delayed-labels.md"
-          - "Perplexity prompts": "Phase0:Research/research/perplexity-prompts.md"
       - Explore:
           - "README": "Phase0:Research/explore/README.md"
           - "Transformers bridge": "Phase0:Research/explore/01-transformers-bridge.md"
@@ -122,13 +126,16 @@ nav:
       - "Results (global)": "Reports/Results.md"
       - "E01 — Metric v2 correction": "Reports/E01-metric-v2.md"
       - "E04 — Detector map": "Reports/E04-detector-map.md"
+      - "E17 — Real-stream detector map": "Reports/E17-real-detector-map.md"
   - "Milestones":
       - "Sept 9": "Reports/Sept9.md"
       - "Mid-term report": "Reports/mid_term.md"
+      - "Nov 14 — post-mid-term": "Reports/Nov14.md"
   - "Viva":
       - "Viva brief": "Reports/viva-brief.md"
   - "Reference":
       - "Repository structure": "struct.md"
+      - "Datasets": "dataset.md"
       - "ML reference": "ML.md"
   - "Product":
       - "DriftDeck": "DriftDeck.md"

@@ -17,12 +17,13 @@ started (Exp-01, Exp-02 concluded).
    change — the difference is what happens *after*. A model that keeps learning
    heals itself; a model trained once and frozen does not.
 2. **The evidence:** 11 seeds. Frozen recovered **0/11**. Streaming had a **real
-   recovery on 7/11**; on the other four it never left its pre-drift band. The old
+   recovery on 8/11**; on the other three it never left its pre-drift band. The old
    “11/11 recovered” counted the metric floor as a recovery.
 3. **The honest headline is not 294×.** It is: *frozen never recovers, and the
-   streaming model pays **≈7.1×** less corrected `damage_ref` on the mean
-   (70.6 vs 504.4)*. The legacy 294× and the 24× worst-vs-best claim are **retired**;
-   the corrected worst-vs-best ratio is only **1.27×**. E01 is the authority (see §7.1).
+   streaming model pays **≈6.9×** less corrected `damage_ref` on the mean
+   (74.8 vs 515.0)*. The legacy 294× and the 24× worst-vs-best claim are **retired**;
+   on the clean panel the worst streaming seed is **0.74×** the best frozen seed.
+   E01 is the authority (see §7.1).
 4. **The project type is 2b.** Development = the instrumented experiment pipeline
    (built) **+** the containerised continual-learning service (next). Say the second
    half out loud, unprompted.
@@ -186,7 +187,7 @@ of a complete Phase 0 research base.
 **Derived claims (legacy metric):**
 
 - Frozen recovered on **0 of 11** seeds. Streaming **11 of 11** only because 8 never
-  left the band; under the corrected rule the real-recovery count is **7/11**.
+  left the band; under the corrected rule the real-recovery count is **8/11**.
 - Mean damage ratio **≈ 294×** (`3,710 / 13`); **worst-vs-best 24×** (103 vs 2,439).
   **Both are upper bounds and are retired by E01.**
 - Reproducibility cross-check: seed 42 reproduced Exp-01 **exactly** — 835 samples,
@@ -194,9 +195,9 @@ of a complete Phase 0 research base.
 - **H2 restored:** on 11 seeds the frozen model *does* lead in steady state
   (0.767 vs 0.751) — and still loses the full run because it collapses at τ.
 
-**Corrected by E01 (2026-11-12):** `damage_ref` **70.6 ± 66.5** vs **504.4 ± 104.1**
-(**≈7.1×**); `damage_full` **293.9 ± 210.8** vs **3,408.1 ± 583.4** (**≈11.6×**);
-worst-vs-best **1.27×**. The frozen-never-recovers result is unchanged. See
+**Corrected by E01 (2026-11-12):** `damage_ref` **74.8 ± 61.8** vs **515.0 ± 97.1**
+(**≈6.9×**); `damage_full` **321.4 ± 203.8** vs **3,472.9 ± 559.7** (**≈10.8×**);
+worst-vs-best **0.74×**. The frozen-never-recovers result is unchanged. See
 [`E01-metric-v2.md`](E01-metric-v2.md).
 
 ### 4d. Literature anchors (the fence and the precedent)
@@ -235,6 +236,8 @@ pipeline — so never claim "we show delayed labels hurt".
 | Exp-05 | **The Delay Tax** | Do delayed/rare labels starve batch retraining while streaming keeps working? | streaming degrades slower under delay | pending |
 | E01 | **Recovery-metric revision** | Fix the τ-anchored rule (§7.1) | fixed-window, panel-shared `damage_ref`; recovery conditional on exit | ✅ **concluded 2026-11-12** |
 | E04 | **Detector map** | Which detector works for which drift shape? | balanced score, episode recall, FAR, NDT; 4 shapes × 4 generators × 2 hosts | ✅ **first pass 2026-11-12** (5 seeds; full matrix pending) |
+| E17 | **Real-stream detector check** | Does the E04 default survive on real data? | Elec2, label-swap, 4 shapes × 8 detectors × 2 hosts × 5 seeds | ✅ **concluded 2026-11-13** (one dataset; one mechanism) |
+| KDD'26 | **External detector benchmark** | Do SEED/STEPD/ABCD beat HDDM-A on seven real datasets? | paper protocol (4 drift types × 2 transitions × 50 trials); compare ranks | 50-trial six-detector run: SEED/STEPD 2.12, HDDM-W 3.56, HDDM-A 3.87; F1 matches the paper; ABCD/ABCD(X) cited from the paper, not re-run |
 | Ch2 | **The system** | What does continual learning cost as a real service? | running docker-compose stack + cost curves | planned |
 
 **Order matters for the viva narrative:** Exp-03 removes the "your opponent is a
@@ -266,9 +269,9 @@ to the *recovery* point; on 8/11 seeds recovery fired at τ, truncating the stre
 integral. The **294×** and **24×** are upper bounds and are **retired**. E01 reran
 the pilot with a fixed-window, panel-shared `damage_ref`:
 
-- `damage_ref`: **70.6 ± 66.5** vs **504.4 ± 104.1** samples·κ → **≈7.1×**
-- `damage_full`: **293.9 ± 210.8** vs **3,408.1 ± 583.4** → **≈11.6×**
-- worst-vs-best: **1.27×**, not 24×
+- `damage_ref`: **74.8 ± 61.8** vs **515.0 ± 97.1** samples·κ → **≈6.9×**
+- `damage_full`: **321.4 ± 203.8** vs **3,472.9 ± 559.7** → **≈10.8×**
+- worst-vs-best: **0.74×**, not 24×
 - frozen recovered **0/11** — unchanged
 
 The corrected claim is smaller and defensible. Do not quote 294× or 24× except as a
@@ -277,15 +280,20 @@ retired upper bound. See §7.1 and [`E01-metric-v2.md`](E01-metric-v2.md).
 ### Attack 3 — "There is no drift detector anywhere in your detector project."
 
 **Was fair; now partly addressed.** E01/02 measured recovery from the rolling window
-alone. E04 (2026-11-12, first pass) now benchmarks **eight detectors** — ADWIN, KSWIN,
+alone. E04 (2026-11-12, first pass) benchmarks **eight detectors** — ADWIN, KSWIN,
 PageHinkley, DDM, EDDM, FHDDM, HDDM-A, HDDM-W — across four generators, four drift
-shapes, two hosts, raw and smoothed mistake streams. **HDDM-A on the raw signal is
-the best default for all four shapes**; recurring drift is the hard case (balanced
-score 0.50); smoothing raises false alarms. It is a **5-seed first pass with default
-settings**, not the full 11-seed tuned matrix. Say that, not “we benchmarked all
+shapes, two hosts, raw and smoothed mistake streams. E17 (2026-11-13) replays the
+same eight on real Elec2 records with an injected label swap. **HDDM-A on the raw
+signal is the best default on the static host** (balanced score 0.93/0.96/0.96/0.79
+for abrupt/gradual/incremental/recurring), but on the adaptive HAT host **ADWIN wins
+abrupt (1.00 vs 0.40) and recurring (0.77 vs 0.59)**; the best-host mean is ADWIN
+0.935 vs HDDM-A 0.910. So the default is **host-conditional**, not universal.
+Recurring remains the hard case; smoothing raises false alarms. Both are 5-seed
+first passes, not the full 11-seed tuned matrix. Say that, not “we benchmarked all
 detectors”. The design response still stands: per-sample incremental updates make the
 retraining *policy* less important (Dasari 2026, 54 paired comparisons). See
-[`E04-detector-map.md`](E04-detector-map.md).
+[`E04-detector-map.md`](E04-detector-map.md) and
+[`E17-real-detector-map.md`](E17-real-detector-map.md).
 
 ### Attack 4 — "Your own scope says no deep learning." ← *known inconsistency*
 
@@ -355,25 +363,25 @@ new artifact.
 
 | Metric | DeepRiver | Frozen RF |
 |---|---:|---:|
-| `damage_ref` (primary) | **70.6 ± 66.5** (worst 224.1) | **504.4 ± 104.1** (best 284.8) |
-| `damage_full` | **293.9 ± 210.8** | **3,408.1 ± 583.4** |
-| `recovery_rate` | **7/11** | **0/11** |
-| Worst-vs-best | **1.27×** | — |
+| `damage_ref` (primary) | **74.8 ± 61.8** (worst 217.9) | **515.0 ± 97.1** (best 295.2) |
+| `damage_full` | **321.4 ± 203.8** | **3,472.9 ± 559.7** |
+| `recovery_rate` | **8/11** | **0/11** |
+| Worst-vs-best | **0.74×** | — |
 
 **What to say:**
 
-1. **294× and 24× are retired.** Corrected mean gap: **≈7.1×** (`damage_ref`) or
-   **≈11.6×** (`damage_full`). The worst-vs-best claim is **1.27×**, not 24×.
+1. **294× and 24× are retired.** Corrected mean gap: **≈6.9×** (`damage_ref`) or
+   **≈10.8×** (`damage_full`). On the clean panel the worst streaming seed is
+   **0.74×** the best frozen seed, not 24×.
 2. **Frozen never recovers (0/11)** — unchanged and still the strongest claim.
-3. **Streaming had a real recovery on 7/11**, not 11/11; the other four never left
+3. **Streaming had a real recovery on 8/11**, not 11/11; the other three never left
    their band. “Recovery = 0” is the metric floor, not instant recovery.
 4. **AUE is secondary.** The timing oracle knows *when* the drift happened but is refit
-   on pre-drift data; its `damage_ref` (494) is almost frozen. AUE measures excess over
+   on pre-drift data; its `damage_ref` (505) is almost frozen. AUE measures excess over
    a weak oracle, not distance from an upper bound.
-5. **Panel caveat.** The current E01 artifact's shared reference includes HT/HAT due to
-   a default-host bug that is now fixed. The qualitative verdict is unchanged; the
-   exact `damage_ref` values will move after the clean two-model rerun. Say this before
-   an examiner asks.
+5. **Panel composition.** The artifact is the clean DeepRiver + frozen + oracle panel.
+   The pre-fix four-model artifact is archived at `results/_archive/e01_5model/`; the
+   numbers above supersede it.
 
 **What survives untouched:** frozen recovered on **0/11**; DeepRiver's `damage_ref`
 was lower on **11/11** seeds; full-run accuracy/Kappa are **0.883/0.753** vs
@@ -401,7 +409,7 @@ was lower on **11/11** seeds; full-run accuracy/Kappa are **0.883/0.753** vs
 | Why Kappa and not accuracy? | Chance-corrected and robust to class imbalance. Accuracy alone overstates learning when temporal persistence creates a strong no-change baseline. |
 | Why SEA? | Synthetic streams give **ground-truth drift positions** — without a known τ, detection delay and recovery time are uncomputable. |
 | Why a rolling window of 500? | It is the bounded-memory mechanism: old samples fall out, which is what makes the model drift-adaptive. It was a pre-registered default, not fitted. |
-| What is `damage_ref`? | The skill lost while the model is wrong, integrated over a **fixed** drift window against a **panel-shared** `κ_ref`, in samples·κ. Current headline: **70.6 vs 504.4** samples·κ (**≈7.1×**). The legacy "damage area" is retired (§7.1). |
+| What is `damage_ref`? | The skill lost while the model is wrong, integrated over a **fixed** drift window against a **panel-shared** `κ_ref`, in samples·κ. Current headline: **74.8 vs 515.0** samples·κ (**≈6.9×**). The legacy "damage area" is retired (§7.1). |
 | What would falsify the thesis? | Streaming recovery comparable to a sane retrain interval (`d + a ≥ r_next − τ`); no dip at τ (dataset problem); no significant difference under Friedman/Nemenyi; reactivity win not worth the resource cost. |
 | Why is this not just a tutorial? | The gap is specific and open: a standard benchmark now exists for *immediate-label* drift detection (KDD'26), but none for delayed/partial/selective labels, and no formal bounds connect label latency to detection quality. |
 | What is the single novel claim? | The **confirmation protocol** — label-free early warning + delayed supervised confirmation. L4 proves label-free cannot confirm; L1 proves supervised cannot be early; so the hybrid is the information-maximal architecture. |

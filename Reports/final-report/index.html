@@ -1,0 +1,4079 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Reports/final-report/" rel="canonical"/>
+<link href="../.." rel="prev"/>
+<link href="../progress/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Final report - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#jaypee-institute-of-information-technology-noida">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Final report
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#df-h-label-free-warning-and-supervised-confirmation-for-concept-drift-detection">
+<span class="md-ellipsis">
+      
+        DF-H: Label-Free Warning and Supervised Confirmation for Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate">
+<span class="md-ellipsis">
+      
+        CERTIFICATE
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#declaration-of-originality">
+<span class="md-ellipsis">
+      
+        DECLARATION OF ORIGINALITY
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#acknowledgement">
+<span class="md-ellipsis">
+      
+        ACKNOWLEDGEMENT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abstract">
+<span class="md-ellipsis">
+      
+        ABSTRACT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        TABLE OF CONTENTS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-figures">
+<span class="md-ellipsis">
+      
+        LIST OF FIGURES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-tables">
+<span class="md-ellipsis">
+      
+        LIST OF TABLES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-abbreviations">
+<span class="md-ellipsis">
+      
+        LIST OF ABBREVIATIONS
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#df-h-label-free-warning-and-supervised-confirmation-for-concept-drift-detection">
+<span class="md-ellipsis">
+      
+        DF-H: Label-Free Warning and Supervised Confirmation for Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate">
+<span class="md-ellipsis">
+      
+        CERTIFICATE
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#declaration-of-originality">
+<span class="md-ellipsis">
+      
+        DECLARATION OF ORIGINALITY
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#acknowledgement">
+<span class="md-ellipsis">
+      
+        ACKNOWLEDGEMENT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abstract">
+<span class="md-ellipsis">
+      
+        ABSTRACT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        TABLE OF CONTENTS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-figures">
+<span class="md-ellipsis">
+      
+        LIST OF FIGURES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-tables">
+<span class="md-ellipsis">
+      
+        LIST OF TABLES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-abbreviations">
+<span class="md-ellipsis">
+      
+        LIST OF ABBREVIATIONS
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Final report.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<!-- pagebreak -->
+<h1 id="jaypee-institute-of-information-technology-noida">Jaypee Institute of Information Technology, Noida<a class="headerlink" href="#jaypee-institute-of-information-technology-noida" title="Permanent link">¶</a></h1>
+<p><strong>DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING AND INFORMATION TECHNOLOGY</strong></p>
+<!-- Institute logo placeholder: insert the JIIT official logo image here at 30 mm width. -->
+<p><br/></p>
+<h2 id="df-h-label-free-warning-and-supervised-confirmation-for-concept-drift-detection">DF-H: Label-Free Warning and Supervised Confirmation for Concept Drift Detection<a class="headerlink" href="#df-h-label-free-warning-and-supervised-confirmation-for-concept-drift-detection" title="Permanent link">¶</a></h2>
+<p><strong>A Major Project Report</strong></p>
+<p>Submitted in partial fulfilment of the requirements for the award of the degree of</p>
+<p><strong>Bachelor of Technology</strong></p>
+<p>in</p>
+<p><strong>Computer Science and Engineering</strong></p>
+<p><br/></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Enrollment No.</th>
+<th>Name of Student</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">9922103035</td>
+<td>Ananya Arora</td>
+</tr>
+<tr>
+<td style="text-align: right;">8823103057</td>
+<td>Vaibhavi Kansal</td>
+</tr>
+<tr>
+<td style="text-align: right;">9923103042</td>
+<td>Priyansh Singh</td>
+</tr>
+</tbody>
+</table>
+<p><br/></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Course Name</td>
+<td>Major Project-1</td>
+</tr>
+<tr>
+<td>Course Code</td>
+<td>15B19CI791</td>
+</tr>
+<tr>
+<td>Program</td>
+<td>B. Tech. CSE 4th Year, 7th Semester</td>
+</tr>
+<tr>
+<td>Academic Session</td>
+<td>2026 - 2027</td>
+</tr>
+<tr>
+<td>Supervisor</td>
+<td>Prof. Dr. Sankosh Kumar Ray</td>
+</tr>
+</tbody>
+</table>
+<p><br/></p>
+<p><strong>Department of Computer Science &amp; Engineering and Information Technology</strong>
+<strong>Jaypee Institute of Information Technology, Noida</strong>
+<strong>November 2026</strong></p>
+<!-- pagebreak -->
+<h2 id="certificate">CERTIFICATE<a class="headerlink" href="#certificate" title="Permanent link">¶</a></h2>
+<p>This is to certify that the Major Project Report entitled "DF-H: Label-Free Warning and Supervised Confirmation for Concept Drift Detection" submitted by Ananya Arora (Enrollment No. 9922103035), Vaibhavi Kansal (Enrollment No. 8823103057), and Priyansh Singh (Enrollment No. 9923103042) of B.Tech of Jaypee Institute of Information Technology, Noida has been carried out under my supervision.</p>
+<p>This work has not been submitted partially or wholly to any other University or Institute for the award of any other degree or diploma.</p>
+<p><br/>
+<br/></p>
+<p><strong>Digital Signature of Supervisor</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name of Supervisor</td>
+<td>Prof. Dr. Sankosh Kumar Ray</td>
+</tr>
+<tr>
+<td>Designation</td>
+<td></td>
+</tr>
+<tr>
+<td>Date</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h2 id="declaration-of-originality">DECLARATION OF ORIGINALITY<a class="headerlink" href="#declaration-of-originality" title="Permanent link">¶</a></h2>
+<p>We, the undersigned, hereby declare that the Major Project Report entitled "DF-H: Label-Free Warning and Supervised Confirmation for Concept Drift Detection" submitted to the Department of Computer Science &amp; Engineering and Information Technology, Jaypee Institute of Information Technology, Noida, in partial fulfilment of the requirements for the award of the degree of Bachelor of Technology, is an original work carried out by us.</p>
+<p>The matter presented in this report has not been submitted by us for the award of any other degree of this or any other university. We have duly acknowledged all the sources of information used in this report.</p>
+<p><br/></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Enrollment No.</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ananya Arora</td>
+<td>9922103035</td>
+<td></td>
+</tr>
+<tr>
+<td>Vaibhavi Kansal</td>
+<td>8823103057</td>
+<td></td>
+</tr>
+<tr>
+<td>Priyansh Singh</td>
+<td>9923103042</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><br/></p>
+<p><strong>Date:</strong>
+<strong>Place:</strong> Noida</p>
+<!-- pagebreak -->
+<h2 id="acknowledgement">ACKNOWLEDGEMENT<a class="headerlink" href="#acknowledgement" title="Permanent link">¶</a></h2>
+<p>We would like to place on record our deep sense of gratitude to Prof. Dr. Sankosh Kumar Ray, Department of Computer Science and Engineering, Jaypee Institute of Information Technology, for the generous guidance, valuable suggestions, continuous encouragement and supervision provided throughout the course of the present work.</p>
+<p>We express our sincere gratitude to the faculty members of the Department of Computer Science and Engineering and Information Technology, Jaypee Institute of Information Technology, for their support and guidance during the development of this major project.</p>
+<p>We also wish to extend our thanks to our classmates for their insightful comments, constructive suggestions and cooperation, which helped us improve the quality of this project work.</p>
+<p><br/></p>
+<table>
+<thead>
+<tr>
+<th>Enrollment No.</th>
+<th>Student Name</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9922103035</td>
+<td>Ananya Arora</td>
+<td></td>
+</tr>
+<tr>
+<td>8823103057</td>
+<td>Vaibhavi Kansal</td>
+<td></td>
+</tr>
+<tr>
+<td>9923103042</td>
+<td>Priyansh Singh</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h2 id="abstract">ABSTRACT<a class="headerlink" href="#abstract" title="Permanent link">¶</a></h2>
+<p><strong>Problem.</strong> Conventional machine learning treats the training set as a finished object, whereas production data arrives as an unbounded stream whose generating process changes over time. A learner that updates per sample recovers from such a change, and a model trained once and frozen does not. Existing drift detectors, however, observe the error stream, and in fraud confirmation, advertising attribution and intrusion triage the labels that feed that stream arrive late. Label delay therefore imposes a floor on every error-based detector, and that floor has not been quantified at detector level.</p>
+<p><strong>Methodology.</strong> A config-driven experiment harness, DriftLab, was built on River 0.25.0, DeepRiver 0.3.4 and PyTorch 2.5.1, with prequential (test-then-train) evaluation and a fixed-window damage metric anchored to a panel-shared pre-drift reference. Eleven experiments cover streaming against frozen and scheduled batch learners, synthetic and real detector maps, a 2,800-task reproduction of the KDD'26 detector benchmark, a deep signal gate, a rule-based fusion detector named DF-H, and a fixed-delay synthesis of the label tax.</p>
+<p><strong>Key Results.</strong> The corrected fixed-window damage is 74.8 against 515.0 samples times kappa, approximately 6.9 times lower for the streaming learner, with frozen recovery on 0 of 11 seeds. The KDD'26 ranking is reproduced with SEED and STEPD tied first at 2.12 and HDDM-A fourth at 3.87. DF-H ranks third overall at 7.34 behind STEPD and SEED, with a false-alarm rate of 0.04 per 1,000 samples and a clear win on feature permutation. At a delay of 2,000 samples the label-free warning fires in 70 to 513 samples against 2,120 to 3,269 for the error-only panel. The pre-registered top-2 gate and the deep signal gate both fail and are reported as failures.</p>
+<p><strong>Societal Relevance.</strong> The work supports reliable adaptation in fraud detection, intrusion monitoring and credit risk, where silent degradation harms users. Bounded-memory learning reduces repeated full retraining, and the negative results are reported rather than hidden.</p>
+<!-- pagebreak -->
+<h2 id="table-of-contents">TABLE OF CONTENTS<a class="headerlink" href="#table-of-contents" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Title</th>
+<th style="text-align: right;">Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong>PRELIMINARY PAGES</strong></td>
+<td style="text-align: right;"><strong>i</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>Certificate</td>
+<td style="text-align: right;">ii</td>
+</tr>
+<tr>
+<td></td>
+<td>Declaration of Originality</td>
+<td style="text-align: right;">iii</td>
+</tr>
+<tr>
+<td></td>
+<td>Acknowledgement</td>
+<td style="text-align: right;">iv</td>
+</tr>
+<tr>
+<td></td>
+<td>Abstract</td>
+<td style="text-align: right;">v</td>
+</tr>
+<tr>
+<td></td>
+<td>Table of Contents</td>
+<td style="text-align: right;">vi</td>
+</tr>
+<tr>
+<td></td>
+<td>List of Figures</td>
+<td style="text-align: right;">vii</td>
+</tr>
+<tr>
+<td></td>
+<td>List of Tables</td>
+<td style="text-align: right;">viii</td>
+</tr>
+<tr>
+<td></td>
+<td>List of Abbreviations</td>
+<td style="text-align: right;">ix</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 1</strong></td>
+<td><strong>INTRODUCTION</strong></td>
+<td style="text-align: right;"><strong>1</strong></td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Background</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Problem Definition and Objectives</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Social and Environmental Relevance</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Project Plan</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>1.4.1</td>
+<td>Work breakdown structure</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>1.4.2</td>
+<td>Timeline</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>1.4.3</td>
+<td>Roles and responsibilities</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>1.4.4</td>
+<td>Challenges and risk management</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>Scope and Limitations</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 2</strong></td>
+<td><strong>LITERATURE SURVEY AND CRITICAL REVIEW</strong></td>
+<td style="text-align: right;"><strong>4</strong></td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>Critical Review</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Summary Table</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Identification of Research Gaps</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 3</strong></td>
+<td><strong>SYSTEM DESIGN AND METHODOLOGY</strong></td>
+<td style="text-align: right;"><strong>8</strong></td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>Design Considerations</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Methodology</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Modelling</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td>Tool and Technique Selection</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 4</strong></td>
+<td><strong>IMPLEMENTATION AND TESTING</strong></td>
+<td style="text-align: right;"><strong>12</strong></td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Development Details</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Experimental Setup</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Test Cases</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Safety Measures</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 5</strong></td>
+<td><strong>RESULTS AND DISCUSSION</strong></td>
+<td style="text-align: right;"><strong>17</strong></td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Result Analysis</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Comparison with Objectives</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Economic Analysis</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Comparison with Existing Solutions and Standards</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 6</strong></td>
+<td><strong>CONCLUSION AND FUTURE SCOPE</strong></td>
+<td style="text-align: right;"><strong>24</strong></td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>Summary of Achievements</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Impact, Sustainability, Ethics and Compliance</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr>
+<td>6.3</td>
+<td>Limitations</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr>
+<td>6.4</td>
+<td>Future Work</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>REFERENCES</strong></td>
+<td style="text-align: right;"><strong>26</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>APPENDIX A</strong></td>
+<td style="text-align: right;"><strong>28</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>ANNEXURE B</strong></td>
+<td style="text-align: right;"><strong>29</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>ANNEXURE C</strong></td>
+<td style="text-align: right;"><strong>30</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>ANNEXURE D</strong></td>
+<td style="text-align: right;"><strong>30</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>ANNEXURE E</strong></td>
+<td style="text-align: right;"><strong>31</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>ANNEXURE F</strong></td>
+<td style="text-align: right;"><strong>31</strong></td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h2 id="list-of-figures">LIST OF FIGURES<a class="headerlink" href="#list-of-figures" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Figure No.</th>
+<th>Title</th>
+<th style="text-align: right;">Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Project timeline by phase</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>DF-H two-stage architecture</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Prequential evaluation loop and metric definitions</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Expected post-drift recovery shapes: streaming, scheduled and frozen</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>DriftLab pipeline: stream, models, prequential loop, drift-window analysis</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Development workflow and artifact pipeline</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Exp-01 rolling Cohen kappa, DeepRiver against frozen random forest</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Exp-02 legacy damage distribution over 11 seeds</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>E01 corrected fixed-window damage per seed</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>E03 baseline ladder</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>E04 synthetic detector map, static host, raw signal</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>E17 real Elec2 host-conditional detector map</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>KDD'26 reproduction ranking and mean F1</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5.8</td>
+<td>E14 real-stream model check</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5.9</td>
+<td>E18 signal gate: overall AUC and drift-type breakdown</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>5.10</td>
+<td>E18 timing diagnostic at 0.1 false alarms per 1,000</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>5.11</td>
+<td>E19 DF-H v1 overall rank and F1 to FAR trade-off</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>5.12</td>
+<td>E21 Delay Tax floor: Stage 1 flat in delay, error-only shifts</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>5.13</td>
+<td>E22 detector shootout overall rank and F1 to FAR trade-off</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>Deployment blueprint for future work</td>
+<td style="text-align: right;">25</td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h2 id="list-of-tables">LIST OF TABLES<a class="headerlink" href="#list-of-tables" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Table No.</th>
+<th>Title</th>
+<th style="text-align: right;">Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Work breakdown structure, phase timing and status</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Roles and responsibilities</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Risk register with mitigation and fallback</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>Literature summary: method, cost, finding and limitation</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>Design considerations across seven dimensions</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>DF-H Stage 1 signals and fusion variants</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Tool and technique selection with justification</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Experimental setup: hardware, software, data and protocol</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Test cases with expected and observed results</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Safety, data protection and cyber security controls</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Evidence at a glance: experiment, setting, headline result and verdict</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Streaming against frozen and scheduled batch: E01 and E03</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Detector maps: E04 synthetic and E17 real Elec2</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Detector panel: KDD'26 reproduction and E22 shootout</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>E14 real-stream model check</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>Gate results: E18 deep signals and E19 DF-H v1</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>E21 Delay Tax at a fixed delay of 2,000 samples</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>5.8</td>
+<td>Objectives against measured outcomes</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>5.9</td>
+<td>Economic analysis: bill of materials and cost benefit</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr>
+<td>5.10</td>
+<td>DF-H against existing solutions and standards</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr>
+<td>A.1</td>
+<td>Artifact schema</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr>
+<td>A.2</td>
+<td>Programme outcome and programme specific outcome mapping</td>
+<td style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h2 id="list-of-abbreviations">LIST OF ABBREVIATIONS<a class="headerlink" href="#list-of-abbreviations" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Abbreviation</th>
+<th>Full Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADWIN</td>
+<td>Adaptive Windowing</td>
+</tr>
+<tr>
+<td>ARF</td>
+<td>Adaptive Random Forest</td>
+</tr>
+<tr>
+<td>AUC</td>
+<td>Area Under the Curve</td>
+</tr>
+<tr>
+<td>AUE</td>
+<td>Area Under Excess error</td>
+</tr>
+<tr>
+<td>BOM</td>
+<td>Bill of Materials</td>
+</tr>
+<tr>
+<td>CUSUM</td>
+<td>Cumulative Sum</td>
+</tr>
+<tr>
+<td>DDM</td>
+<td>Drift Detection Method</td>
+</tr>
+<tr>
+<td>DF-H</td>
+<td>Deep Feature Hybrid detector</td>
+</tr>
+<tr>
+<td>DPL</td>
+<td>Delayed Partially Labelled</td>
+</tr>
+<tr>
+<td>EDDM</td>
+<td>Early Drift Detection Method</td>
+</tr>
+<tr>
+<td>FAR</td>
+<td>False Alarm Rate</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>F1 detection score</td>
+</tr>
+<tr>
+<td>HAT</td>
+<td>Hoeffding Adaptive Tree</td>
+</tr>
+<tr>
+<td>HDDM-A</td>
+<td>Hoeffding Drift Detection Method, Average</td>
+</tr>
+<tr>
+<td>HDDM-W</td>
+<td>Hoeffding Drift Detection Method, Weighted</td>
+</tr>
+<tr>
+<td>HT</td>
+<td>Hoeffding Tree</td>
+</tr>
+<tr>
+<td>KDD</td>
+<td>Knowledge Discovery and Data Mining</td>
+</tr>
+<tr>
+<td>KSWIN</td>
+<td>Kolmogorov-Smirnov Windowing</td>
+</tr>
+<tr>
+<td>MMD</td>
+<td>Maximum Mean Discrepancy</td>
+</tr>
+<tr>
+<td>NDT</td>
+<td>Normalised Detection Time</td>
+</tr>
+<tr>
+<td>PHT</td>
+<td>Page-Hinkley Test</td>
+</tr>
+<tr>
+<td>PO</td>
+<td>Programme Outcome</td>
+</tr>
+<tr>
+<td>PSO</td>
+<td>Programme Specific Outcome</td>
+</tr>
+<tr>
+<td>RF</td>
+<td>Random Forest</td>
+</tr>
+<tr>
+<td>SSL</td>
+<td>Self-Supervised Learning</td>
+</tr>
+<tr>
+<td>STEPD</td>
+<td>Statistical Test of Equal Proportions, Detection</td>
+</tr>
+<tr>
+<td>STUDD</td>
+<td>Student-Teacher Unsupervised Drift Detection</td>
+</tr>
+<tr>
+<td>WBS</td>
+<td>Work Breakdown Structure</td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h1 id="chapter-1-introduction">CHAPTER 1: INTRODUCTION<a class="headerlink" href="#chapter-1-introduction" title="Permanent link">¶</a></h1>
+<h2 id="11-background">1.1 Background<a class="headerlink" href="#11-background" title="Permanent link">¶</a></h2>
+<p>Machine learning is usually taught on a finished dataset that is loaded, split, trained on and then treated as complete. Production data is not finished. It arrives one sample at a time, potentially without end, and is often too large or too fast to store. Three constraints define a genuine streaming algorithm: a single pass, memory that does not grow with the number of samples, and a bounded processing time per sample [4], [13], [25].</p>
+<p>The distribution that generates the stream does not stay fixed. Concept drift is a change in the joint distribution of features and labels over time, and it appears in four recognised shapes: abrupt, gradual, incremental and recurring [3], [4]. A model trained once and deployed is blind to all four. A model that updates on every sample can follow the change, because its own error signal is evidence that the world has moved [5], [11], [19].</p>
+<p>Most detectors in the field watch that error signal, which means they consume labels. In fraud confirmation, advertising attribution and intrusion triage the labels arrive hours or days later, so every error-based detector inherits a floor equal to the delay. This report treats that floor as a measurable quantity, calls it the Delay Tax, and builds a detector that escapes it where the input distribution moves.</p>
+<h2 id="12-problem-definition-and-objectives">1.2 Problem Definition and Objectives<a class="headerlink" href="#12-problem-definition-and-objectives" title="Permanent link">¶</a></h2>
+<p>The technical problem separates two questions that the literature usually conflates. The first is whether continual learning pays: does a learner that updates per sample recover from a concept change, and how much damage does it avoid relative to a model trained once or retrained on a clock. The second is whether drift can be detected before labels arrive, and which drift types permit it.</p>
+<p>Five measurable objectives were set for the work.</p>
+<ul>
+<li><strong>O1.</strong> Demonstrate at least a five times lower fixed-window damage for a streaming learner against a frozen learner over at least ten seeds, with zero frozen recoveries.</li>
+<li><strong>O2.</strong> Map classical detector performance across four drift shapes and two hosts, and reproduce the published KDD'26 detector ranking.</li>
+<li><strong>O3.</strong> Design and evaluate DF-H on an 80-cell pilot with a false-alarm rate at or below 0.1 per 1,000 samples and an overall rank in the top three, while reporting the top-2 gate honestly.</li>
+<li><strong>O4.</strong> Quantify the Delay Tax at a fixed delay of 2,000 samples and show a label-free Stage 1 warning at least twice as early as the best error-only detector.</li>
+<li><strong>O5.</strong> Deliver a reproducible harness with saved artifacts and automated tests for every reported number.</li>
+</ul>
+<h2 id="13-social-and-environmental-relevance">1.3 Social and Environmental Relevance<a class="headerlink" href="#13-social-and-environmental-relevance" title="Permanent link">¶</a></h2>
+<p>Fraud detection, intrusion monitoring and credit risk scoring share a property that makes this work consequential: the model's output decides something about a person, and the label that would correct the model arrives much later. Silent degradation produces false approvals, missed fraud and unfairly persistent decisions against groups affected by a distributional change.</p>
+<p>Single-pass learning with bounded memory also has an environmental reading. A model that updates incrementally does not re-read the historical corpus on a schedule, so the compute, storage and energy of repeated full retraining are avoided, and retention of raw history is no longer required for correctness.</p>
+<h2 id="14-project-plan">1.4 Project Plan<a class="headerlink" href="#14-project-plan" title="Permanent link">¶</a></h2>
+<p>The work was organised as ten work packages across seven relative phases, labelled relatively rather than by calendar date so that the plan stays readable independently of the academic timetable.</p>
+<h3 id="141-work-breakdown-structure">1.4.1 Work breakdown structure<a class="headerlink" href="#141-work-breakdown-structure" title="Permanent link">¶</a></h3>
+<p><strong>Table 1.1: Work breakdown structure, phase timing and status</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Work package</th>
+<th>Phase</th>
+<th>Output</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WP1</td>
+<td>Literature review and scope</td>
+<td>Literature review</td>
+<td>38 papers, six deep notes, gap analysis</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP2</td>
+<td>Harness and metric contract</td>
+<td>Harness and metric</td>
+<td>DriftLab, artifact schema, 53 tests</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP3</td>
+<td>Pilot and seed sweep</td>
+<td>Pilot</td>
+<td>Exp-01, Exp-02</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP4</td>
+<td>Metric correction</td>
+<td>Mid</td>
+<td>E01 fixed-window damage</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP5</td>
+<td>Detector maps</td>
+<td>Result accumulation</td>
+<td>E02, E04, E17</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP6</td>
+<td>Baseline ladder</td>
+<td>Result accumulation</td>
+<td>E03, E14</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP7</td>
+<td>Benchmark reproduction</td>
+<td>Result accumulation</td>
+<td>KDD'26, 2,800 tasks</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP8</td>
+<td>Deep signal gate and fusion</td>
+<td>Result accumulation</td>
+<td>E18, E19, E22</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP9</td>
+<td>Delay Tax</td>
+<td>Result accumulation</td>
+<td>E21 fixed-delay synthesis</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>WP10</td>
+<td>Report and artifact audit</td>
+<td>Final</td>
+<td>This report, evidence dossier</td>
+<td>Complete</td>
+</tr>
+</tbody>
+</table>
+<h3 id="142-timeline">1.4.2 Timeline<a class="headerlink" href="#142-timeline" title="Permanent link">¶</a></h3>
+<p>The seven phases follow one another in the order shown in Table 1.1, with the literature, harness and pilot phases overlapping the start phase. The Gantt chart in Figure 1.1 carries the same seven labels on a relative week axis. Scheduled retrain intervals, by contrast, are a property of the models under test rather than of the project, and they are reported in samples throughout.</p>
+<p><img alt="Project timeline by phase" src="../report_assets/fig-1-1-timeline.png"/></p>
+<p><strong>Figure 1.1: Project timeline by phase.</strong> Seven phases are placed on a relative week axis from week 1 to week 12, with no calendar dates. The start, literature review and harness phases overlap the opening weeks, the pilot runs into the middle of the schedule, the mid review sits at its close, and result accumulation precedes the final report.</p>
+<h3 id="143-roles-and-responsibilities">1.4.3 Roles and responsibilities<a class="headerlink" href="#143-roles-and-responsibilities" title="Permanent link">¶</a></h3>
+<p><strong>Table 1.2: Roles and responsibilities</strong></p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Primary responsibility</th>
+<th>Secondary responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ananya Arora</td>
+<td>Literature review and methodology</td>
+<td>Report structure, editing, citation audit</td>
+</tr>
+<tr>
+<td>Vaibhavi Kansal</td>
+<td>Harness development and baseline ladder</td>
+<td>Real-stream evaluation, test suite</td>
+</tr>
+<tr>
+<td>Priyansh Singh</td>
+<td>Deep detector and benchmark reproduction</td>
+<td>Artifact pipeline, continuous integration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="144-challenges-and-risk-management">1.4.4 Challenges and risk management<a class="headerlink" href="#144-challenges-and-risk-management" title="Permanent link">¶</a></h3>
+<p><strong>Table 1.3: Risk register with mitigation and fallback</strong></p>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Probability</th>
+<th>Impact</th>
+<th>Mitigation or fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deep signal has no discriminative power</td>
+<td>High</td>
+<td>High</td>
+<td>Pre-registered gate; classical control travels with the deep view</td>
+</tr>
+<tr>
+<td>Benchmark host mismatch</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>CapyMOA with an isolated Java environment; two protocol conventions implemented</td>
+</tr>
+<tr>
+<td>Leakage in learned fusion</td>
+<td>Medium</td>
+<td>High</td>
+<td>Rule-based fusion first; leave-one-dataset-out reserved for the learned variant</td>
+</tr>
+<tr>
+<td>Graphics compute cost</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Laptop-scale runs, bounded worker counts, short trial caps</td>
+</tr>
+<tr>
+<td>Deep model is a weak classifier</td>
+<td>High</td>
+<td>Medium</td>
+<td>Use the encoder as a signal extractor, not as the benchmark host</td>
+</tr>
+<tr>
+<td>False alarms make the detector unusable</td>
+<td>Medium</td>
+<td>High</td>
+<td>Threshold calibrated on pre-drift windows to a fixed false-alarm budget</td>
+</tr>
+<tr>
+<td>Scope creep across experiments</td>
+<td>High</td>
+<td>Medium</td>
+<td>Pre-registered gates; the pilot-first rule blocks an unearned full matrix</td>
+</tr>
+<tr>
+<td>Thermal ceiling on a laptop</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Controlled worker counts, no unattended heavy runs</td>
+</tr>
+<tr>
+<td>Delay floor cannot be beaten</td>
+<td>Certain</td>
+<td>Low</td>
+<td>State the warning and confirmation split instead of a single blended number</td>
+</tr>
+</tbody>
+</table>
+<h2 id="15-scope-and-limitations">1.5 Scope and Limitations<a class="headerlink" href="#15-scope-and-limitations" title="Permanent link">¶</a></h2>
+<p>The work covers classification on drifting streams, implemented in River and DeepRiver, evaluated prequentially over synthetic generators and public real streams, at detector level and at model level. It includes a two-stage detector, a fixed-delay synthesis of the label tax, and a reproducible artifact pipeline.</p>
+<p>It excludes regression, clustering and recommendation, distributed or federated training, a production service, and novel deep architectures. The stochastic, partial, selective and batch delay matrix is implemented but not benchmarked, and the ABCD and ABCD(X) arm of the benchmark is cited rather than reproduced.</p>
+<!-- pagebreak -->
+<h1 id="chapter-2-literature-survey-and-critical-review">CHAPTER 2: LITERATURE SURVEY AND CRITICAL REVIEW<a class="headerlink" href="#chapter-2-literature-survey-and-critical-review" title="Permanent link">¶</a></h1>
+<h2 id="21-critical-review">2.1 Critical Review<a class="headerlink" href="#21-critical-review" title="Permanent link">¶</a></h2>
+<p><strong>Foundations and evaluation.</strong> Streaming learning rests on a small set of uncontested results. Domingos and Hulten showed that a decision tree can be grown in one pass with constant memory per leaf [4]. Bifet and Gavalda supplied the adaptive window that most of the field still uses, with a false-positive guarantee that made detector evaluation quantitative [8], [9]. Gama, Sebastiao and Rodrigues formalised prequential scoring, in which each sample is predicted before it trains the model [11]. River packaged these primitives into a Python ecosystem [13], and DeepRiver extended the same interface to PyTorch learners [22].</p>
+<p><strong>Detector benchmarking and host dependence.</strong> The detector literature is long and, read carefully, negative. Gama et al. introduced DDM as statistical process control on the error stream [5], Baena-Garcia et al. added EDDM to catch gradual change through the distance between errors [6], and Page's cumulative sum scheme [1], given its minimax formulation by Lorden [2], survives as Page-Hinkley. Each method reports a win on its own evaluation, and the comparisons do not agree. Goncalves et al. summarised the position in 2014: no detector dominates on delay, false alarms and misses at once. Cerqueira et al. converted that folk result into a proper benchmark, with seven real datasets, four injected drift types, two transition speeds and a timing-aware F1 detection score [27]. Their ranking places SEED and STEPD first, with HDDM-A mid-table.</p>
+<p>The benchmark also exposes an unexamined variable. A detector watches the mistakes of a specific host learner, and the host adapts while the detector is watching. A one-sided test such as HDDM-A can therefore miss a change that an adaptive host repairs before the test separates. This report treats host dependence as a first-class measurement and reports detector maps on both a static and an adaptive host.</p>
+<p><strong>Delayed and partial labels.</strong> Zliobaite asked the question that governs this area: when a change arrives with delayed labelling, is it detectable at all [10]. The answer is conditional. Pure posterior drift, in which the conditional distribution of the label given the features changes while the feature distribution does not, leaves no trace in the input stream, so no label-free method can see it. Grzenda, Gomes and Bifet supplied the evaluation protocol for the delayed case [12]. Gomes et al. surveyed semi-supervised learning for delayed partially labelled streams and named the delayed and partial intersection as under-explored [16]. Botacin and Gomes measured the operational cost in a malware pipeline, reporting roughly a 50 percent increase in user exposure and a decrease of up to 75 percent in detection as delay grows [20]. Alencar et al. confirmed that the terminology itself is fragmented [24].</p>
+<p><strong>Label-free and hybrid detection.</strong> STUDD detects drift without labels by monitoring how well a student model imitates the deployed teacher [18], and it demonstrates both the value and the limit of the approach: it works when the input distribution moves, and it fails on pure posterior drift, exactly as Zliobaite predicted [10], [18]. The active-learning line attacks the same problem from the acquisition side [15]. Agu et al. gate deep adaptation on a parametric detector, which is architecturally close to the two-stage idea but sidesteps delayed ground truth by using pseudo-labels [23]. Applied work adds the operational case: Hans and Zuhlke show an online ensemble beating weekly batch retraining [25], Abdoune et al. compare iterative batch against incremental learning on a digital twin [26], and Carneiro et al. predict whether retraining will help before spending the compute [14]. Imbalanced drifting streams are where adaptive ensembles have the strongest published record, with ROSE reporting a mean kappa of 63.65 against 57.85 for the next-best of thirty ensembles over twenty-four real datasets [17].</p>
+<p><strong>The open position.</strong> Three results run through the review. Detector quality is host-conditional, so a detector claim without a host is incomplete. Label-free monitoring is limited to changes that leave a trace in the input distribution. An immediate-label benchmark now exists, and the equivalent for delayed, partial and selective labels does not. No logged paper builds and evaluates a two-stage warning and confirmation protocol against a calibrated detector panel, which is the gap this project occupies [16], [18].</p>
+<h2 id="22-summary-table">2.2 Summary Table<a class="headerlink" href="#22-summary-table" title="Permanent link">¶</a></h2>
+<p><strong>Table 2.1: Literature summary: method, cost, finding and limitation</strong></p>
+<table>
+<thead>
+<tr>
+<th>Work</th>
+<th>Year</th>
+<th>Method or dataset</th>
+<th>Cost or efficiency</th>
+<th>Key finding</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page [1]</td>
+<td>1954</td>
+<td>CUSUM sequential test</td>
+<td>Constant memory</td>
+<td>Sequential change detection with a tunable threshold</td>
+<td>No notion of a learner or of drift type</td>
+</tr>
+<tr>
+<td>Lorden [2]</td>
+<td>1971</td>
+<td>Minimax quickest detection</td>
+<td>Theoretical</td>
+<td>Frames the delay against false-alarm trade-off</td>
+<td>Asymptotic, not a practical recipe</td>
+</tr>
+<tr>
+<td>Widmer and Kubat [3]</td>
+<td>1996</td>
+<td>FLORA2, hidden context</td>
+<td>Small</td>
+<td>Early formal treatment of drift</td>
+<td>Concept-level, no detector benchmark</td>
+</tr>
+<tr>
+<td>Domingos and Hulten [4]</td>
+<td>2000</td>
+<td>Hoeffding tree, one pass</td>
+<td>Constant memory per leaf</td>
+<td>Learn a tree in a single pass with a statistical split rule</td>
+<td>Static, no adaptation</td>
+</tr>
+<tr>
+<td>Gama et al. [5]</td>
+<td>2004</td>
+<td>DDM on the error stream</td>
+<td>Cheap</td>
+<td>Warn and alarm thresholds on error rate and variance</td>
+<td>Weak on gradual drift</td>
+</tr>
+<tr>
+<td>Baena-Garcia et al. [6]</td>
+<td>2006</td>
+<td>EDDM on error distances</td>
+<td>Cheap</td>
+<td>Better sensitivity to gradual change</td>
+<td>More parameters, noisier</td>
+</tr>
+<tr>
+<td>Bifet and Gavalda [8]</td>
+<td>2007</td>
+<td>ADWIN adaptive window</td>
+<td>Bounded window</td>
+<td>False-positive guarantee without a fixed window</td>
+<td>Slower on gradual drift</td>
+</tr>
+<tr>
+<td>Zliobaite [10]</td>
+<td>2010</td>
+<td>Detectability analysis</td>
+<td>Theoretical</td>
+<td>Pure posterior drift is undetectable from inputs</td>
+<td>No architecture proposed</td>
+</tr>
+<tr>
+<td>Gama et al. [11]</td>
+<td>2013</td>
+<td>Prequential evaluation</td>
+<td>One pass</td>
+<td>Test-then-train is the correct ordered-stream protocol</td>
+<td>Breaks when labels are delayed</td>
+</tr>
+<tr>
+<td>Grzenda et al. [12]</td>
+<td>2020</td>
+<td>Delayed-labelling evaluation</td>
+<td>Buffered</td>
+<td>Continuous re-evaluation for delayed labels</td>
+<td>Evaluation protocol, not detector analysis</td>
+</tr>
+<tr>
+<td>Montiel et al. [13]</td>
+<td>2021</td>
+<td>River library</td>
+<td>Open source</td>
+<td>Unified streaming API with detectors and metrics</td>
+<td>Tooling paper, no benchmark</td>
+</tr>
+<tr>
+<td>Carneiro et al. [14]</td>
+<td>2021</td>
+<td>Meta-learning for retraining</td>
+<td>Meta-model</td>
+<td>Predicts whether retraining will help before spending compute</td>
+<td>Decision support, not detection</td>
+</tr>
+<tr>
+<td>Gomes et al. [16]</td>
+<td>2022</td>
+<td>DPL survey</td>
+<td>Survey</td>
+<td>Names the delayed and partial intersection as open</td>
+<td>No experiment at detector level</td>
+</tr>
+<tr>
+<td>STUDD [18]</td>
+<td>2023</td>
+<td>Student-teacher, label-free</td>
+<td>Page-Hinkley on imitation loss</td>
+<td>Strong label efficiency, missed-detection ratio about 19 percent</td>
+<td>Blind to pure posterior drift</td>
+</tr>
+<tr>
+<td>Botacin and Gomes [20]</td>
+<td>2024</td>
+<td>Malware pipeline, DREBIN</td>
+<td>Queue-driven delay</td>
+<td>Delay raises exposure about 50 percent, cuts detection up to 75 percent</td>
+<td>Pipeline-specific, not detector-level</td>
+</tr>
+<tr>
+<td>Agu et al. [23]</td>
+<td>2026</td>
+<td>Gamma-Weibull gate, pseudo-labels</td>
+<td>Under 50 KB memory</td>
+<td>Detection delay of 6 samples abrupt, 80 gradual</td>
+<td>Uses pseudo-labels, not delayed truth</td>
+</tr>
+<tr>
+<td>KDD'26 [27]</td>
+<td>2026</td>
+<td>14 detectors, 7 datasets, 4 drift types</td>
+<td>Monte Carlo injection</td>
+<td>SEED and STEPD lead; no detector wins everywhere</td>
+<td>Immediate labels only</td>
+</tr>
+<tr>
+<td>Alencar et al. [24]</td>
+<td>2026</td>
+<td>Experimental survey</td>
+<td>Survey</td>
+<td>Confirms fragmentation of the delayed-label setting</td>
+<td>Results at survey level</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reading.</strong> The table separates three kinds of contribution. Foundational entries establish the mechanism and the protocol, benchmark entries establish comparability, and delay entries establish that the problem exists without establishing its detector-level size. The KDD'26 row matters most, because it supplies the protocol that Chapter 5 reproduces and extends.</p>
+<h2 id="23-identification-of-research-gaps">2.3 Identification of Research Gaps<a class="headerlink" href="#23-identification-of-research-gaps" title="Permanent link">¶</a></h2>
+<p>The literature leaves five gaps, each mapping to one or more objectives in Section 1.2.</p>
+<p><strong>G1. Detector-level degradation under delayed, partial and selective labels is unquantified.</strong> Three papers establish that delayed labels harm learning [16], [20], [24], and none isolates the detector from the learner and reports detection delay against label latency. Lemma 1 states the floor and E21 measures it. This maps to O4.</p>
+<p><strong>G2. An immediate-label detector benchmark exists, but no delayed-label benchmark does.</strong> Cerqueira et al. solved comparability for the immediate case [27], and the same harness has not been run under a delay schedule. This report reproduces their ranking as a control and applies a fixed-delay synthesis to the same cells. This maps to O2 and O4.</p>
+<p><strong>G3. No built and evaluated two-stage warning and confirmation protocol exists.</strong> Gomes et al. name the hybrid as open [16], STUDD demonstrates the label-free half [18], Agu et al. build an adjacent gate that avoids delayed truth [23], and none reports <span class="arithmatex">\(T_{\mathrm{warn}}\)</span> separately from <span class="arithmatex">\(T_{\mathrm{confirm}}\)</span> on a calibrated panel. This maps to O3 and O4.</p>
+<p><strong>G4. The marginal value of a deep representation monitor over a classical feature test is unproven.</strong> Neither the imitation loss of STUDD [18] nor the parametric likelihood of Agu et al. [23] is reported against a per-feature Kolmogorov-Smirnov control at a matched false-alarm budget. E18 was built as that comparison, and its result is negative. This maps to O3.</p>
+<p><strong>G5. The operational cost of continual learning under drift is under-reported.</strong> Papers report accuracy and rarely report damage, warning latency, false-alarm budgets or the compute saved by avoiding full retraining [21], [25], [26]. This report prices damage in samples times kappa and compute in wall-clock seconds, and states the energy envelope in Chapter 5. This maps to O5.</p>
+<p>The literature therefore supports a narrow claim: the ingredients are published, and the combination is not. Chapter 3 describes the design that tests that combination.</p>
+<!-- pagebreak -->
+<h1 id="chapter-3-system-design-and-methodology">CHAPTER 3: SYSTEM DESIGN AND METHODOLOGY<a class="headerlink" href="#chapter-3-system-design-and-methodology" title="Permanent link">¶</a></h1>
+<h2 id="31-design-considerations">3.1 Design Considerations<a class="headerlink" href="#31-design-considerations" title="Permanent link">¶</a></h2>
+<p>The design was constrained along seven dimensions before any experiment was written. Table 3.1 states the position taken on each.</p>
+<p><strong>Table 3.1: Design considerations across seven dimensions</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Position taken</th>
+<th>Consequence in the design</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Economic</td>
+<td>Open-source stack, laptop-scale compute, no cloud cluster</td>
+<td>The owned laptop is the only capital item; the graphics processor is the main marginal cost</td>
+</tr>
+<tr>
+<td>Environmental</td>
+<td>Bounded memory, few full retrains, local execution</td>
+<td>Single-pass learners; fixed worker counts; no repeated corpus reads</td>
+</tr>
+<tr>
+<td>Social</td>
+<td>Fraud, intrusion and credit-risk use cases</td>
+<td>Delayed labels treated as the normal case rather than an edge case</td>
+</tr>
+<tr>
+<td>Political</td>
+<td>Public datasets, no personal data, transparent reporting</td>
+<td>Every number traces to a committed artifact; negative gates published</td>
+</tr>
+<tr>
+<td>Ethical</td>
+<td>Pre-registered gates, no tuning on test trials</td>
+<td>A gate that fails is reported as a failure, not reframed</td>
+</tr>
+<tr>
+<td>Health and safety</td>
+<td>No human subjects, no physical hazard</td>
+<td>Thermal safety on the laptop; no unattended heavy runs</td>
+</tr>
+<tr>
+<td>Sustainability</td>
+<td>Reusable harness, versioned configuration, provenance</td>
+<td>Artifact schema, configuration hashes, one-command reproduction</td>
+</tr>
+</tbody>
+</table>
+<p>The economic constraint shapes the science. A cluster would have allowed the full 7 by 4 by 2 by 50 matrix for the fusion detector. The laptop did not, so a pilot-first rule was adopted: an 80-cell pilot must clear its gate before the full matrix is justified. The rule was pre-registered, the pilot failed, and the matrix was not run.</p>
+<h2 id="32-methodology">3.2 Methodology<a class="headerlink" href="#32-methodology" title="Permanent link">¶</a></h2>
+<p>The design has two halves: a measurement instrument and a detector. DriftLab turns a YAML specification into a reproducible run. DF-H is a two-stage detector that separates a label-free warning from a supervised confirmation.</p>
+<p><strong>DriftLab.</strong> Seven modules carry the harness: <code>config</code> (typed specification and stable hash), <code>streams</code> (generators and injected episodes), <code>detectors</code> (the classical panel), <code>learners</code> (frozen, scheduled, oracle and adaptive models), <code>metrics</code> (prequential and drift-window measures), <code>artifacts</code> (the result schema) and <code>harness</code> (the loop, with per-seed units and a resume guard). A run is reproducible from <code>meta.json</code> alone, which records the configuration, its hash, the git revision, the library versions and the exact command. Figures are re-rendered from artifacts, so no number has a manual step between measurement and plot.</p>
+<p><strong>The loop.</strong> For each sample the model predicts, the metric is updated with the true label, and then the model learns from that sample. The order matters: a model that learned first would be scored on data it had already seen. The loop appears as Code Listing 4.1.</p>
+<p><strong>Stage 1.</strong> Seven label-free signals are computed over a window of 500 samples with a stride of 100: self-supervised loss from a frozen encoder, embedding mean shift, embedding variance shift, head disagreement, predictive entropy, an internal ADWIN, and a per-feature Kolmogorov-Smirnov statistic. The reference is the first 20 percent of windows, and each signal is normalised by its reference mean and spread. The classical KS statistic travels with the deep signals deliberately, as a control that must be beaten before the deep representation can claim value.</p>
+<p><strong>Stage 2.</strong> The classical panel watches the host's mistake stream: SEED, STEPD, ADWIN, HDDM-A and HDDM-W. These detectors consume labels, which is why they are floor-bound. Thresholds are calibrated on pre-drift windows to 0.1 false alarms per 1,000 samples per dataset.</p>
+<p><strong>Table 3.2: DF-H Stage 1 signals and fusion variants</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Signals or detectors</th>
+<th>Labels required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stage 1 deep</td>
+<td><code>ssl_loss</code>, <code>embedding_shift</code>, <code>embedding_var_shift</code>, <code>head_disagreement</code>, <code>entropy</code>, <code>internal_adwin</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Stage 1 classical</td>
+<td><code>feature_ks</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Stage 1 combined</td>
+<td>Maximum of the deep and classical standardised scores</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Stage 2</td>
+<td>SEED, STEPD, ADWIN, HDDM-A, HDDM-W on the raw mistake channel</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Fusion variants</td>
+<td><code>S1</code>, <code>S2</code>, <code>OR</code>, <code>AND</code>, <code>2of3</code>, <code>2of3_nodeep</code></td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Primary candidate</td>
+<td><code>2of3_both</code>, reported as DF-H</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Control</td>
+<td><code>2of3_nodeep</code>, which removes the feature monitor</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fusion.</strong> Fusion runs over a confirmation window of 2,000 samples with a refractory period of 2,000 samples. <code>OR</code> reports the earliest alarm of either stage, <code>AND</code> reports the time at which both have alarmed, and 2-of-3 reports the time at which two of three members have alarmed. Because the stages hold different information, the design reports two times rather than one: <span class="arithmatex">\(T_{\mathrm{warn}}\)</span> from Stage 1 is not shifted by label delay, and <span class="arithmatex">\(T_{\mathrm{confirm}}\)</span> from Stage 2 is floor-bound at <span class="arithmatex">\(\tau + L\)</span>. A single blended number would hide the result.</p>
+<p><strong>Benchmark protocol.</strong> The external benchmark is reproduced with seven datasets, four drift types, two transition speeds, 50 trials, a 100,000-row cap, a Hoeffding Tree host, and the correctness signal with the code-convention gradual anchor. The public code and the paper disagree on signal polarity and gradual anchoring, so both conventions are implemented; the reported run uses the one that reproduces the published F1 values.</p>
+<p><strong>Delay regimes.</strong> Five label-arrival schedules are implemented: fixed, geometric, partial, selective and batch. Only the fixed-delay case is measured here, and that restriction is stated wherever the Delay Tax appears.</p>
+<p><img alt="DF-H two-stage architecture" src="../report_assets/fig-3-1-architecture.png"/></p>
+<p><strong>Figure 3.1: DF-H two-stage architecture.</strong> The input stream forks by information type. Stage 1 receives features only and computes self-supervised loss, embedding shift and the feature KS statistic, so its output is available at any time. Stage 2 receives the host's mistakes, which exist only where labels have arrived. A 2-of-3 rule over a 2,000-sample window combines the two, and the design reports the warning time and the confirmed time separately because only the second is floor-bound.</p>
+<p><img alt="Prequential evaluation loop and metric definitions" src="../report_assets/fig-3-2-prequential.png"/></p>
+<p><strong>Figure 3.2: Prequential evaluation loop and metric definitions.</strong> Each sample is predicted before it is used to train, and the metric is updated in between, so no score is contaminated by the sample it scores. The curve beneath the loop shows how the drift-window quantities are read: <span class="arithmatex">\(\kappa_0\)</span> is the pre-drift reference, <span class="arithmatex">\(\Delta\kappa\)</span> is the dip depth, the width of the return is the recovery time, and the shaded region is the damage that Section 3.3 integrates.</p>
+<p><img alt="Expected post-drift recovery shapes for streaming, scheduled and frozen learning" src="../report_assets/fig-3-3-recovery-shapes.png"/></p>
+<p><strong>Figure 3.3: Expected post-drift recovery shapes for streaming, scheduled and frozen batch models.</strong> The metric definitions of Section 3.3 can be read from the shape. The pre-drift band is the reference level, the fall at the drift point is the dip depth, the width of the return is the recovery time, and the shaded region is the damage. A streaming learner closes that region quickly, a scheduled model stays wrong until its next refit, and a frozen model never closes it. The shapes are schematic; measured curves appear in Chapter 5.</p>
+<h2 id="33-modelling">3.3 Modelling<a class="headerlink" href="#33-modelling" title="Permanent link">¶</a></h2>
+<p>Let a stream arrive one sample at a time, and let a drift occur at sample <span class="arithmatex">\(\tau\)</span>. Every model predicts before it learns, so the instantaneous error is the indicator that the prediction differs from the label.</p>
+<div class="arithmatex">\[
+e_t = \mathbb{1}\left[\hat{y}_t \neq y_t\right]
+\]</div>
+<p>Rolling Cohen kappa over a window <span class="arithmatex">\(w\)</span> corrects prequential accuracy for chance agreement, and it is the primary quality measure because it does not reward a majority-class predictor on an imbalanced stream. Damage is priced against a shared pre-drift reference, so that a weak model cannot lower its own baseline and appear healthy.</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathrm{damage}_{\mathrm{ref}}  &amp;= \sum_{t=\tau}^{\tau+W} \max\left(\kappa_{\mathrm{ref}} - \kappa_t,\ 0\right) \\
+\mathrm{damage}_{\mathrm{full}} &amp;= \sum_{t=\tau}^{T} \max\left(\kappa_{\mathrm{ref}} - \kappa_t,\ 0\right)
+\end{aligned}
+\]</div>
+<p><span class="arithmatex">\(\mathrm{damage}_{\mathrm{ref}}\)</span> uses a fixed window <span class="arithmatex">\(W\)</span> of 5,000 samples and is the primary metric; <span class="arithmatex">\(\mathrm{damage}_{\mathrm{full}}\)</span> integrates to the end of the stream and captures the tail. The area under excess error against the timing oracle, AUE, is secondary, because the oracle knows when the drift happened but not what the new concept is. Recovery counts only after a genuine band exit followed by 500 consecutive in-band samples.</p>
+<p>Four lemmas bound what any detector can do.</p>
+<p><strong>Lemma 1 (reaction floor).</strong> An error-stream detector cannot alarm before the post-drift labels arrive, so under a fixed delay <span class="arithmatex">\(L\)</span> its detection time satisfies <span class="arithmatex">\(T \ge \tau + L\)</span>. The detector's input is a function of labelled samples only, so at time <span class="arithmatex">\(t &lt; \tau + L\)</span> no post-drift label exists. A label-free monitor is not subject to this bound, and that asymmetry is the content of the Delay Tax.</p>
+<p><strong>Lemma 2 (power loss).</strong> A detector observing a fraction <span class="arithmatex">\(p\)</span> of labels sees an effective sample size <span class="arithmatex">\(pW\)</span> per window, so the smallest detectable shift in the error mean grows as <span class="arithmatex">\(1/\sqrt{pW}\)</span>, and the detectable effect is inflated by <span class="arithmatex">\(1/\sqrt{p}\)</span>.</p>
+<p><strong>Lemma 3 (batch variance inflation).</strong> For labels arriving in batches of size <span class="arithmatex">\(b\)</span> with intra-batch correlation <span class="arithmatex">\(\rho\)</span>, the variance of the observed error mean is inflated by the design effect <span class="arithmatex">\(1 + (b - 1)\rho\)</span>, so a threshold calibrated on independent arrivals will fire too often.</p>
+<p><strong>Lemma 4 (identifiability ceiling).</strong> If the drift is purely posterior, so that the conditional label distribution changes while the feature distribution does not, the divergence between pre-drift and post-drift inputs is zero and no label-free method can detect the change. This restates Zliobaite [10], and its consequence is architectural: a label-free monitor can only warn, so confirmation is required by information rather than by preference. Lemmas 2 and 3 are stated but not measured end to end here.</p>
+<p>The fusion score is the standardised maximum of the participating members, and an alarm is declared when two of three exceed their calibrated thresholds inside the confirmation window. The benchmark score is the F1 detection score of Cerqueira et al. [27], computed from matched, missed and false alarms, with the normalised detection time.</p>
+<h2 id="34-tool-and-technique-selection">3.4 Tool and Technique Selection<a class="headerlink" href="#34-tool-and-technique-selection" title="Permanent link">¶</a></h2>
+<p><strong>Table 3.3: Tool and technique selection with justification</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tool or technique</th>
+<th>Version</th>
+<th>Role</th>
+<th>Justification against alternatives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.12.3</td>
+<td>Implementation language</td>
+<td>Ecosystem covers every library required; no performance-critical path is in pure Python</td>
+</tr>
+<tr>
+<td>uv</td>
+<td>current</td>
+<td>Environment and dependency management</td>
+<td>Reproducible lock files; faster resolution than pip and conda for this dependency set</td>
+</tr>
+<tr>
+<td>River</td>
+<td>0.25.0</td>
+<td>Detectors, trees, ensembles, metrics</td>
+<td>Native prequential API and the exact detector panel required; merging of creme and scikit-multiflow [13]</td>
+</tr>
+<tr>
+<td>DeepRiver</td>
+<td>0.3.4</td>
+<td>Deep streaming learners, frozen encoder</td>
+<td>Only maintained library that puts PyTorch models behind the River streaming interface [22]</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td>2.5.1 with CUDA 12.4</td>
+<td>Encoder pretraining and inference</td>
+<td>Required by DeepRiver; the 12.4 build matches the installed driver</td>
+</tr>
+<tr>
+<td>scikit-learn</td>
+<td>1.9.0</td>
+<td>Frozen random forest baseline</td>
+<td>Reference implementation of the batch model under test; no streaming substitute is equivalent</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>2.5.3</td>
+<td>Stream generation and numerics</td>
+<td>Deterministic seeded generation; the fusion rules are pure NumPy</td>
+</tr>
+<tr>
+<td>SciPy</td>
+<td>1.18.1</td>
+<td>Statistical tests</td>
+<td>Kolmogorov-Smirnov and KS-based phase tests are already implemented and validated</td>
+</tr>
+<tr>
+<td>CapyMOA</td>
+<td>0.15.1</td>
+<td>Benchmark reproduction</td>
+<td>Wraps the reference Java detectors, so the reproduction uses the benchmark's own implementations</td>
+</tr>
+<tr>
+<td>Matplotlib</td>
+<td>current</td>
+<td>Figures</td>
+<td>Every figure is rendered from a committed artifact, never assembled by hand</td>
+</tr>
+<tr>
+<td>MkDocs Material</td>
+<td>current</td>
+<td>Evidence site</td>
+<td>Renders the dossier for review; not required to reproduce a result</td>
+</tr>
+</tbody>
+</table>
+<p>Two rejections are worth recording. A pure MOA stack was rejected because the analysis, artifact schema and statistical layer would have had to be rewritten in Java, and CapyMOA already exposes the same detectors from Python. A custom streaming framework was rejected because River already provides the detectors, trees and metrics, so building one would have substituted engineering for science. The Java bridge runs in its own virtual environment with a 512 MB heap, so a benchmark failure cannot disturb the Python experiments.</p>
+<!-- pagebreak -->
+<h1 id="chapter-4-implementation-and-testing">CHAPTER 4: IMPLEMENTATION AND TESTING<a class="headerlink" href="#chapter-4-implementation-and-testing" title="Permanent link">¶</a></h1>
+<h2 id="41-development-details">4.1 Development Details<a class="headerlink" href="#41-development-details" title="Permanent link">¶</a></h2>
+<p>Development proceeded in ten work packages. The order matters, because two of them invalidated results produced by earlier ones and forced a controlled rerun.</p>
+<p><strong>Start phase.</strong> Orientation established the reading list and the tooling. River 0.25.0 was pinned and its detector panel was verified to contain every method the plan required.</p>
+<p><strong>Literature review phase.</strong> Thirty-eight papers were catalogued with verification status, six received deep-dive notes, and the gap analysis produced the four lemmas and the scoop-risk assessment that Chapter 2 reports. Two findings changed the design. Cerqueira et al. had already standardised immediate-label detector benchmarking, so the gap statement was narrowed to the delayed case [27]. Alencar et al. is a paywalled experimental survey of the delayed and partial setting [24], so the contribution was reworded to claim formal bounds and a confirmation protocol rather than the measurement of degradation itself.</p>
+<p><strong>Harness and metric phase.</strong> The bespoke pilot scripts were replaced by a configuration-driven harness. A run is a per-seed unit with a cache key, so an interrupted sweep resumes at the next unit. A configuration-hash guard refuses to resume into an artifact produced by a different configuration. The artifact contract was fixed at that point, with figures rendered from the artifact rather than drawn by hand.</p>
+<p><strong>Pilot phase.</strong> Exp-01 ran one DeepRiver rolling classifier against a frozen random forest on a SEA stream with one abrupt drift at sample 30,000. Exp-02 repeated the identical configuration on eleven seeds, and seed 42 reproduced the Exp-01 recovery exactly, which established that the sweep was a genuine rerun.</p>
+<p><strong>Mid phase.</strong> A defect was found in the damage metric. The legacy definition integrated from the drift point to the recovery point, and on eight of eleven seeds the recovery rule collapsed to the drift point itself, so the streaming integral covered one sample while the frozen integral covered the whole window. The corrected contract integrates over a fixed 5,000-sample window against a panel-shared reference, and recovery is conditional on a genuine band exit. Experiment E01 reran the clean three-model panel, and the headline fell from the retired 294 times to approximately 6.9 times.</p>
+<p><strong>Result accumulation, part one.</strong> E02 ran the no-drift control and returned a deliberate negative: smoothing the mistake signal makes ADWIN and KSWIN fire on a stationary stream, so the raw channel became the default. E04 produced the synthetic detector map across four generators, four drift shapes, eight detectors, two hosts and both channels, and a scoring bug was fixed here: zero-alarm runs had been dropped from the F1 mean, so a detector that never rang appeared perfect. E17 replayed the same panel on real electricity-market records with an injected label swap.</p>
+<p><strong>Result accumulation, part two.</strong> E03 ran the ten-model baseline ladder on two generators over eleven seeds, and E14 ran the real-stream model check on Elec2 and Phishing.</p>
+<p><strong>Result accumulation, part three.</strong> The external benchmark was reproduced with 2,800 tasks across seven datasets, four drift types, two transition speeds, 50 trials and six detectors, completing in 13 minutes and 33 seconds on 14 workers with no failures. A protocol discrepancy was resolved by measurement: the public code feeds correctness into detectors that document an error convention, and its gradual window is anchored differently from the paper. Both conventions are implemented, and the headline uses the one that reproduces the published F1 values.</p>
+<p><strong>Result accumulation, part four.</strong> E18 instrumented the frozen encoder and produced a pure NumPy signal stream for all 80 trials, then failed its gate. E19 piloted the fusion detector and failed the top-2 gate. E21 built the fixed-delay synthesis from the committed trial artifacts without retraining a model. E22 ran the capability check against the requested classical panel in about 45 seconds.</p>
+<p><strong>Final phase.</strong> The report was written from artifacts, and the audit was run against the evidence map rather than against memory.</p>
+<p><code>Code Listing 4.1</code> gives the prequential loop and the fusion core in Python-like syntax. The listing is abridged; the full implementations are in <code>experiments/driftlab/harness.py</code> and <code>experiments/driftlab/fusion.py</code>.</p>
+<p><strong>Code Listing 4.1: Prequential loop and DF-H fusion core</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># 1. Prequential loop: predict, score, then learn. Order is not negotiable.</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_one</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>      <span class="c1"># score the unseen sample first</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>           <span class="c1"># no leakage: metric sees the truth now</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">model</span><span class="o">.</span><span class="n">learn_one</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>             <span class="c1"># only now may the model learn</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="c1"># 2. Rolling kappa and the shared pre-drift reference.</span>
+<a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="n">kappa_ref</span> <span class="o">=</span> <span class="n">panel_mean_kappa_before</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>      <span class="c1"># shared across all models</span>
+<a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="n">damage_ref</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">kappa_ref</span> <span class="o">-</span> <span class="n">kappa_t</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>                 <span class="k">for</span> <span class="n">kappa_t</span> <span class="ow">in</span> <span class="n">rolling_kappa</span><span class="p">[</span><span class="n">tau</span><span class="p">:</span><span class="n">tau</span> <span class="o">+</span> <span class="mi">5000</span><span class="p">])</span>
+<a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a>
+<a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="c1"># 3. DF-H Stage 1: label-free standardised signals, reference = first 20% of windows.</span>
+<a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="n">z</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">signal</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_mean</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="o">/</span> <span class="n">ref_std</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"ssl_loss"</span><span class="p">,</span> <span class="s2">"embedding_shift"</span><span class="p">,</span> <span class="s2">"embedding_var_shift"</span><span class="p">,</span>
+<a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a>                  <span class="s2">"head_disagreement"</span><span class="p">,</span> <span class="s2">"entropy"</span><span class="p">,</span> <span class="s2">"internal_adwin"</span><span class="p">,</span> <span class="s2">"feature_ks"</span><span class="p">)}</span>
+<a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="n">stage1_deep</span>      <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="s2">"ssl_loss"</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="s2">"embedding_shift"</span><span class="p">])</span>
+<a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="n">stage1_classical</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="s2">"feature_ks"</span><span class="p">]</span>
+<a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="n">stage1_both</span>      <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stage1_deep</span><span class="p">,</span> <span class="n">stage1_classical</span><span class="p">)</span>
+<a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>
+<a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="c1"># 4. Stage 2: error-stream detectors on the host's raw mistake channel.</span>
+<a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="n">stage2</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">det</span><span class="o">.</span><span class="n">alarm</span> <span class="k">for</span> <span class="n">det</span> <span class="ow">in</span> <span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">stepd</span><span class="p">,</span> <span class="n">adwin</span><span class="p">,</span> <span class="n">hddm_a</span><span class="p">,</span> <span class="n">hddm_w</span><span class="p">))</span>
+<a href="#__codelineno-0-22" id="__codelineno-0-22" name="__codelineno-0-22"></a>
+<a href="#__codelineno-0-23" id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="c1"># 5. Fusion: 2-of-3 confirmation inside a 2,000-sample window.</span>
+<a href="#__codelineno-0-24" id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="n">votes</span> <span class="o">=</span> <span class="p">[</span><span class="n">stage1_both</span> <span class="o">&gt;</span> <span class="n">threshold_s1</span><span class="p">,</span>
+<a href="#__codelineno-0-25" id="__codelineno-0-25" name="__codelineno-0-25"></a>         <span class="n">stage2</span><span class="p">,</span>
+<a href="#__codelineno-0-26" id="__codelineno-0-26" name="__codelineno-0-26"></a>         <span class="n">ensemble_vote</span> <span class="o">&gt;</span> <span class="n">threshold_s2</span><span class="p">]</span>
+<a href="#__codelineno-0-27" id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">votes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+<a href="#__codelineno-0-28" id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">T_confirm</span> <span class="o">=</span> <span class="n">t</span>
+<a href="#__codelineno-0-29" id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="n">trigger_adaptation</span><span class="p">()</span>
+<a href="#__codelineno-0-30" id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="n">T_warn</span> <span class="o">=</span> <span class="n">first_t</span> <span class="n">where</span> <span class="n">stage1_both</span> <span class="o">&gt;</span> <span class="n">threshold_s1</span>   <span class="c1"># never shifted by delay L</span>
+</code></pre></div>
+<p><img alt="DriftLab pipeline: stream, models, prequential loop, drift-window analysis" src="../report_assets/fig-4-1-pipeline.png"/></p>
+<p><strong>Figure 4.1: DriftLab pipeline from stream to drift-window analysis.</strong> Both models consume the same sample order from one seeded stream, so the only difference between arms is whether the model may update. Everything below the prequential loop is measurement rather than modelling, since per-sample scores are recorded and the drift-window quantities are computed from those records. The verdict box states the outcome that the pipeline reports.</p>
+<p><img alt="Development workflow and artifact pipeline" src="../report_assets/fig-4-2-workflow.png"/></p>
+<p><strong>Figure 4.2: Development workflow and artifact pipeline.</strong> A YAML configuration and a registry feed the DriftLab runner, which writes <code>meta.json</code>, <code>summary.json</code>, <code>episodes.jsonl</code>, <code>detections.jsonl</code> and <code>series.npz</code>. Report tables and figures are produced only from those artifacts; the crossed path marks the direct route from a run to a figure, which the harness forbids.</p>
+<h2 id="42-experimental-setup">4.2 Experimental Setup<a class="headerlink" href="#42-experimental-setup" title="Permanent link">¶</a></h2>
+<p><strong>Table 4.1: Experimental setup: hardware, software, data and protocol</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware</td>
+<td>Laptop with AMD Ryzen 7 6800H, 8 cores and 16 threads, NVIDIA RTX 3050 Laptop GPU, 16 GB RAM, Linux</td>
+</tr>
+<tr>
+<td>Thermal envelope</td>
+<td>GPU up to 95 W under load; CPU package up to 45 W under load</td>
+</tr>
+<tr>
+<td>Language and environment</td>
+<td>Python 3.12.3, uv package manager</td>
+</tr>
+<tr>
+<td>Streaming stack</td>
+<td>River 0.25.0, DeepRiver 0.3.4, PyTorch 2.5.1 with CUDA 12.4</td>
+</tr>
+<tr>
+<td>Numerical stack</td>
+<td>NumPy 2.5.3, SciPy 1.18.1, scikit-learn 1.9.0</td>
+</tr>
+<tr>
+<td>Benchmark stack</td>
+<td>CapyMOA 0.15.1, NumPy 2.4.6, Java subprocess with a 512 MB heap</td>
+</tr>
+<tr>
+<td>Synthetic streams</td>
+<td>SEA, Hyperplane, RandomRBF and Agrawal generators, with known drift positions</td>
+</tr>
+<tr>
+<td>Real streams</td>
+<td>Elec2 with 45,312 rows, Phishing with 1,250 rows, Covtype and Electricity for the benchmark</td>
+</tr>
+<tr>
+<td>Detector panel</td>
+<td>ADWIN, KSWIN, Page-Hinkley, DDM, EDDM, FHDDM, HDDM-A, HDDM-W, SEED, STEPD</td>
+</tr>
+<tr>
+<td>Learner panel</td>
+<td>Frozen random forest, scheduled retrain at 1k, 5k and 20k, oracle refit, Hoeffding Tree, HAT, ARF, Leveraging Bagging, ADWIN Bagging</td>
+</tr>
+<tr>
+<td>Metrics</td>
+<td>Prequential accuracy, rolling Cohen kappa, <span class="arithmatex">\(\mathrm{damage}_{\mathrm{ref}}\)</span>, <span class="arithmatex">\(\mathrm{damage}_{\mathrm{full}}\)</span>, AUE, recovery rate, F1 detection score, normalised detection time</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>Eleven for E01 and E03; five for E04, E14, E17 and the 80-cell pilot; 50 trials per cell for the benchmark</td>
+</tr>
+<tr>
+<td>Artifact root</td>
+<td><code>experiments/results/&lt;exp_id&gt;/</code></td>
+</tr>
+</tbody>
+</table>
+<p>The synthetic streams carry a known drift position, which is what makes the timing metrics possible. Without a ground-truth onset there is no way to measure detection delay or recovery time, only a post-hoc dip, so the synthetic generators supply the timing and the real streams supply the external validity. That division explains why the timing claims rest on synthetic and benchmark data while the adaptation claims are checked again on Elec2, Phishing, Covtype and Electricity.</p>
+<p>The seed counts differ by experiment for a reason. Model-level comparisons need enough seeds to estimate a distribution, so E01 and E03 use eleven. Detector-level comparisons average over far more cells, since the 80-cell pilot already gives 80 observations per detector, so five trials per cell are adequate for a rank. The benchmark uses 50 trials because that is its published protocol. Comparing many learners across many streams ultimately requires Friedman and Nemenyi procedures with pairwise post-hoc tests [7]; that analysis is not run here, and the per-cell counts in Chapter 5 are descriptive rather than significance claims.</p>
+<p>All datasets are public and none contains personal data. Every run is local, so no result depends on a cloud environment that a reader cannot reproduce, and the measured runtimes in Section 5.3 are short enough to make the whole ladder reproducible on one machine.</p>
+<h2 id="43-test-cases">4.3 Test Cases<a class="headerlink" href="#43-test-cases" title="Permanent link">¶</a></h2>
+<p>Testing proceeded at two levels. Unit tests cover the metric implementations, the stream generators, the detector adapters, the artifact contract, the label schedules and the fusion rules, with 53 test functions across nine files. Experiment-level tests check the properties that would invalidate a result if they failed.</p>
+<p><strong>Table 4.2: Test cases with expected and observed results</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Test</th>
+<th>Expected result</th>
+<th>Observed result</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Prequential leakage check</td>
+<td>The metric is updated before <code>learn_one</code> is called</td>
+<td>Call order verified by instrumentation in all runs</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Metric hand calculation</td>
+<td><span class="arithmatex">\(\mathrm{damage}_{\mathrm{ref}}\)</span> matches a hand-computed series</td>
+<td>Exact match on a synthetic series with a known dip</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Stationary false-alarm calibration, raw channel</td>
+<td>At most 0.1 false alarms per 1,000 samples</td>
+<td>Within budget on both stationary streams</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Stationary false-alarm calibration, smoothed channel</td>
+<td>At most 0.1 false alarms per 1,000 samples</td>
+<td>ADWIN 0.548 and KSWIN 7.667 per 1,000</td>
+<td>Fail by design</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>Artifact determinism</td>
+<td>Identical seed and configuration reproduce identical artifacts</td>
+<td>Reproduced exactly</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Resume guard on a changed configuration hash</td>
+<td>A changed hash refuses to resume</td>
+<td>Refused, as intended</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Benchmark trial-stream parity</td>
+<td>The runner and the precompute see the same sample order</td>
+<td>Parity confirmed across all 80 trials</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Label scheduler invariants</td>
+<td>Fixed, geometric, partial, selective and batch schedules honour their arrival times</td>
+<td>Invariants held in every schedule</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>DF-H false-alarm calibration on pre-drift windows</td>
+<td>Calibrated rate at or below 0.1 per 1,000</td>
+<td>0.04 measured on the pilot</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Delay floor check</td>
+<td>Every error-only detection occurs at or after <span class="arithmatex">\(\tau + L\)</span></td>
+<td>Satisfied in every cell of the synthesis</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Zero-alarm F1 handling</td>
+<td>A detector that never alarms scores F1 zero, not one</td>
+<td>Corrected after the E04 bug</td>
+<td>Pass</td>
+</tr>
+</tbody>
+</table>
+<p>Two of these deserve comment. T4 is a deliberate negative control and is retained as a documented failure, because it establishes that the raw channel rather than the smoothed channel is the correct default. The measured rates are unambiguous: ADWIN fires at 0.548 per 1,000 and KSWIN at 7.667 per 1,000 on a stream that contains no drift at all. T11 records a bug rather than a routine check. Before the correction, zero-alarm runs had <code>precision = None</code> and were excluded from the F1 mean, so a never-ringing detector could appear perfect; the first E04 report selected KSWIN for incremental drift with an F1 of 1.0 and an episode recall of 0.25, a pair of numbers that cannot both be true. The corrected implementation recomputes F1 from raw counts and scores zero alarms as zero.</p>
+<p>T10 is the test that validates the central claim rather than the code. Had any error-only detector reported a detection earlier than <span class="arithmatex">\(\tau + L\)</span> at a positive delay, Lemma 1 would have been contradicted and the Delay Tax would have collapsed. Every cell satisfied the bound.</p>
+<h2 id="44-safety-measures">4.4 Safety Measures<a class="headerlink" href="#44-safety-measures" title="Permanent link">¶</a></h2>
+<p><strong>Table 4.3: Safety, data protection and cyber security controls</strong></p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Electrical safety</td>
+<td>Single laptop on mains power; no modified hardware; no external power supply</td>
+</tr>
+<tr>
+<td>Thermal safety</td>
+<td>Bounded worker counts, no unattended heavy runs, monitoring of sustained load</td>
+</tr>
+<tr>
+<td>Worker control</td>
+<td>Explicit worker limits on every benchmark run; 14 for the full reproduction, 8 for the pilot</td>
+</tr>
+<tr>
+<td>Java isolation</td>
+<td>Dedicated virtual environment with a 512 MB heap limit</td>
+</tr>
+<tr>
+<td>Crash handling</td>
+<td>JVM crash logs retained as diagnostics and excluded from version control</td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Public datasets only; no personal data; no credentials; large inputs excluded from git</td>
+</tr>
+<tr>
+<td>Dependency integrity</td>
+<td>Pinned versions and lock files; isolated virtual environments per stack</td>
+</tr>
+<tr>
+<td>Attack surface</td>
+<td>No network services exposed; no listening ports; runs are offline</td>
+</tr>
+<tr>
+<td>Reproducibility</td>
+<td>Deterministic seeds; configuration hashes; artifact provenance; committed result files</td>
+</tr>
+<tr>
+<td>Research integrity</td>
+<td>Pre-registered gates; no tuning on test trials; leave-one-dataset-out reserved for learned fusion; negative results preserved</td>
+</tr>
+</tbody>
+</table>
+<p>The research-integrity controls changed the outcome of the project. Because the gates were pre-registered, a failing pilot blocked the full matrix, and because negative results were preserved, the E18 and E19 gates appear in Chapter 5 as failures rather than being quietly dropped. The storage control also has a practical consequence: the 99 MB benchmarking input is not committed, so the artifact set stays reviewable in a repository rather than becoming a data dump.</p>
+<!-- pagebreak -->
+<h1 id="chapter-5-results-and-discussion">CHAPTER 5: RESULTS AND DISCUSSION<a class="headerlink" href="#chapter-5-results-and-discussion" title="Permanent link">¶</a></h1>
+<h2 id="51-result-analysis">5.1 Result Analysis<a class="headerlink" href="#51-result-analysis" title="Permanent link">¶</a></h2>
+<p>Nine experiments are reported in the order in which they build the argument. Table 5.1 states the headline of each before the detail.</p>
+<p><strong>Table 5.1: Evidence at a glance: experiment, setting, headline result and verdict</strong></p>
+<table>
+<thead>
+<tr>
+<th>Exp</th>
+<th>Question</th>
+<th>Setting</th>
+<th>Headline result</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E01</td>
+<td>Does the corrected metric preserve the streaming win?</td>
+<td>SEA abrupt, 11 seeds, clean panel</td>
+<td>74.8 against 515.0, about 6.9 times; frozen 0 of 11</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E03</td>
+<td>Does streaming beat scheduled retraining?</td>
+<td>SEA and Hyperplane, 10 models, 11 seeds</td>
+<td>Leveraging Bagging 455.7 against scheduled 733.5 and frozen 871.7</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E04</td>
+<td>Which detector works for which shape?</td>
+<td>4 generators, 4 shapes, 8 detectors, 2 hosts</td>
+<td>HDDM-A on raw wins all four shapes</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E17</td>
+<td>Does the default survive real data?</td>
+<td>Elec2, injected label swap, 5 seeds</td>
+<td>Host-conditional: ADWIN wins on adaptive HAT</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>KDD'26</td>
+<td>Does the published ranking reproduce?</td>
+<td>7 datasets, 4 types, 2 transitions, 50 trials</td>
+<td>SEED and STEPD 2.12; HDDM-A 3.87</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E14</td>
+<td>Does the win survive real streams?</td>
+<td>Elec2 and Phishing, 5 seeds, 100 runs</td>
+<td>ARF 198.0 against frozen 297.4, ratio 0.666</td>
+<td>Provisional pass</td>
+</tr>
+<tr>
+<td>E18</td>
+<td>Do deep signals beat the error rate?</td>
+<td>80 cells, frozen encoder</td>
+<td>Best deep AUC 0.616 against 0.598</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E19</td>
+<td>Does DF-H reach top-2?</td>
+<td>80 cells, rule-based fusion</td>
+<td>Third overall at 7.09, FAR 0.04</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E21</td>
+<td>Is the label-free warning floor-bound?</td>
+<td>80 cells, fixed delay 2,000</td>
+<td>70 to 513 against 2,120 to 3,269</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E22</td>
+<td>Can DF-H beat the requested panel?</td>
+<td>80 cells, ADWIN, HDDM-A, HDDM-W, Page-Hinkley</td>
+<td>Third at 7.34, ahead of all four</td>
+<td>Pass</td>
+</tr>
+</tbody>
+</table>
+<h3 id="511-streaming-against-frozen-the-corrected-headline">5.1.1 Streaming against frozen: the corrected headline<a class="headerlink" href="#511-streaming-against-frozen-the-corrected-headline" title="Permanent link">¶</a></h3>
+<p>Experiment E01 reran the pilot with the corrected metric on a clean three-model panel of eleven seeds. The streaming learner had lower fixed-window damage on all eleven seeds, its worst seed at 217.9 remains 0.74 times the best frozen seed at 295.2, and the mean gap is approximately 6.9 times.</p>
+<p><img alt="Exp-01 rolling Cohen kappa for DeepRiver and frozen random forest" src="../report_assets/fig-5-1-exp01-kappa.png"/></p>
+<p><strong>Figure 5.1: Exp-01 rolling Cohen kappa for the streaming and frozen models.</strong> Before the drift the curves are interleaved and the frozen model is marginally ahead, which is the fair-comparison control. At the drift point both fall, and only the streaming curve returns to its pre-drift band while the frozen curve settles about 0.13 kappa lower. That persistent gap is what the damage metric prices.</p>
+<p><strong>Table 5.2: Streaming against frozen and scheduled batch: E01 and E03</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Frozen random forest</th>
+<th style="text-align: right;">Scheduled retrain, 1k</th>
+<th style="text-align: right;">Leveraging Bagging</th>
+<th style="text-align: right;">HAT</th>
+<th style="text-align: right;">DeepRiver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathrm{damage}_{\mathrm{ref}}\)</span></td>
+<td style="text-align: right;">515.0 (E01)</td>
+<td style="text-align: right;">733.5 (E03)</td>
+<td style="text-align: right;">455.7</td>
+<td style="text-align: right;">489.2</td>
+<td style="text-align: right;">74.8 (E01)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathrm{damage}_{\mathrm{full}}\)</span></td>
+<td style="text-align: right;">3,472.9</td>
+<td style="text-align: right;">824.1</td>
+<td style="text-align: right;">not reported</td>
+<td style="text-align: right;">not reported</td>
+<td style="text-align: right;">321.4</td>
+</tr>
+<tr>
+<td>Recovery rate</td>
+<td style="text-align: right;">0/11</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.955</td>
+<td style="text-align: right;">8/11</td>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.855</td>
+<td style="text-align: right;">0.857</td>
+<td style="text-align: right;">0.847</td>
+<td style="text-align: right;">0.883</td>
+</tr>
+<tr>
+<td>Cohen kappa</td>
+<td style="text-align: right;">0.685</td>
+<td style="text-align: right;">0.702</td>
+<td style="text-align: right;">0.707</td>
+<td style="text-align: right;">0.685</td>
+<td style="text-align: right;">0.753</td>
+</tr>
+</tbody>
+</table>
+<p>The two panels use different streams, so the comparison is between orderings rather than absolute values. Scheduled models recover by construction at each retrain tick, so their recovery rate is not the comparison; damage is.</p>
+<p><img alt="Exp-02 legacy damage distribution over eleven seeds" src="../report_assets/fig-5-2-exp02-damage.png"/></p>
+<p><strong>Figure 5.2: Exp-02 legacy damage distribution, one point per seed.</strong> This figure is shown only as history. Every frozen seed sits in a narrow high band and every streaming seed sits two orders of magnitude below it. The magnitudes it displays, including the retired 294 times figure, come from the truncating legacy metric and are superseded by Figure 5.3.</p>
+<p><img alt="E01 corrected fixed-window damage per seed" src="../report_assets/fig-5-3-e01-correction.png"/></p>
+<p><strong>Figure 5.3: E01 corrected fixed-window damage per seed.</strong> The corrected metric removes the truncation artefact and the gap narrows to approximately 6.9 times while remaining present on all eleven seeds. The two bands do not overlap, so the ordering is not an artefact of averaging.</p>
+<h3 id="512-the-scheduled-and-adaptive-ladder">5.1.2 The scheduled and adaptive ladder<a class="headerlink" href="#512-the-scheduled-and-adaptive-ladder" title="Permanent link">¶</a></h3>
+<p>Experiment E03 ran a ten-model ladder on two generators over eleven seeds. Every streaming adapter paid less fixed-window damage than the frozen model and less than every scheduled interval.</p>
+<p><img alt="E03 baseline ladder" src="../report_assets/fig-5-4-e03-ladder.png"/></p>
+<p><strong>Figure 5.4: E03 baseline ladder of ten models on fixed-window damage.</strong> Leveraging Bagging leads at 455.7, followed by HAT at 489.2 and ARF at 575.4. The best batch baseline is the 1k scheduled model at 733.5, which still pays 1.6 times the Leveraging Bagging damage, and the frozen model sits at 871.7.</p>
+<p>Two qualifications belong with this result. The phase-noise test is inconclusive, because the refit buffer of 12,000 samples exceeds both the 1k and 5k intervals, so lag in those cells is buffer-dominated rather than phase-driven. The oracle refit is also not an upper bound, because it is refit on pre-drift data, so its damage at 864.3 is essentially frozen.</p>
+<h3 id="513-detector-maps-synthetic-and-real">5.1.3 Detector maps: synthetic and real<a class="headerlink" href="#513-detector-maps-synthetic-and-real" title="Permanent link">¶</a></h3>
+<p>Experiment E04 replayed eight detectors on four synthetic generators, four drift shapes, two hosts and both channels. HDDM-A on the raw signal was the best cell for all four shapes.</p>
+<p><img alt="E04 synthetic detector map, static host, raw signal" src="../report_assets/fig-5-5-e04-map.png"/></p>
+<p><strong>Figure 5.5: E04 balanced score per detector and drift shape on the static host with the raw signal.</strong> HDDM-A occupies the best cell for every shape. The gap between abrupt and recurring is the substantive finding: a shape that reverses is harder to detect than one that changes once, because the detector must separate a genuine return from noise.</p>
+<p><strong>Table 5.3: Detector maps: E04 synthetic and E17 real Elec2</strong></p>
+<table>
+<thead>
+<tr>
+<th>Drift shape</th>
+<th style="text-align: right;">E04 HDDM-A, static host</th>
+<th style="text-align: right;">E17 HDDM-A, static host</th>
+<th style="text-align: right;">E17 ADWIN, static host</th>
+<th style="text-align: right;">E17 HDDM-A, adaptive host</th>
+<th style="text-align: right;">E17 ADWIN, adaptive host</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrupt</td>
+<td style="text-align: right;">0.683</td>
+<td style="text-align: right;">0.933</td>
+<td style="text-align: right;">0.452</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;"><strong>1.000</strong></td>
+</tr>
+<tr>
+<td>Gradual</td>
+<td style="text-align: right;">0.842</td>
+<td style="text-align: right;">0.960</td>
+<td style="text-align: right;">0.495</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td>Incremental</td>
+<td style="text-align: right;">0.883</td>
+<td style="text-align: right;">0.960</td>
+<td style="text-align: right;">0.842</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.971</td>
+</tr>
+<tr>
+<td>Recurring</td>
+<td style="text-align: right;">0.500</td>
+<td style="text-align: right;">0.787</td>
+<td style="text-align: right;">0.508</td>
+<td style="text-align: right;">0.593</td>
+<td style="text-align: right;"><strong>0.770</strong></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="E17 real Elec2 host-conditional detector map" src="../report_assets/fig-5-6-e17-map.png"/></p>
+<p><strong>Figure 5.6: E17 detector map on real electricity-market records.</strong> On the static host, HDDM-A repeats the synthetic result and wins all four shapes. On the adaptive host ADWIN wins abrupt and recurring, ties gradual and loses only incremental. The mechanism is interpretable: a one-sided test alarms only when the error rate rises above a frozen low-error reference, and an adaptive host can repair an abrupt label swap before the test separates, while ADWIN compares two windows in both directions.</p>
+<h3 id="514-the-published-benchmark-reproduced">5.1.4 The published benchmark reproduced<a class="headerlink" href="#514-the-published-benchmark-reproduced" title="Permanent link">¶</a></h3>
+<p>The external benchmark was reproduced on seven real datasets with four drift types, two transition speeds and 50 trials per cell, for 2,800 tasks and no failures.</p>
+<p><img alt="KDD'26 reproduction ranking and mean F1" src="../report_assets/fig-5-7-kdd-rank.png"/></p>
+<p><strong>Figure 5.7: Benchmark reproduction ranking and mean F1.</strong> SEED and STEPD tie for first, HDDM-W is third, HDDM-A fourth, DDM fifth and ADWIN sixth. The absolute F1 values reproduce the published tables for the shared detectors, which is the evidence that the reproduction is faithful rather than merely similar in ordering.</p>
+<p><strong>Table 5.4: Detector panel: KDD'26 reproduction and the E22 shootout</strong></p>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th style="text-align: right;">KDD'26 mean F1</th>
+<th style="text-align: right;">KDD'26 rank</th>
+<th style="text-align: right;">E22 mean F1</th>
+<th style="text-align: right;">E22 FAR per 1,000</th>
+<th style="text-align: right;">E22 rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEED</td>
+<td style="text-align: right;">0.300</td>
+<td style="text-align: right;">2.12</td>
+<td style="text-align: right;">0.267</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">5.59</td>
+</tr>
+<tr>
+<td>STEPD</td>
+<td style="text-align: right;">0.303</td>
+<td style="text-align: right;">2.12</td>
+<td style="text-align: right;">0.281</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">5.44</td>
+</tr>
+<tr>
+<td>HDDM-W</td>
+<td style="text-align: right;">0.163</td>
+<td style="text-align: right;">3.56</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">7.47</td>
+</tr>
+<tr>
+<td>HDDM-A</td>
+<td style="text-align: right;">0.155</td>
+<td style="text-align: right;">3.87</td>
+<td style="text-align: right;">0.128</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">11.34</td>
+</tr>
+<tr>
+<td>DDM</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">4.54</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">not run</td>
+</tr>
+<tr>
+<td>ADWIN</td>
+<td style="text-align: right;">0.122</td>
+<td style="text-align: right;">4.80</td>
+<td style="text-align: right;">0.117</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">9.94</td>
+</tr>
+<tr>
+<td>DF-H</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">0.223</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">7.34</td>
+</tr>
+<tr>
+<td>Page-Hinkley</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">not run</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">12.53</td>
+</tr>
+</tbody>
+</table>
+<h3 id="515-the-real-stream-model-check">5.1.5 The real-stream model check<a class="headerlink" href="#515-the-real-stream-model-check" title="Permanent link">¶</a></h3>
+<p>Experiment E14 replayed the model comparison on real features and labels from Elec2 and Phishing, with label-swap and feature-permutation drift injected at a known point, over five seeds and 100 runs.</p>
+<p><img alt="E14 real-stream model check" src="../report_assets/fig-5-8-e14-real.png"/></p>
+<p><strong>Figure 5.8: E14 real-stream model comparison pooled over 20 cells.</strong> ARF leads on damage, accuracy and kappa, with a pooled ratio of 0.666 against frozen, and HAT is second. The deep model is fourth and does not beat frozen on damage, though it does beat frozen on kappa.</p>
+<p><strong>Table 5.5: E14 real-stream model check, pooled over 20 cells</strong></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Cohen kappa</th>
+<th style="text-align: right;"><span class="arithmatex">\(\mathrm{damage}_{\mathrm{ref}}\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(\mathrm{damage}_{\mathrm{full}}\)</span></th>
+<th style="text-align: right;">Recovery rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frozen random forest</td>
+<td style="text-align: right;">0.685</td>
+<td style="text-align: right;">0.395</td>
+<td style="text-align: right;">297.4</td>
+<td style="text-align: right;">4,703.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr>
+<td>ARF</td>
+<td style="text-align: right;"><strong>0.875</strong></td>
+<td style="text-align: right;"><strong>0.724</strong></td>
+<td style="text-align: right;"><strong>198.0</strong></td>
+<td style="text-align: right;"><strong>2,684.8</strong></td>
+<td style="text-align: right;"><strong>0.20</strong></td>
+</tr>
+<tr>
+<td>HAT</td>
+<td style="text-align: right;">0.803</td>
+<td style="text-align: right;">0.583</td>
+<td style="text-align: right;">245.7</td>
+<td style="text-align: right;">3,019.6</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr>
+<td>DeepRiver</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">0.524</td>
+<td style="text-align: right;">284.9</td>
+<td style="text-align: right;">3,497.5</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr>
+<td>Oracle refit</td>
+<td style="text-align: right;">0.698</td>
+<td style="text-align: right;">0.415</td>
+<td style="text-align: right;">280.3</td>
+<td style="text-align: right;">4,518.3</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+</tbody>
+</table>
+<p>The acceptance rules pass: ARF is lower in 18 of 20 cells, frozen recovered in 0 of 20, and the kappa gain is 0.329. The result is provisional, because there are two datasets, five seeds and one injected mechanism per stream. The important negative is that the deep model is not the host: on Elec2 it pays slightly more damage than frozen at 314.7 against 295.0, which justifies using the encoder as a signal extractor rather than as the classifier in the benchmark.</p>
+<h3 id="516-the-deep-signal-gate-a-reported-failure">5.1.6 The deep signal gate: a reported failure<a class="headerlink" href="#516-the-deep-signal-gate-a-reported-failure" title="Permanent link">¶</a></h3>
+<p>Experiment E18 asked whether a frozen self-supervised encoder produces label-free signals that predict drift better than the raw error rate, over 80 cells of two datasets, four drift types, two transitions and five trials. The pre-registered gate was at least one deep signal at an AUC of 0.75 or above and at least 0.10 above the error rate.</p>
+<p><img alt="E18 signal gate: overall AUC and drift-type breakdown" src="../report_assets/fig-5-9-e18-gate.png"/></p>
+<p><strong>Figure 5.9: E18 signal gate, overall AUC and drift-type breakdown.</strong> The best deep signal is <code>embedding_shift</code> at 0.616, against an error rate of 0.598, and the classical control <code>feature_ks</code> scores 0.628, higher than every deep signal. The right panel shows where the signal lives: feature permutation, where <code>embedding_var_shift</code> reaches 0.781 while the error rate reaches 0.879.</p>
+<p><strong>Table 5.6: Gate results: E18 deep signals and E19 DF-H v1</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Bar</th>
+<th>Measured</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E18 best deep AUC</td>
+<td>0.75 or above</td>
+<td>0.616</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E18 margin over error rate</td>
+<td>0.10 or above</td>
+<td>+0.017</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E18 classical control</td>
+<td>Must be beaten by the deep view</td>
+<td><code>feature_ks</code> 0.628 exceeds all deep signals</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E19 overall rank</td>
+<td>Top 2</td>
+<td>Third at 7.09; STEPD 5.22 and SEED 5.44</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>E19 feature-cell win</td>
+<td>Best on at least one feature cell</td>
+<td>None for the primary; ablations win two</td>
+<td>Fail for primary</td>
+</tr>
+<tr>
+<td>E19 false alarms</td>
+<td>At or below ADWIN</td>
+<td>0.04 against 0.11</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>E19 per-dataset robustness</td>
+<td>No rank worse than 3</td>
+<td>Covtype tied 5th to 7th</td>
+<td>Fail</td>
+</tr>
+</tbody>
+</table>
+<p>The gate fails on all three conditions, and the failure is informative. The deep view has power on feature permutation but the error rate is stronger there, and on label-only drift the deep view is correctly near chance while the error rate catches the change at 0.698. That division is what Lemma 4 predicts.</p>
+<p><img alt="E18 timing diagnostic at 0.1 false alarms per 1,000" src="../report_assets/fig-5-10-e18-timing.png"/></p>
+<p><strong>Figure 5.10: E18 timing diagnostic at a calibrated false-alarm budget.</strong> The diagnostic is more favourable than the AUC gate: on feature permutation the self-supervised loss alarms in 72 samples against 184 for the error rate on Covtype abrupt, in 244 against 1,033 on Covtype gradual, and in 83 against 198 on Electricity abrupt. On feature filtering the error rate misses entirely while the feature signals still fire. The catch is visible in the same figure: <code>feature_ks</code> is often as fast as the deep signals, so the marginal value of the deep encoder remains unproven.</p>
+<h3 id="517-the-fusion-pilot-a-reported-failure">5.1.7 The fusion pilot: a reported failure<a class="headerlink" href="#517-the-fusion-pilot-a-reported-failure" title="Permanent link">¶</a></h3>
+<p>Experiment E19 fused Stage 1 with the classical panel on the same 80 cells using a rule-based 2-of-3 combination. The primary candidate ranks third overall, behind STEPD and SEED.</p>
+<p><img alt="E19 DF-H v1 overall rank and F1 to FAR trade-off" src="../report_assets/fig-5-11-e19-rank.png"/></p>
+<p><strong>Figure 5.11: E19 overall rank and the F1 to false-alarm trade-off.</strong> DF-H sits third with the lowest false-alarm rate of the competitive rows at 0.04. The low-false-alarm outlier is the <code>AND</code> variant at 0.01, but its overall rank is 8.53, so precision bought at the cost of rank is not a win.</p>
+<p>Three readings follow. The feature monitor adds information, because DF-H beats the no-feature control by 2.9 ranks at 7.09 against 9.97. The fixed 2-of-3 rule is nevertheless the wrong combiner, because it demands Stage 2 confirmation on cells where Stage 1 is already correct and Stage 2 is slow or blind, and it leaks Stage 1 false alarms on label-only cells where Stage 1 has no power. The ablations own the feature cells that the primary does not, with <code>AND_deep</code> winning abrupt feature permutation at 1.50 and <code>S1_both</code> winning gradual feature filtering at 1.00. The top-2 gate fails, so the full matrix was not run.</p>
+<h3 id="518-the-delay-tax-the-surviving-headline">5.1.8 The Delay Tax: the surviving headline<a class="headerlink" href="#518-the-delay-tax-the-surviving-headline" title="Permanent link">¶</a></h3>
+<p>Experiment E21 built a fixed-delay synthesis from the committed trial artifacts at a delay of 2,000 samples. It retrains no model and shifts the error-only detection times by the delay, which is the direct measurement of Lemma 1.</p>
+<p><img alt="E21 Delay Tax floor: Stage 1 flat in delay, error-only shifts" src="../report_assets/fig-5-12-e21-delay.png"/></p>
+<p><strong>Figure 5.12: E21 Delay Tax floor.</strong> The flat lines are the label-free Stage 1 warning, which does not move as the delay grows. The dashed lines are the error-only detectors, which shift upward by the delay. The vertical gap is the label tax, and it grows linearly because the Stage 1 line is constant.</p>
+<p><strong>Table 5.7: E21 Delay Tax at a fixed delay of 2,000 samples, detection delay after onset</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cell</th>
+<th style="text-align: right;">Stage 1 deep</th>
+<th style="text-align: right;">Stage 1 classical</th>
+<th style="text-align: right;">SEED</th>
+<th style="text-align: right;">STEPD</th>
+<th style="text-align: right;">ADWIN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Covtype, abrupt</td>
+<td style="text-align: right;"><strong>70</strong></td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">2,130</td>
+<td style="text-align: right;">2,120</td>
+<td style="text-align: right;">2,472</td>
+</tr>
+<tr>
+<td>Covtype, gradual</td>
+<td style="text-align: right;"><strong>306</strong></td>
+<td style="text-align: right;">406</td>
+<td style="text-align: right;">2,710</td>
+<td style="text-align: right;">2,616</td>
+<td style="text-align: right;">not detected</td>
+</tr>
+<tr>
+<td>Electricity, abrupt</td>
+<td style="text-align: right;"><strong>76</strong></td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">2,129</td>
+<td style="text-align: right;">2,180</td>
+<td style="text-align: right;">3,269</td>
+</tr>
+<tr>
+<td>Electricity, gradual</td>
+<td style="text-align: right;"><strong>293</strong></td>
+<td style="text-align: right;">513</td>
+<td style="text-align: right;">2,701</td>
+<td style="text-align: right;">2,694</td>
+<td style="text-align: right;">not detected</td>
+</tr>
+</tbody>
+</table>
+<p>The Stage 1 warning is 4 to 30 times earlier than the error-only panel at this delay, and its timing is flat in the delay while every error-only detector moves by exactly the delay. The honest limit is that Stage 1 alone is not a good detector on label-only drift, so the result is a warning and confirmation split rather than a standalone detector.</p>
+<h3 id="519-the-detector-shootout">5.1.9 The detector shootout<a class="headerlink" href="#519-the-detector-shootout" title="Permanent link">¶</a></h3>
+<p>Experiment E22 ran the focused capability check on the same 80 cells against the requested classical panel, with SEED and STEPD as the reference.</p>
+<p><img alt="E22 detector shootout overall rank and F1 to FAR trade-off" src="../report_assets/fig-5-13-e22-shootout.png"/></p>
+<p><strong>Figure 5.13: E22 overall rank and F1 to false-alarm trade-off.</strong> DF-H is third, behind STEPD and SEED, and ahead of HDDM-W, ADWIN, HDDM-A and Page-Hinkley. DF-H beats ADWIN by 2.6 ranks, HDDM-A by 4.0 and Page-Hinkley by 5.2. The HDDM-W margin of 0.13 ranks is not meaningful at 80 cells.</p>
+<p>On feature permutation DF-H beats every requested classical detector, with ranks of 5.8 abrupt and 5.5 gradual against a panel range of 8.8 to 16.0. On feature filtering HDDM-W wins abrupt and the Stage-1-only variants are the right tool on gradual. Page-Hinkley's false-alarm rate of 0.01 is not a capability claim, because its mean F1 is 0.018: it almost never alarms and therefore almost never scores.</p>
+<h3 id="5110-synthesis">5.1.10 Synthesis<a class="headerlink" href="#5110-synthesis" title="Permanent link">¶</a></h3>
+<p>DF-H is a strong feature-drift warning detector with a controlled false-alarm rate. It is third overall on a pilot, ahead of the classical panel that motivated the comparison and behind the two best benchmark detectors. Its unique contribution is not average rank but the label-free warning under delay, which is the only measurement here that no error-based detector can match by construction. It is not a universal top-2 detector, the deep signal gate failed, and the ablation variants rather than the primary candidate own the feature cells.</p>
+<h2 id="52-comparison-with-objectives">5.2 Comparison with Objectives<a class="headerlink" href="#52-comparison-with-objectives" title="Permanent link">¶</a></h2>
+<p><strong>Table 5.8: Objectives against measured outcomes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Objective</th>
+<th>Bar</th>
+<th>Measured</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1</td>
+<td>Damage at least 5 times lower, 10 or more seeds, zero frozen recoveries</td>
+<td>6.9 times lower, 11 seeds, frozen 0/11</td>
+<td>Achieved</td>
+</tr>
+<tr>
+<td>O2</td>
+<td>Map four shapes and two hosts; reproduce the published ranking</td>
+<td>E04, E17 and the 2,800-task reproduction</td>
+<td>Achieved</td>
+</tr>
+<tr>
+<td>O3</td>
+<td>80-cell pilot, FAR at or below 0.1 per 1,000, overall rank top 3, top-2 gate stated honestly</td>
+<td>FAR 0.04 and third overall; top-2 gate fails</td>
+<td>Partially achieved</td>
+</tr>
+<tr>
+<td>O4</td>
+<td>Delay of 2,000 samples, warning at least twice as early</td>
+<td>70 to 513 against 2,120 to 3,269, 4 to 30 times earlier</td>
+<td>Achieved</td>
+</tr>
+<tr>
+<td>O5</td>
+<td>Reproducible harness, saved artifacts, automated tests</td>
+<td>DriftLab, artifact schema, 53 tests, one-command reproduction</td>
+<td>Achieved</td>
+</tr>
+</tbody>
+</table>
+<p>O1 is unambiguous: the corrected metric gives a 6.9 times mean gap, the streaming learner is lower on all eleven seeds, and the frozen model recovered on none. O2 is also unambiguous, and it changed the project's own conclusion about HDDM-A by showing the default to be host-conditional.</p>
+<p>O3 is the partial case and deserves precision. Two of its three numeric conditions pass: the false-alarm rate is 0.04 against a bar of 0.1, and the overall rank is third. The pre-registered top-2 gate fails at 7.09 against 5.44 for SEED. Reporting this as partial achievement rather than as success is the point of pre-registration.</p>
+<p>O4 is achieved on the fixed-delay synthesis and is deliberately narrow: the measurement uses a delay of 2,000 samples on the same 80 cells, and a warning lead of 4 to 30 times exceeds the stated bar of twice as early. O5 is achieved in that every reported number can be regenerated from a committed artifact by one command.</p>
+<h2 id="53-economic-analysis">5.3 Economic Analysis<a class="headerlink" href="#53-economic-analysis" title="Permanent link">¶</a></h2>
+<p><strong>Table 5.9: Economic analysis: bill of materials and cost benefit</strong></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Basis</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Laptop, already owned</td>
+<td>Ryzen 7 6800H, RTX 3050 Laptop GPU, 16 GB RAM</td>
+<td>Indicative replacement 75,000 INR</td>
+</tr>
+<tr>
+<td>Hardware opportunity cost</td>
+<td>Three-year life, four-month project window</td>
+<td>About 8,000 INR, not a cash outflow</td>
+</tr>
+<tr>
+<td>Software licences</td>
+<td>Python, River, PyTorch, scikit-learn, CapyMOA, Matplotlib</td>
+<td>Zero</td>
+</tr>
+<tr>
+<td>Datasets</td>
+<td>Public benchmark and public stream data</td>
+<td>Zero</td>
+</tr>
+<tr>
+<td>Electricity</td>
+<td>Mixed-load average of 65 to 95 W over 150 to 250 hours</td>
+<td>About 10 to 24 kWh</td>
+</tr>
+<tr>
+<td>Energy cost</td>
+<td>Indicative 8 INR per kWh, plus monitor and network</td>
+<td>About 200 to 400 INR</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Local disk for artifacts and public inputs</td>
+<td>Negligible</td>
+</tr>
+<tr>
+<td>Human development time</td>
+<td>Three students over one semester</td>
+<td>Not monetised</td>
+</tr>
+</tbody>
+</table>
+<p>The energy estimate is stated rather than dismissed. The graphics processor draws up to 95 W under load and the processor package up to 45 W, so a mixed-load average between 65 and 95 W is a fair envelope. Between 150 and 250 hours of active experimentation, including failed runs, pretraining and reruns, gives 10 to 24 kWh, and at 8 INR per kWh the direct cost is about 80 to 190 INR. Adding the monitor, network and idle time, the realistic range is 200 to 400 INR. That is small but not negligible for a project that ran 2,800 benchmark tasks.</p>
+<p>The hardware cost is an opportunity cost rather than a cash outflow, because the laptop was already owned. A replacement cost of 75,000 INR over a three-year life gives about 8,000 INR for a four-month window. The dominant costs are the owned hardware and human development time, and neither is a cash expenditure for the project.</p>
+<p>Resource utilisation was modest in wall-clock terms: 2,800 benchmark tasks in 13 minutes and 33 seconds on 14 workers, 220 model runs in 2,904 seconds for E03, 1,760 detector runs in 4,867 seconds for E04, 100 runs in 738 seconds for E14, 832 seconds for E17 and about 45 seconds for E22. No monetary value for avoided incidents is invented here. The benefit is operational: streaming damage about 6.9 times lower, a label-free warning 4 to 30 times earlier at a delay of 2,000 samples, and fewer full retrains because the learner adapts per sample rather than on a clock.</p>
+<h2 id="54-comparison-with-existing-solutions-and-standards">5.4 Comparison with Existing Solutions and Standards<a class="headerlink" href="#54-comparison-with-existing-solutions-and-standards" title="Permanent link">¶</a></h2>
+<p><strong>Table 5.10: DF-H against existing solutions and standards</strong></p>
+<table>
+<thead>
+<tr>
+<th>Solution or standard</th>
+<th>Relative position</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADWIN [8]</td>
+<td>DF-H ahead by 2.6 ranks</td>
+<td>E22: 7.34 against 9.94</td>
+</tr>
+<tr>
+<td>HDDM-A [27]</td>
+<td>DF-H ahead by 4.0 ranks</td>
+<td>E22: 7.34 against 11.34; HDDM-A is also host-conditional in E17</td>
+</tr>
+<tr>
+<td>HDDM-W</td>
+<td>DF-H ahead by 0.13 ranks, not a meaningful margin</td>
+<td>E22: 7.34 against 7.47</td>
+</tr>
+<tr>
+<td>Page-Hinkley [1]</td>
+<td>DF-H ahead by 5.2 ranks</td>
+<td>E22: 7.34 against 12.53; Page-Hinkley F1 0.018</td>
+</tr>
+<tr>
+<td>SEED and STEPD [27]</td>
+<td>DF-H behind the top two</td>
+<td>E22: 5.44 and 5.59 against 7.34</td>
+</tr>
+<tr>
+<td>STUDD [18]</td>
+<td>Label-free, but no delayed benchmark and no confirmation stage</td>
+<td>DF-H adds the two-time split</td>
+</tr>
+<tr>
+<td>Botacin and Gomes [20]</td>
+<td>Consistent: delay increases exposure and reduces detection</td>
+<td>DF-H isolates the detector and states the floor</td>
+</tr>
+<tr>
+<td>KDD'26 benchmark [27]</td>
+<td>Reproduced and extended to a delay regime</td>
+<td>E01 to E22 use its protocol</td>
+</tr>
+<tr>
+<td>ISO/IEC 42001 [28]</td>
+<td>Alignment, not certification</td>
+<td>Management-system principles applied to reporting</td>
+</tr>
+<tr>
+<td>NIST AI Risk Management Framework</td>
+<td>Alignment, not certification</td>
+<td>Transparency and measurement principles applied</td>
+</tr>
+</tbody>
+</table>
+<p>The position against the classical panel is favourable and the position against the benchmark top two is not. DF-H beats every detector the project set out to test, by margins from 0.13 to 5.2 ranks, and it loses to SEED and STEPD. The HDDM-W margin is inside the noise of an 80-cell pilot and is not claimed as a win. Page-Hinkley's low false-alarm rate is reported as a near-zero detector rather than as a precision result.</p>
+<p>The comparison with STUDD is the most informative one for the contribution. STUDD is genuinely label-free and useful, and it has no delayed-label benchmark and no confirmation stage [18]. DF-H adds the split between <span class="arithmatex">\(T_{\mathrm{warn}}\)</span> and <span class="arithmatex">\(T_{\mathrm{confirm}}\)</span>, which is the only part of the design that Lemma 1 permits. The comparison with Botacin and Gomes is consistent rather than competitive: they measured that delay increases exposure and reduces detection in a malware pipeline [20], and this report isolates the detector and states the floor that produces that outcome.</p>
+<p>The standards comparison is stated narrowly. ISO/IEC 42001 and the NIST AI Risk Management Framework both call for documented measurement, transparent reporting of limitations and traceable evidence [28]. The project applies those principles through pre-registered gates, an artifact-per-claim map and published negative results. No certification is claimed.</p>
+<!-- pagebreak -->
+<h1 id="chapter-6-conclusion-and-future-scope">CHAPTER 6: CONCLUSION AND FUTURE SCOPE<a class="headerlink" href="#chapter-6-conclusion-and-future-scope" title="Permanent link">¶</a></h1>
+<h2 id="61-summary-of-achievements">6.1 Summary of Achievements<a class="headerlink" href="#61-summary-of-achievements" title="Permanent link">¶</a></h2>
+<p>Four results survive their own negative controls. A streaming learner pays approximately 6.9 times less fixed-window damage than a frozen learner over eleven seeds, and the frozen learner recovered on none. Every streaming adapter in a ten-model ladder pays less damage than frozen and less than every scheduled retrain interval. Detector performance is host-conditional: HDDM-A wins all four shapes on a static host, ADWIN wins abrupt and recurring on an adaptive host, and the published ranking reproduces with SEED and STEPD first and HDDM-A fourth. The two-stage detector ranks third overall at 7.34 with a false-alarm rate of 0.04, ahead of every classical detector the project set out to test and behind the two best benchmark detectors, while its pre-registered top-2 gate failed and is reported as a failure.</p>
+<p>At a fixed delay of 2,000 samples the label-free warning fires in 70 to 513 samples against 2,120 to 3,269 for the error-only panel, a lead of 4 to 30 times that grows with the delay. A reproducible harness, a committed artifact per claim and a 53-test suite carry every reported number.</p>
+<h2 id="62-impact-sustainability-ethics-and-compliance">6.2 Impact, Sustainability, Ethics and Compliance<a class="headerlink" href="#62-impact-sustainability-ethics-and-compliance" title="Permanent link">¶</a></h2>
+<p><strong>Social impact.</strong> The systems that motivate this work decide things about people: whether a transaction is fraudulent, whether a connection is hostile, whether credit is granted. Their labels arrive late by construction, so the delay floor is a property of the deployment rather than a technicality. Quantifying it gives practitioners a way to reason about how much warning time to expect, and the finding that a label-free monitor is limited to feature drift bounds what such a monitor can promise.</p>
+<p><strong>Environmental impact.</strong> Incremental learning removes the repeated full-corpus retraining that scheduled batch pipelines perform. The measured envelope is between about 10 and 24 kWh for the whole project, and the structural argument matters more: a learner that updates per sample does not need the historical corpus to remain resident, so storage and compute scale with the model rather than with the stream.</p>
+<p><strong>Ethical impact.</strong> Two pre-registered gates failed and both are reported with their exact bars and measured values, and the retired 294 times figure is shown only as history. The deep encoder is described as a signal extractor rather than as a classifier because the evidence says so. The report states what was measured, including where the measurement disappointed.</p>
+<p><strong>Compliance alignment.</strong> ISO/IEC 42001 and the NIST AI Risk Management Framework both call for documented measurement, traceable evidence and transparent limitation reporting [28]. The project applies those principles through pre-registered acceptance criteria, an artifact-per-claim map and a published negative-result record. No certification is claimed.</p>
+<h2 id="63-limitations">6.3 Limitations<a class="headerlink" href="#63-limitations" title="Permanent link">¶</a></h2>
+<p>The pilot covers two datasets and five trials, with no significance testing for the fusion or shootout results. The Delay Tax result is a fixed-delay synthesis rather than a full delayed-learning rerun, and Lemmas 2 and 3 are stated without end-to-end measurement. The 50-trial fusion matrix was not run because its gate failed. All runs are on one laptop, and the ABCD and ABCD(X) arm is cited rather than reproduced.</p>
+<h2 id="64-future-work">6.4 Future Work<a class="headerlink" href="#64-future-work" title="Permanent link">¶</a></h2>
+<p>Four extensions follow from the limitations. The full delay matrix should be run across the implemented stochastic, partial, selective and batch schedules, and the delayed-learning rerun should train the host on the delayed schedule rather than shifting detection times analytically. Lemmas 2 and 3 should be measured end to end, since both make quantitative predictions that the current artifacts can test. A 50-trial fusion run with a learned gate and leave-one-dataset-out validation would establish whether the 2.9-rank advantage over the no-feature control survives an adaptive combiner, and the classical feature monitor should be the default Stage 1 until the deep view beats it. A deployment path is the natural engineering extension, and Figure 6.1 sketches it on a single node.</p>
+<p><img alt="Deployment blueprint for future work" src="../report_assets/fig-6-1-deployment.png"/></p>
+<p><strong>Figure 6.1: Deployment blueprint for future work.</strong> A load generator writes to a Redis or Kafka event stream, a continual-learning model service both predicts and learns from each event, and a live drift monitor consumes the same stream. Metrics reach Prometheus and dashboards reach Grafana. The model service is labelled as both predictor and learner because that is the property the streaming evidence supports.</p>
+<!-- pagebreak -->
+<h1 id="references">REFERENCES<a class="headerlink" href="#references" title="Permanent link">¶</a></h1>
+<p><em>Note on the list: 28 references, of which 14 are recent journal articles published in 2021 or later. Every entry is cited at least once in the text.</em></p>
+<ol>
+<li>E. S. Page, "Continuous inspection schemes," <em>Biometrika</em>, vol. 41, no. 1-2, pp. 100-115, 1954.</li>
+<li>G. Lorden, "Procedures for reacting to a change in distribution," <em>Annals of Mathematical Statistics</em>, vol. 42, no. 6, pp. 1897-1908, 1971.</li>
+<li>G. Widmer and M. Kubat, "Learning in the presence of concept drift and hidden contexts," <em>Machine Learning</em>, vol. 23, no. 1, pp. 69-101, 1996.</li>
+<li>P. Domingos and G. Hulten, "Mining high-speed data streams," in <em>Proc. ACM SIGKDD</em>, 2000, pp. 71-80.</li>
+<li>J. Gama, P. Medas, G. Castillo, and P. P. Rodrigues, "Learning with drift detection," in <em>Proc. Brazilian Symp. Artificial Intelligence</em>, 2004, pp. 286-295.</li>
+<li>M. Baena-Garcia, J. del Campo-Avila, R. Fidalgo, A. Bifet, R. Gavalda, and R. Morales-Bueno, "Early drift detection method," in <em>Proc. Fourth Int. Workshop Knowledge Discovery from Data Streams</em>, 2006.</li>
+<li>J. Demsar, "Statistical comparisons of classifiers over multiple data sets," <em>Journal of Machine Learning Research</em>, vol. 7, pp. 1-30, 2006.</li>
+<li>A. Bifet and R. Gavalda, "Learning from time-changing data with adaptive windowing," in <em>Proc. SIAM Int. Conf. Data Mining</em>, 2007, pp. 443-448.</li>
+<li>A. Bifet and R. Gavalda, "Adaptive learning from evolving data streams," in <em>Proc. Int. Symp. Intelligent Data Analysis</em>, 2009.</li>
+<li>I. Zliobaite, "Change with delayed labeling: When is it detectable?" in <em>Proc. IEEE ICDM Workshops</em>, 2010, pp. 843-850.</li>
+<li>J. Gama, R. Sebastiao, and P. P. Rodrigues, "On evaluating stream learning algorithms," <em>Machine Learning</em>, vol. 90, no. 3, pp. 317-346, 2013.</li>
+<li>M. Grzenda, H. M. Gomes, and A. Bifet, "Delayed labelling evaluation for data streams," <em>Data Mining and Knowledge Discovery</em>, vol. 34, pp. 1237-1266, 2020.</li>
+<li>J. Montiel, M. Halford, S. M. Mastelini, G. Bolmier, R. Sourty, R. Vaysse, A. Zouitine, H. M. Gomes, J. Read, T. Abdessalem, and A. Bifet, "River: Machine learning for streaming data in Python," <em>Journal of Machine Learning Research</em>, vol. 22, no. 110, pp. 1-8, 2021.</li>
+<li>D. Carneiro, M. Guimaraes, F. Silva, and P. Novais, "A predictive and user-centric approach to machine learning in data streaming scenarios," <em>Neurocomputing</em>, 2021.</li>
+<li>R. Mello, H. M. Gomes, A. Bifet, and B. Pfahringer, "Stream-based active learning for sliding windows under the influence of verification latency," <em>Machine Learning</em>, 2021.</li>
+<li>H. M. Gomes, M. Grzenda, R. Mello, J. Read, M. H. Le Nguyen, and A. Bifet, "A survey on semi-supervised learning for delayed partially labelled data streams," <em>ACM Computing Surveys</em>, vol. 55, no. 4, article 75, 2022.</li>
+<li>A. Cano and B. Krawczyk, "ROSE: Robust online self-adjusting ensemble for continual learning on imbalanced drifting data streams," <em>Machine Learning</em>, vol. 111, pp. 2561-2599, 2022.</li>
+<li>V. Cerqueira, H. M. Gomes, A. Bifet, and L. Torgo, "STUDD: A student-teacher method for unsupervised concept drift detection," <em>Machine Learning</em>, vol. 112, pp. 4351-4378, 2023.</li>
+<li>F. Ceschin, H. M. Gomes, M. Botacin, A. Bifet, B. Pfahringer, L. S. Oliveira, and A. Gregio, "Machine learning (in) security: A stream of problems," <em>Expert Systems with Applications</em>, vol. 212, article 118590, 2023.</li>
+<li>M. Botacin and H. M. Gomes, "Towards more realistic evaluations: The impact of label delays in malware detection pipelines," <em>Computers &amp; Security</em>, vol. 147, 2024.</li>
+<li>C. Surianarayanan, S. Kunasekaran, and P. R. Chelliah, "A high-throughput architecture for anomaly detection in streaming data using machine learning algorithms," <em>International Journal of Information Technology</em>, vol. 16, pp. 493-506, 2024.</li>
+<li>C. Kulbach, L. Cazzonelli, H.-A. Ngo, M. Halford, and S. M. Mastelini, "DeepRiver: A deep learning library for data streams," <em>Journal of Open Source Software</em>, vol. 10, no. 105, article 7226, 2025.</li>
+<li>F. I. Agu, R. Andok, J. Klarak, and J. R. Dora, "Statistical drift detection with parametric Gamma-Weibull and adaptive deep learning for malware detection in IoT data streams," <em>Journal of King Saud University Computer and Information Sciences</em>, vol. 38, article 673, 2026.</li>
+<li>B. M. Alencar, G. W. Cassales, H. M. Gomes, C. V. S. Prazeres, T. Rios, A. Bifet, and R. A. Rios, "Concept drift detection in delayed and partially labeled data streams: An experimental survey," <em>Digital Signal Processing</em>, vol. 182, article 106325, 2026.</li>
+<li>L. Hans and D. Zuhlke, "Online versus batch retraining in one-step-ahead urban water demand forecasting under concept drift," <em>Water Supply</em>, vol. 26, no. 4, pp. 255-268, 2026.</li>
+<li>F. Abdoune, M. Nouiri, and O. Cardin, "Digital twin-based anomaly detection under concept drift: A comparison between iterative batch learning and incremental learning approaches," <em>Expert Systems with Applications</em>, vol. 299, article 130062, 2026.</li>
+<li>V. Cerqueira, H. M. Gomes, M. Heyden, B. Pfahringer, and A. Bifet, "A framework for evaluating and benchmarking concept drift detection methods," in <em>Proc. ACM SIGKDD</em>, 2026, pp. 8671-8682.</li>
+<li>ISO/IEC 42001:2023, "Information technology - Artificial intelligence - Management system," ISO/IEC, 2023.</li>
+</ol>
+<!-- pagebreak -->
+<h1 id="appendix-a-code-and-artifact-extracts">APPENDIX A: CODE AND ARTIFACT EXTRACTS<a class="headerlink" href="#appendix-a-code-and-artifact-extracts" title="Permanent link">¶</a></h1>
+<p>The artifact contract is the mechanism that makes every claim traceable. A run produces five files under <code>experiments/results/&lt;exp_id&gt;/</code>, and every table and figure in this report is derived from them.</p>
+<p><strong>Table A.1: Artifact schema</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>meta.json</code></td>
+<td>Configuration, configuration hash, git revision, library versions, command, timestamps</td>
+<td>Provenance and exact reproduction</td>
+</tr>
+<tr>
+<td><code>summary.json</code></td>
+<td>Aggregate metrics per model and per seed, acceptance verdicts</td>
+<td>Model tables and gate checks</td>
+</tr>
+<tr>
+<td><code>episodes.jsonl</code></td>
+<td>One record per drift episode, with dip depth, recovery and damage</td>
+<td>Drift-window analysis</td>
+</tr>
+<tr>
+<td><code>detections.jsonl</code></td>
+<td>One record per detector alarm, with false-alarm status and delay</td>
+<td>Detector maps and F1 scores</td>
+</tr>
+<tr>
+<td><code>series.npz</code></td>
+<td>Per-sample rolling kappa, accuracy and error series</td>
+<td>Every time-series figure</td>
+</tr>
+</tbody>
+</table>
+<p><code>Code Listing A.1</code> shows the fusion core as it is implemented, with the calibration and the two reported times.</p>
+<p><strong>Code Listing A.1: DF-H fusion and the two reported times</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">fuse</span><span class="p">(</span><span class="n">stage1</span><span class="p">,</span> <span class="n">stage2</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">    </span><span class="sd">"""Combine the label-free and error-stream stages.</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="sd">    stage1.z    : standardised label-free signals, shape (n_windows, n_signals)</span>
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="sd">    stage2.alarm: boolean error-detector alarms, shape (n_samples,)</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="sd">    """</span>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>    <span class="c1"># Calibrate the label-free threshold on pre-drift windows only.</span>
+<a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="n">pre</span> <span class="o">=</span> <span class="n">stage1</span><span class="o">.</span><span class="n">z</span><span class="p">[:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">reference_windows</span><span class="p">]</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>    <span class="n">thr_s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">pre</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">cfg</span><span class="o">.</span><span class="n">far_target</span><span class="p">)</span>
+<a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a>
+<a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a>    <span class="n">s1</span> <span class="o">=</span> <span class="n">stage1</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">thr_s1</span>          <span class="c1"># warning, needs no labels</span>
+<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a>    <span class="n">s2</span> <span class="o">=</span> <span class="n">stage2</span><span class="o">.</span><span class="n">alarm</span>                           <span class="c1"># confirmation, floor-bound</span>
+<a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a>
+<a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="c1"># 2-of-3 confirmation inside a 2,000-sample window, 2,000 refractory.</span>
+<a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="n">votes</span> <span class="o">=</span> <span class="n">s1</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">+</span> <span class="n">s2</span><span class="p">[</span><span class="n">window</span><span class="p">]</span> <span class="o">+</span> <span class="n">ensemble_vote</span><span class="p">[</span><span class="n">window</span><span class="p">]</span>
+<a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a>    <span class="n">confirmed</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+<a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a>
+<a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a>    <span class="k">return</span> <span class="n">FusionResult</span><span class="p">(</span>
+<a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a>        <span class="n">T_warn</span><span class="o">=</span><span class="n">first_true</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span>        <span class="c1"># not shifted by the delay L</span>
+<a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a>        <span class="n">T_confirm</span><span class="o">=</span><span class="n">first_true</span><span class="p">(</span><span class="n">confirmed</span><span class="p">),</span>  <span class="c1"># bounded below by tau + L</span>
+<a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a>    <span class="p">)</span>
+</code></pre></div>
+<!-- pagebreak -->
+<h1 id="annexure-b-plagiarism-report">ANNEXURE B: PLAGIARISM REPORT<a class="headerlink" href="#annexure-b-plagiarism-report" title="Permanent link">¶</a></h1>
+<p><em>This page is a template. The values are to be filled in after the institutional similarity run.</em></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Similarity index</td>
+<td></td>
+</tr>
+<tr>
+<td>Submission ID</td>
+<td></td>
+</tr>
+<tr>
+<td>Submission date</td>
+<td></td>
+</tr>
+<tr>
+<td>Database</td>
+<td></td>
+</tr>
+<tr>
+<td>Excluded sources</td>
+<td>Bibliography and quoted material</td>
+</tr>
+<tr>
+<td>Supervisor signature</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<!-- pagebreak -->
+<h1 id="annexure-c-programme-outcome-and-programme-specific-outcome-mapping">ANNEXURE C: PROGRAMME OUTCOME AND PROGRAMME SPECIFIC OUTCOME MAPPING<a class="headerlink" href="#annexure-c-programme-outcome-and-programme-specific-outcome-mapping" title="Permanent link">¶</a></h1>
+<p><strong>Table A.2: Programme outcome and programme specific outcome mapping</strong></p>
+<table>
+<thead>
+<tr>
+<th>Project task</th>
+<th>PO1</th>
+<th>PO2</th>
+<th>PO3</th>
+<th>PO4</th>
+<th>PO5</th>
+<th>PO6</th>
+<th>PO7</th>
+<th>PO8</th>
+<th>PO9</th>
+<th>PO10</th>
+<th>PO11</th>
+<th>PO12</th>
+<th>PSO1</th>
+<th>PSO2</th>
+<th>PSO3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engineering knowledge of streaming learning and drift</td>
+<td>High</td>
+<td>High</td>
+<td>Medium</td>
+<td>Medium</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>Medium</td>
+<td></td>
+</tr>
+<tr>
+<td>Problem analysis of the delay floor and identifiability</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+</tr>
+<tr>
+<td>Design of the two-stage detector and harness</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>Medium</td>
+<td>Medium</td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Investigation through eleven controlled experiments</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>Medium</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Medium</td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+</tr>
+<tr>
+<td>Modern tool usage across River, PyTorch and CapyMOA</td>
+<td>Medium</td>
+<td></td>
+<td>Medium</td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Environment and sustainability in the compute envelope</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Medium</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td></td>
+<td></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Ethics and honest reporting of negative results</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td></td>
+<td></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Individual and team work across three defined roles</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Communication through this report and the evidence site</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+</tr>
+<tr>
+<td>Project management with a pilot-first gate</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>High</td>
+<td>High</td>
+<td></td>
+<td></td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<p>The mapping is deliberately sparse. Only the cells where a task makes a substantial contribution are marked, so that the table distinguishes the project's actual coverage rather than claiming every outcome at every level.</p>
+<!-- pagebreak -->
+<h1 id="annexure-d-outcome-of-the-report">ANNEXURE D: OUTCOME OF THE REPORT<a class="headerlink" href="#annexure-d-outcome-of-the-report" title="Permanent link">¶</a></h1>
+<p>This work produced a reproducible software artefact and an evidence dossier rather than a patentable device. No patent has been filed, and no claim of intellectual-property protection is made.</p>
+<p><strong>Outcome abstract.</strong> The report presents a pre-registered study of concept drift detection under delayed labels. A configuration-driven harness, DriftLab, was built on River and DeepRiver and populated with eleven experiments over synthetic generators, public real streams and a 2,800-task reproduction of a published detector benchmark. Three findings are established. Streaming adaptation reduces fixed-window damage by approximately 6.9 times against a frozen learner over eleven seeds, with no frozen recovery. Detector quality is host-conditional, and the published benchmark ranking reproduces with SEED and STEPD first and HDDM-A fourth. A two-stage detector, DF-H, ranks third overall at 7.34 with a false-alarm rate of 0.04, ahead of every classical detector tested and behind the benchmark top two, while its pre-registered top-2 gate fails. At a fixed delay of 2,000 samples the label-free warning is 4 to 30 times earlier than the best error-only detector, which is the surviving contribution. All negative results are reported, and every number traces to a committed artifact.</p>
+<!-- pagebreak -->
+<h1 id="annexure-e-sustainability-statement">ANNEXURE E: SUSTAINABILITY STATEMENT<a class="headerlink" href="#annexure-e-sustainability-statement" title="Permanent link">¶</a></h1>
+<p>The environmental position of this work rests on a structural argument rather than on an offset. A streaming learner updates on each sample and therefore does not require repeated passes over a stored corpus. Scheduled batch pipelines, by contrast, re-read historical data at every refit, and the compute and storage cost of that pattern grows with the length of the stream. Continual learning replaces a cost that scales with history by a cost that scales with model size, and for long-lived streams that substitution is the larger environmental effect.</p>
+<p>The measured envelope for the project itself is small and is reported rather than hidden. Mixed load between 65 and 95 W over an estimated 150 to 250 hours gives 10 to 24 kWh, which at an indicative tariff is between 200 and 400 INR including peripherals and network. No cloud cluster was rented, so no shared infrastructure was provisioned and released, and no result depends on a machine that a reader cannot access.</p>
+<p>The social dimension is inseparable from the environmental one in this domain. A model that silently degrades after a drift produces decisions that are wrong in a way nobody notices, and the populations affected are rarely the ones who can detect the failure. Reporting the delay floor, and the fact that a label-free monitor cannot see pure posterior drift, gives practitioners a realistic basis for deciding when human review must remain in the loop.</p>
+<p>The code, configuration and artifacts are organised for reuse. A single command reproduces a concluded experiment, figures are regenerated from artifacts rather than redrawn, and the test suite covers the metric definitions and the artifact contract. Reuse is the most direct sustainability contribution a software project can make, because a harness that others can run does not have to be rebuilt.</p>
+<!-- pagebreak -->
+<h1 id="annexure-f-team-roles">ANNEXURE F: TEAM ROLES<a class="headerlink" href="#annexure-f-team-roles" title="Permanent link">¶</a></h1>
+<p><strong>Ananya Arora</strong> led the literature review and the methodological framing. The initial catalogue of thirty-eight papers, the six deep-dive notes and the gap analysis that produced the four lemmas were her work, and she reworded the contribution twice as new evidence arrived, first when the immediate-label benchmark was found and again when the delayed-label survey could not be read in full. She owned the report structure, the citation audit and the final language pass, including the decision to state the two failed gates in the body of Chapter 5 rather than in an annexure.</p>
+<p><strong>Vaibhavi Kansal</strong> built the experiment harness and the baseline ladder. The configuration-driven design, the per-seed unit cache, the resume guard and the artifact schema are hers, as is the test suite that covers the metric definitions and the artifact contract. She ran the baseline ladder across ten models and eleven seeds, the real-stream model check on Elec2 and Phishing, and the no-drift control that established the raw channel as the default. She also found and corrected the zero-alarm scoring defect that had made a never-ringing detector appear perfect.</p>
+<p><strong>Priyansh Singh</strong> built the deep detector and the benchmark reproduction. The frozen encoder instrumentation, the seven Stage-1 signals, the pure NumPy trial stream and the fusion core are his, together with the CapyMOA bridge and the isolated Java environment that reproduces the published detector ranking on 2,800 tasks. He maintained the artifact pipeline and the continuous integration workflow, produced the figures from artifacts, and ran the fixed-delay synthesis that became the surviving headline. He also maintained the record of retired numbers, including the 294 times figure, so that no superseded value could re-enter the report.</p>
+<p>All three members shared the experimental review, the negative-result decisions and the final read-through.</p>
+<!-- END OF REPORT BODY -->
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

@@ -1,0 +1,3546 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Reports/mid_term/" rel="canonical"/>
+<link href="../Sept9/" rel="prev"/>
+<link href="../Nov14/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Mid-term report - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#jaypee-institute-of-information-technology-noida">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Mid-term report
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#acknowledgement">
+<span class="md-ellipsis">
+      
+        ACKNOWLEDGEMENT
+      
+    </span>
+</a>
+<nav aria-label="ACKNOWLEDGEMENT" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#signatures-of-students">
+<span class="md-ellipsis">
+      
+        Signature(s) of Students
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate">
+<span class="md-ellipsis">
+      
+        CERTIFICATE
+      
+    </span>
+</a>
+<nav aria-label="CERTIFICATE" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#digital-signature-of-supervisor">
+<span class="md-ellipsis">
+      
+        Digital Signature of Supervisor
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#declaration-of-originality">
+<span class="md-ellipsis">
+      
+        DECLARATION OF ORIGINALITY
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abstract">
+<span class="md-ellipsis">
+      
+        ABSTRACT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        TABLE OF CONTENTS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-tables">
+<span class="md-ellipsis">
+      
+        LIST OF TABLES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-figures">
+<span class="md-ellipsis">
+      
+        LIST OF FIGURES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-abbreviations">
+<span class="md-ellipsis">
+      
+        LIST OF ABBREVIATIONS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-introduction">
+<span class="md-ellipsis">
+      
+        CHAPTER 1: INTRODUCTION
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 1: INTRODUCTION" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-background">
+<span class="md-ellipsis">
+      
+        1.1 Background
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-problem-statement">
+<span class="md-ellipsis">
+      
+        1.2 Problem Statement
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-social-environmental-relevance">
+<span class="md-ellipsis">
+      
+        1.3 Social &amp; Environmental Relevance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-gantt-chart-timeline">
+<span class="md-ellipsis">
+      
+        1.4 Gantt Chart / Timeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-scope">
+<span class="md-ellipsis">
+      
+        1.5 Scope
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-literature-survey-critical-review">
+<span class="md-ellipsis">
+      
+        CHAPTER 2: LITERATURE SURVEY / CRITICAL REVIEW
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 2: LITERATURE SURVEY / CRITICAL REVIEW" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-overview-of-existing-work-literature-review">
+<span class="md-ellipsis">
+      
+        2.1 Overview of Existing Work / Literature Review
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-summary-table">
+<span class="md-ellipsis">
+      
+        2.2 Summary Table
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-identification-of-research-gaps-limitations-of-existing-methods">
+<span class="md-ellipsis">
+      
+        2.3 Identification of Research Gaps / Limitations of Existing Methods
+      
+    </span>
+</a>
+<nav aria-label="2.3 Identification of Research Gaps / Limitations of Existing Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-1-detector-level-degradation-under-delay-is-unquantified">
+<span class="md-ellipsis">
+      
+        Gap 1: Detector-level degradation under delay is unquantified
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-2-no-standard-confirmation-protocol-exists">
+<span class="md-ellipsis">
+      
+        Gap 2: No standard confirmation protocol exists
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-3-the-operational-cost-of-continual-learning-is-under-measured">
+<span class="md-ellipsis">
+      
+        Gap 3: The operational cost of continual learning is under-measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-4-immediate-label-benchmarks-now-exist-but-delayed-label-benchmarks-do-not">
+<span class="md-ellipsis">
+      
+        Gap 4: Immediate-label benchmarks now exist, but delayed-label benchmarks do not
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#limitation-of-frozen-batch-baselines">
+<span class="md-ellipsis">
+      
+        Limitation of Frozen Batch Baselines
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#limitation-of-global-accuracy">
+<span class="md-ellipsis">
+      
+        Limitation of Global Accuracy
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-system-design-methodology">
+<span class="md-ellipsis">
+      
+        CHAPTER 3: SYSTEM DESIGN &amp; METHODOLOGY
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 3: SYSTEM DESIGN &amp; METHODOLOGY" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-proposed-methodology">
+<span class="md-ellipsis">
+      
+        3.1 Proposed Methodology
+      
+    </span>
+</a>
+<nav aria-label="3.1 Proposed Methodology" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-baseline-control-condition">
+<span class="md-ellipsis">
+      
+        Chapter 1: Baseline (Control Condition)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-system-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        Chapter 2: System (Infrastructure Spine)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-delay-tax-research-contribution">
+<span class="md-ellipsis">
+      
+        Chapter 3: Delay Tax (Research Contribution)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-tool-and-technique-selection">
+<span class="md-ellipsis">
+      
+        3.2 Tool and Technique Selection
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-4-implementation-testing">
+<span class="md-ellipsis">
+      
+        CHAPTER 4: IMPLEMENTATION &amp; TESTING
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 4: IMPLEMENTATION &amp; TESTING" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-experimental-setup">
+<span class="md-ellipsis">
+      
+        4.1 Experimental Setup
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-test-cases-case-study-and-outputs">
+<span class="md-ellipsis">
+      
+        4.2 Test Cases, Case Study, and Outputs
+      
+    </span>
+</a>
+<nav aria-label="4.2 Test Cases, Case Study, and Outputs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-workflow-exp-02">
+<span class="md-ellipsis">
+      
+        System Workflow (Exp-02)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-and-validation">
+<span class="md-ellipsis">
+      
+        Testing and Validation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-5-results-discussion">
+<span class="md-ellipsis">
+      
+        CHAPTER 5: RESULTS &amp; DISCUSSION
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 5: RESULTS &amp; DISCUSSION" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-result-analysis">
+<span class="md-ellipsis">
+      
+        5.1 Result Analysis
+      
+    </span>
+</a>
+<nav aria-label="5.1 Result Analysis" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-findings">
+<span class="md-ellipsis">
+      
+        Key Findings
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52-performance-evaluation-and-comparison-with-existing-methods">
+<span class="md-ellipsis">
+      
+        5.2 Performance Evaluation and Comparison with Existing Methods
+      
+    </span>
+</a>
+<nav aria-label="5.2 Performance Evaluation and Comparison with Existing Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comparison-with-literature-expectations">
+<span class="md-ellipsis">
+      
+        Comparison with Literature Expectations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#discussion">
+<span class="md-ellipsis">
+      
+        Discussion
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-6-conclusion-future-scope">
+<span class="md-ellipsis">
+      
+        CHAPTER 6: CONCLUSION &amp; FUTURE SCOPE
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 6: CONCLUSION &amp; FUTURE SCOPE" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-summary-of-work-and-achievements">
+<span class="md-ellipsis">
+      
+        6.1 Summary of Work and Achievements
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-impact-on-society-environmental-sustainability-ethical-issues-and-compliance">
+<span class="md-ellipsis">
+      
+        6.2 Impact on Society, Environmental Sustainability, Ethical Issues and Compliance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-limitations-of-the-work">
+<span class="md-ellipsis">
+      
+        6.3 Limitations of the Work
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-future-scope">
+<span class="md-ellipsis">
+      
+        6.4 Future Scope
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#references">
+<span class="md-ellipsis">
+      
+        REFERENCES
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#acknowledgement">
+<span class="md-ellipsis">
+      
+        ACKNOWLEDGEMENT
+      
+    </span>
+</a>
+<nav aria-label="ACKNOWLEDGEMENT" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#signatures-of-students">
+<span class="md-ellipsis">
+      
+        Signature(s) of Students
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#certificate">
+<span class="md-ellipsis">
+      
+        CERTIFICATE
+      
+    </span>
+</a>
+<nav aria-label="CERTIFICATE" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#digital-signature-of-supervisor">
+<span class="md-ellipsis">
+      
+        Digital Signature of Supervisor
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#declaration-of-originality">
+<span class="md-ellipsis">
+      
+        DECLARATION OF ORIGINALITY
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#abstract">
+<span class="md-ellipsis">
+      
+        ABSTRACT
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#table-of-contents">
+<span class="md-ellipsis">
+      
+        TABLE OF CONTENTS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-tables">
+<span class="md-ellipsis">
+      
+        LIST OF TABLES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-figures">
+<span class="md-ellipsis">
+      
+        LIST OF FIGURES
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#list-of-abbreviations">
+<span class="md-ellipsis">
+      
+        LIST OF ABBREVIATIONS
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-introduction">
+<span class="md-ellipsis">
+      
+        CHAPTER 1: INTRODUCTION
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 1: INTRODUCTION" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-background">
+<span class="md-ellipsis">
+      
+        1.1 Background
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-problem-statement">
+<span class="md-ellipsis">
+      
+        1.2 Problem Statement
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-social-environmental-relevance">
+<span class="md-ellipsis">
+      
+        1.3 Social &amp; Environmental Relevance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-gantt-chart-timeline">
+<span class="md-ellipsis">
+      
+        1.4 Gantt Chart / Timeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-scope">
+<span class="md-ellipsis">
+      
+        1.5 Scope
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-literature-survey-critical-review">
+<span class="md-ellipsis">
+      
+        CHAPTER 2: LITERATURE SURVEY / CRITICAL REVIEW
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 2: LITERATURE SURVEY / CRITICAL REVIEW" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-overview-of-existing-work-literature-review">
+<span class="md-ellipsis">
+      
+        2.1 Overview of Existing Work / Literature Review
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-summary-table">
+<span class="md-ellipsis">
+      
+        2.2 Summary Table
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-identification-of-research-gaps-limitations-of-existing-methods">
+<span class="md-ellipsis">
+      
+        2.3 Identification of Research Gaps / Limitations of Existing Methods
+      
+    </span>
+</a>
+<nav aria-label="2.3 Identification of Research Gaps / Limitations of Existing Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-1-detector-level-degradation-under-delay-is-unquantified">
+<span class="md-ellipsis">
+      
+        Gap 1: Detector-level degradation under delay is unquantified
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-2-no-standard-confirmation-protocol-exists">
+<span class="md-ellipsis">
+      
+        Gap 2: No standard confirmation protocol exists
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-3-the-operational-cost-of-continual-learning-is-under-measured">
+<span class="md-ellipsis">
+      
+        Gap 3: The operational cost of continual learning is under-measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gap-4-immediate-label-benchmarks-now-exist-but-delayed-label-benchmarks-do-not">
+<span class="md-ellipsis">
+      
+        Gap 4: Immediate-label benchmarks now exist, but delayed-label benchmarks do not
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#limitation-of-frozen-batch-baselines">
+<span class="md-ellipsis">
+      
+        Limitation of Frozen Batch Baselines
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#limitation-of-global-accuracy">
+<span class="md-ellipsis">
+      
+        Limitation of Global Accuracy
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-system-design-methodology">
+<span class="md-ellipsis">
+      
+        CHAPTER 3: SYSTEM DESIGN &amp; METHODOLOGY
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 3: SYSTEM DESIGN &amp; METHODOLOGY" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-proposed-methodology">
+<span class="md-ellipsis">
+      
+        3.1 Proposed Methodology
+      
+    </span>
+</a>
+<nav aria-label="3.1 Proposed Methodology" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-baseline-control-condition">
+<span class="md-ellipsis">
+      
+        Chapter 1: Baseline (Control Condition)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-system-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        Chapter 2: System (Infrastructure Spine)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-delay-tax-research-contribution">
+<span class="md-ellipsis">
+      
+        Chapter 3: Delay Tax (Research Contribution)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-tool-and-technique-selection">
+<span class="md-ellipsis">
+      
+        3.2 Tool and Technique Selection
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-4-implementation-testing">
+<span class="md-ellipsis">
+      
+        CHAPTER 4: IMPLEMENTATION &amp; TESTING
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 4: IMPLEMENTATION &amp; TESTING" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-experimental-setup">
+<span class="md-ellipsis">
+      
+        4.1 Experimental Setup
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-test-cases-case-study-and-outputs">
+<span class="md-ellipsis">
+      
+        4.2 Test Cases, Case Study, and Outputs
+      
+    </span>
+</a>
+<nav aria-label="4.2 Test Cases, Case Study, and Outputs" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#system-workflow-exp-02">
+<span class="md-ellipsis">
+      
+        System Workflow (Exp-02)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-and-validation">
+<span class="md-ellipsis">
+      
+        Testing and Validation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-5-results-discussion">
+<span class="md-ellipsis">
+      
+        CHAPTER 5: RESULTS &amp; DISCUSSION
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 5: RESULTS &amp; DISCUSSION" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-result-analysis">
+<span class="md-ellipsis">
+      
+        5.1 Result Analysis
+      
+    </span>
+</a>
+<nav aria-label="5.1 Result Analysis" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-findings">
+<span class="md-ellipsis">
+      
+        Key Findings
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52-performance-evaluation-and-comparison-with-existing-methods">
+<span class="md-ellipsis">
+      
+        5.2 Performance Evaluation and Comparison with Existing Methods
+      
+    </span>
+</a>
+<nav aria-label="5.2 Performance Evaluation and Comparison with Existing Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#comparison-with-literature-expectations">
+<span class="md-ellipsis">
+      
+        Comparison with Literature Expectations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#discussion">
+<span class="md-ellipsis">
+      
+        Discussion
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-6-conclusion-future-scope">
+<span class="md-ellipsis">
+      
+        CHAPTER 6: CONCLUSION &amp; FUTURE SCOPE
+      
+    </span>
+</a>
+<nav aria-label="CHAPTER 6: CONCLUSION &amp; FUTURE SCOPE" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-summary-of-work-and-achievements">
+<span class="md-ellipsis">
+      
+        6.1 Summary of Work and Achievements
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-impact-on-society-environmental-sustainability-ethical-issues-and-compliance">
+<span class="md-ellipsis">
+      
+        6.2 Impact on Society, Environmental Sustainability, Ethical Issues and Compliance
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-limitations-of-the-work">
+<span class="md-ellipsis">
+      
+        6.3 Limitations of the Work
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-future-scope">
+<span class="md-ellipsis">
+      
+        6.4 Future Scope
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#references">
+<span class="md-ellipsis">
+      
+        REFERENCES
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Mid-term report.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="jaypee-institute-of-information-technology-noida">Jaypee Institute of Information Technology, Noida<a class="headerlink" href="#jaypee-institute-of-information-technology-noida" title="Permanent link">¶</a></h1>
+<p>DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING AND INFORMATION TECHNOLOGY</p>
+<!-- Institute logo -->
+<p><strong>Project Title:</strong> The Delay Tax: Streaming Machine Learning with Concept Drift Detection and Adaptation</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Enrollment No.</th>
+<th>Name of Student</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">9922103035</td>
+<td>Ananya Arora</td>
+</tr>
+<tr>
+<td style="text-align: right;">8823103057</td>
+<td>Vaibhavi Kansal</td>
+</tr>
+<tr>
+<td style="text-align: right;">9923103042</td>
+<td>Priyansh Singh</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Course Name</td>
+<td>Major Project-1</td>
+</tr>
+<tr>
+<td>Course Code</td>
+<td>15B19CI791</td>
+</tr>
+<tr>
+<td>Program</td>
+<td>B. Tech. CSE 4th Year, 7th Semester</td>
+</tr>
+<tr>
+<td>Academic Session</td>
+<td>2026 – 2027</td>
+</tr>
+</tbody>
+</table>
+<h2 id="acknowledgement">ACKNOWLEDGEMENT<a class="headerlink" href="#acknowledgement" title="Permanent link">¶</a></h2>
+<p>We would like to place on record our deep sense of gratitude to Prof. Dr. Sankosh Kumar Ray, Department of Computer Science and Engineering, Jaypee Institute of Information Technology, India, for the generous guidance, valuable suggestions, continuous encouragement, and supervision provided throughout the course of the present work.</p>
+<p>We express our sincere gratitude to the faculty members of the Department of Computer Science and Engineering, Jaypee Institute of Information Technology, for their support and guidance during the development of this major project.</p>
+<p>We also wish to extend our thanks to our classmates for their insightful comments, constructive suggestions, and cooperation, which helped us improve the quality of this project work.</p>
+<h3 id="signatures-of-students">Signature(s) of Students<a class="headerlink" href="#signatures-of-students" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Enrollment No.</th>
+<th>Student Name</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9922103035</td>
+<td>Ananya Arora</td>
+<td></td>
+</tr>
+<tr>
+<td>8823103057</td>
+<td>Vaibhavi Kansal</td>
+<td></td>
+</tr>
+<tr>
+<td>9923103042</td>
+<td>Priyansh Singh</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate">CERTIFICATE<a class="headerlink" href="#certificate" title="Permanent link">¶</a></h2>
+<p>This is to certify that the Major Project Report entitled "The Delay Tax: Streaming Machine Learning with Concept Drift Detection and Adaptation" submitted by Ananya Arora (Enrollment No. 9922103035), Vaibhavi Kansal (Enrollment No. 8823103057), and Priyansh Singh (Enrollment No. 9923103042) of B.Tech of Jaypee Institute of Information Technology, Noida has been carried out under my supervision.</p>
+<p>This work has not been submitted partially or wholly to any other University or Institute for the award of any other degree or diploma.</p>
+<h3 id="digital-signature-of-supervisor">Digital Signature of Supervisor<a class="headerlink" href="#digital-signature-of-supervisor" title="Permanent link">¶</a></h3>
+<p><strong>Name of Supervisor:</strong> Prof. Dr. Sankosh Kumar Ray</p>
+<p><strong>Designation:</strong></p>
+<p><strong>Date:</strong></p>
+<h2 id="declaration-of-originality">DECLARATION OF ORIGINALITY<a class="headerlink" href="#declaration-of-originality" title="Permanent link">¶</a></h2>
+<p>We, the undersigned, hereby declare that the Major Project Report entitled "The Delay Tax: Streaming Machine Learning with Concept Drift Detection and Adaptation" submitted to the Department of Computer Science &amp; Engineering, Jaypee Institute of Information Technology, Noida, in partial fulfilment of the requirements for the award of the degree of Bachelor of Technology, is an original work carried out by us.</p>
+<p>The matter presented in this report has not been submitted by us for the award of any other degree of this or any other university. We have duly acknowledged all the sources of information used in this report.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Enrollment No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ananya Arora</td>
+<td>9922103035</td>
+</tr>
+<tr>
+<td>Vaibhavi Kansal</td>
+<td>8823103057</td>
+</tr>
+<tr>
+<td>Priyansh Singh</td>
+<td>9923103042</td>
+</tr>
+</tbody>
+</table>
+<p>Date:</p>
+<p>Place: Noida</p>
+<h2 id="abstract">ABSTRACT<a class="headerlink" href="#abstract" title="Permanent link">¶</a></h2>
+<p><strong>Problem:</strong> Conventional machine learning assumes a finite, static dataset that is loaded, split, and used to train a model, after which deployment is treated as finished. In production, however, data often arrives as an unbounded stream that is too large or too fast to store, and the process generating it changes over time through concept drift, which batch models trained once cannot react to on their own. Furthermore, nearly all drift-detection research assumes that labels arrive instantly with each sample, whereas in real systems such as fraud confirmation, advertising conversions, and analyst verdicts, labels arrive late, partially, and selectively, which weakens both detection and evaluation.</p>
+<p><strong>Methodology:</strong> This project implements a research pipeline for streaming machine learning built on the River framework and DeepRiver (PyTorch). It follows prequential (test-then-train) evaluation on drifting data streams, compares adaptive streaming learners against frozen batch baselines, and measures temporal reactivity metrics such as recovery time, dip depth, and damage area (skill lost × time wrong) rather than global accuracy alone. Phase 0 completed a literature review of 38 papers with six deep-dive notes and formalised the Delay Tax as four provable lemmas on how delayed, partial, and batched labels degrade drift detection, while Phase 1 executed two controlled experiments (the Exp-01 pilot and the Exp-02 eleven-seed sweep) on a synthetic SEA stream with one abrupt concept change.</p>
+<p><strong>Key Results:</strong> A DeepRiver rolling deep classifier recovered from concept drift on 11 of 11 seeds within a 5,000-sample budget, while a frozen RandomForest recovered on none of the 11 seeds. Damage area, the primary reactivity metric, was 13 ± 31 samples·κ for streaming against 3,710 ± 592 for the frozen model, approximately 294× smaller, and even the worst streaming seed (103) beat the best frozen seed (2,439) by a factor of 24. Overall prequential performance also favoured streaming, with 88.3% against 85.4% accuracy and 0.753 against 0.685 Cohen Kappa, although this remains existence evidence on one synthetic stream, with cross-dataset statistics and the Delay Tax experiments scheduled next.</p>
+<p><strong>Societal Relevance:</strong> Streaming machine learning underpins fraud detection, network intrusion monitoring, adaptive recommendation, and financial risk systems, where models must stay accurate as the world changes. Quantifying the Delay Tax, the cost of learning from yesterday's truth, helps in designing fairer and more reliable adaptive systems for domains where delayed labels are unavoidable, reducing the silent model degradation that harms users and organisations.</p>
+<h2 id="table-of-contents">TABLE OF CONTENTS<a class="headerlink" href="#table-of-contents" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Title</th>
+<th>Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CHAPTER 1</strong></td>
+<td><strong>INTRODUCTION</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Background</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Problem Statement</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Social &amp; Environmental Relevance</td>
+<td>3</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Gantt Chart / Timeline</td>
+<td>3</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>Scope</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 2</strong></td>
+<td><strong>LITERATURE SURVEY / CRITICAL REVIEW</strong></td>
+<td><strong>6</strong></td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>Overview of Existing Work / Literature Review</td>
+<td>6</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Summary Table</td>
+<td>7</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Identification of Research Gaps / Limitations of Existing Methods</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 3</strong></td>
+<td><strong>SYSTEM DESIGN &amp; METHODOLOGY</strong></td>
+<td><strong>10</strong></td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>Proposed Methodology</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Tool and Technique Selection</td>
+<td>12</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 4</strong></td>
+<td><strong>IMPLEMENTATION &amp; TESTING</strong></td>
+<td><strong>14</strong></td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Experimental Setup</td>
+<td>14</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Test Cases, Case Study, and Outputs</td>
+<td>15</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 5</strong></td>
+<td><strong>RESULTS &amp; DISCUSSION</strong></td>
+<td><strong>17</strong></td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Result Analysis</td>
+<td>17</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Performance Evaluation and Comparison with Existing Methods</td>
+<td>22</td>
+</tr>
+<tr>
+<td><strong>CHAPTER 6</strong></td>
+<td><strong>CONCLUSION &amp; FUTURE SCOPE</strong></td>
+<td><strong>25</strong></td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>Summary of Work and Achievements</td>
+<td>25</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Impact on Society, Environmental Sustainability, Ethical Issues and Compliance</td>
+<td>25</td>
+</tr>
+<tr>
+<td>6.3</td>
+<td>Limitations of the Work</td>
+<td>26</td>
+</tr>
+<tr>
+<td>6.4</td>
+<td>Future Scope</td>
+<td>26</td>
+</tr>
+<tr>
+<td><strong>References</strong></td>
+<td></td>
+<td><strong>28</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="list-of-tables">LIST OF TABLES<a class="headerlink" href="#list-of-tables" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Table No.</th>
+<th>Title</th>
+<th>Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Project Development Timeline / Gantt Chart</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>Literature Review Summary</td>
+<td>7</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>Drift Detector Comparison (Literature)</td>
+<td>12</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>Technology and Tool Selection</td>
+<td>13</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Experimental Setup and Technology Stack</td>
+<td>14</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Pre-registered Hypotheses and Acceptance Criteria</td>
+<td>16</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Exp-02 Aggregate Results (11 Seeds)</td>
+<td>17</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Streaming vs Frozen Batch: Structural Comparison</td>
+<td>22</td>
+</tr>
+</tbody>
+</table>
+<h2 id="list-of-figures">LIST OF FIGURES<a class="headerlink" href="#list-of-figures" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Figure No.</th>
+<th>Title</th>
+<th>Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td>Expected post-drift shapes: streaming vs scheduled vs frozen batch</td>
+<td>12</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Experiment pipeline: stream, models, prequential loop, drift-window analysis</td>
+<td>15</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Exp-01: rolling Cohen Kappa, DeepRiver vs frozen RandomForest on SEA</td>
+<td>18</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Exp-02: recovery time and damage area per seed (11 seeds)</td>
+<td>19</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Exp-02: damage area as a distribution, streaming vs frozen</td>
+<td>20</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Exp-02: fall from each model's own pre-drift baseline, per seed</td>
+<td>21</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>Exp-01: recovery time and damage area, seed 42</td>
+<td>22</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>Exp-02: full-run Cohen Kappa per seed</td>
+<td>23</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>Exp-01 measured against the pre-registered expectations</td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
+<h2 id="list-of-abbreviations">LIST OF ABBREVIATIONS<a class="headerlink" href="#list-of-abbreviations" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Abbreviation</th>
+<th>Full Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADWIN</td>
+<td>Adaptive Windowing</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Application Programming Interface</td>
+</tr>
+<tr>
+<td>ARF</td>
+<td>Adaptive Random Forest</td>
+</tr>
+<tr>
+<td>AUC-PR</td>
+<td>Area Under Precision-Recall Curve</td>
+</tr>
+<tr>
+<td>Ch</td>
+<td>Chapter</td>
+</tr>
+<tr>
+<td>CSE</td>
+<td>Computer Science and Engineering</td>
+</tr>
+<tr>
+<td>DDM</td>
+<td>Drift Detection Method</td>
+</tr>
+<tr>
+<td>DPL</td>
+<td>Delayed Partially Labelled</td>
+</tr>
+<tr>
+<td>EDDM</td>
+<td>Early Drift Detection Method</td>
+</tr>
+<tr>
+<td>FN</td>
+<td>False Negative</td>
+</tr>
+<tr>
+<td>FP</td>
+<td>False Positive</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Graphics Processing Unit</td>
+</tr>
+<tr>
+<td>HAT</td>
+<td>Hoeffding Adaptive Tree</td>
+</tr>
+<tr>
+<td>JMLR</td>
+<td>Journal of Machine Learning Research</td>
+</tr>
+<tr>
+<td>KDD</td>
+<td>Knowledge Discovery and Data Mining</td>
+</tr>
+<tr>
+<td>KSWIN</td>
+<td>Kolmogorov-Smirnov Windowing</td>
+</tr>
+<tr>
+<td>ML</td>
+<td>Machine Learning</td>
+</tr>
+<tr>
+<td>MTD</td>
+<td>Mean Time to Detection</td>
+</tr>
+<tr>
+<td>MTFA</td>
+<td>Mean Time to False Alarm</td>
+</tr>
+<tr>
+<td>RNN</td>
+<td>Recurrent Neural Network</td>
+</tr>
+<tr>
+<td>RQ</td>
+<td>Research Question</td>
+</tr>
+<tr>
+<td>SEA</td>
+<td>Synthetic Stream Generator (Street-Kim)</td>
+</tr>
+<tr>
+<td>SLT</td>
+<td>Statistical Learning Theory</td>
+</tr>
+<tr>
+<td>STUDD</td>
+<td>Semi-supervised Drift Detection</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>Time To Live</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-1-introduction">CHAPTER 1: INTRODUCTION<a class="headerlink" href="#chapter-1-introduction" title="Permanent link">¶</a></h2>
+<h3 id="11-background">1.1 Background<a class="headerlink" href="#11-background" title="Permanent link">¶</a></h3>
+<p>Machine learning in academic curricula typically treats the dataset as a finished object that sits on disk, is loaded into memory, and is split into training and test sets, after which a model is fitted and the project is considered complete. Streaming machine learning drops that assumption entirely, because data arrives one sample at a time, potentially forever, and is often too large or too fast to store. The model is therefore never finished, and it remains permanently in the middle of its training.</p>
+<p>Three hard constraints define a true streaming algorithm, and every method considered in this project must respect all of them:</p>
+<ul>
+<li>
+<p><strong>Single pass:</strong> each sample is seen exactly once and is never revisited after it has been processed by the learner.</p>
+</li>
+<li>
+<p><strong>Bounded memory:</strong> memory usage must not grow with the number of samples seen, regardless of how long the stream continues to run.</p>
+</li>
+<li>
+<p><strong>Bounded time per sample:</strong> processing must keep pace with the arrival rate, so that the learner never falls behind the incoming stream.</p>
+</li>
+</ul>
+<p>Because the world that generates the data keeps changing, the model must also notice when it has become wrong and adapt accordingly. This phenomenon, known as concept drift, occurs when the joint distribution P(X, y) changes over time, and its recognised forms include sudden (abrupt), gradual, incremental, and recurring (seasonal) change.</p>
+<p>The standard evaluation protocol for streaming is prequential evaluation (test-then-train), in which the model predicts each sample before it learns from that sample, so that the resulting scores remain honest and free of leakage. Rolling metrics computed over a recent window reveal the dips and recoveries that follow a drift, and these are precisely the behaviours that this project sets out to measure.</p>
+<p>This project is built on the River framework, which is often described as "scikit-learn for data streams", and on DeepRiver, which provides PyTorch-backed deep learners for streams. Its distinctive research angle is the Delay Tax, which arises because in production the labels for today's decisions often arrive hours or days late. A model in that situation is judged and updated on yesterday's truth, and every adaptive mechanism that the field relies on is weakened by that lag.</p>
+<h3 id="12-problem-statement">1.2 Problem Statement<a class="headerlink" href="#12-problem-statement" title="Permanent link">¶</a></h3>
+<p>Building reliable machine learning for drifting data streams involves several interconnected challenges, which are summarised below:</p>
+<ul>
+<li>
+<p><strong>Structural batch blindness:</strong> A model trained once on historical data has no mechanism to react when the generating process changes, so its recovery depends entirely on an external decision to retrain whose timing is arbitrary relative to the drift.</p>
+</li>
+<li>
+<p><strong>Clock-driven vs evidence-driven updates:</strong> Scheduled batch retraining refits the model on a fixed interval regardless of whether any drift has occurred, and as a result a scheduled model stays wrong, on average, for half a retrain interval longer than necessary after a concept change.</p>
+</li>
+<li>
+<p><strong>Evaluation under delay:</strong> Prequential scoring requires the label to be available in the same tick as the prediction, so when labels are delayed, the field's own instrument for measuring success fails in the very setting that it claims to serve.</p>
+</li>
+<li>
+<p><strong>Detector degradation:</strong> Drift detectors such as ADWIN, DDM, EDDM, Page-Hinkley, and KSWIN watch the error stream, and late, partial, or selectively observed labels delay, thin, and bias that stream, yet almost no existing work quantifies detector-level degradation as a function of label latency or label coverage.</p>
+</li>
+<li>
+<p><strong>Metric mismatch:</strong> Global accuracy computed over an entire stream hides the temporal damage caused by drift, because the interesting question is not how accurate the model is on average but how fast it recovers after a change, which is measured by recovery time and damage area (skill lost multiplied by the time spent below baseline).</p>
+</li>
+</ul>
+<p>The proposed project addresses these issues through three contributions: (1) a rigorous streaming-versus-batch benchmark under controlled synthetic drift; (2) a containerised continual-learning service that measures the operational costs which the literature rarely reports; and (3) a formal Delay Tax model accompanied by a hybrid detector that combines a label-free early warning with delayed supervised confirmation.</p>
+<h3 id="13-social-environmental-relevance">1.3 Social &amp; Environmental Relevance<a class="headerlink" href="#13-social-environmental-relevance" title="Permanent link">¶</a></h3>
+<p>Adaptive streaming models underpin critical real-time systems such as credit-card fraud detection (where labels are confirmed 30 to 90 days later), network intrusion monitoring, adaptive advertising (where conversions arrive days later), and financial risk scoring. When these models silently degrade after concept drift, users face false approvals, missed fraud, or degraded recommendations, all of which carry direct economic and safety consequences.</p>
+<p>Digitising continual learning reduces the reliance on periodic full retraining jobs that re-process entire historical datasets, which amounts to computational waste when only recent data actually matters. Bounded-memory streaming learners use fixed resources regardless of the length of the stream, which aligns well with the efficient utilisation of cloud resources.</p>
+<p>Ethical considerations include fairness under drift, since models must not persistently disadvantage the groups affected by a distributional change, together with transparent evaluation through honest reporting of where batch models win (for example, under delayed labels with oracle tuning), and data minimisation, since single-pass learning avoids the indefinite retention of raw training data.</p>
+<h3 id="14-gantt-chart-timeline">1.4 Gantt Chart / Timeline<a class="headerlink" href="#14-gantt-chart-timeline" title="Permanent link">¶</a></h3>
+<p><strong>Table 1.1: Project Development Timeline</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Major Activity / Milestone</th>
+<th>Duration</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 0</td>
+<td>Research orientation: River setup, background notes, literature review (38 papers)</td>
+<td>Weeks 1-8</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Phase 1a</td>
+<td>Thesis formulation, metrics protocol, and experiment harness design</td>
+<td>Weeks 9-10</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Phase 1b</td>
+<td>Exp-01: DeepRiver vs frozen RF on SEA (pilot, seed 42)</td>
+<td>Week 11</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Phase 1c</td>
+<td>Exp-02: 11-seed sweep and statistical validation</td>
+<td>Week 12</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Phase 1d</td>
+<td>Real datasets (Elec2, Phishing, Covertype, Airlines, CreditCard)</td>
+<td>Weeks 13-16</td>
+<td>Scheduled</td>
+</tr>
+<tr>
+<td>Phase 1e</td>
+<td>Full baseline ladder (frozen, scheduled, and oracle-tuned batch)</td>
+<td>Weeks 17-18</td>
+<td>Scheduled</td>
+</tr>
+<tr>
+<td>Phase 1f</td>
+<td>Cross-dataset Friedman and Nemenyi statistics</td>
+<td>Weeks 19-20</td>
+<td>Scheduled</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td>Continual-learning service (Docker, event stream, Prometheus/Grafana)</td>
+<td>Weeks 21-28</td>
+<td>Scheduled</td>
+</tr>
+<tr>
+<td>Phase 3</td>
+<td>Delay Tax: label-delay sweeps, hybrid detector, and lemma verification</td>
+<td>Weeks 29-36</td>
+<td>Scheduled</td>
+</tr>
+<tr>
+<td>Phase 4</td>
+<td>Report write-up, demo dashboard, and viva preparation</td>
+<td>Weeks 37-40</td>
+<td>Scheduled</td>
+</tr>
+</tbody>
+</table>
+<h3 id="15-scope">1.5 Scope<a class="headerlink" href="#15-scope" title="Permanent link">¶</a></h3>
+<p>The scope of the project, as fixed at the end of Phase 0, encompasses the following items:</p>
+<ul>
+<li>
+<p>Classification on drifting data streams, using River and DeepRiver as the primary experimental libraries.</p>
+</li>
+<li>
+<p>Prequential evaluation with rolling Cohen Kappa, recovery time, and damage area as the core performance measures.</p>
+</li>
+<li>
+<p>Controlled synthetic streams (SEA, Hyperplane, and RandomRBF) with known drift positions, so that detection and recovery can be measured against ground truth.</p>
+</li>
+<li>
+<p>Up to three real datasets (Elec2, Phishing, and CreditCard fraud) to establish external validity beyond synthetic data.</p>
+</li>
+<li>
+<p>The drift detectors ADWIN, DDM, EDDM, Page-Hinkley, and KSWIN, together with the adaptive models Hoeffding Adaptive Tree, Adaptive Random Forest, and Leveraging Bagging.</p>
+</li>
+<li>
+<p>Batch baselines in frozen, scheduled-retrain, and oracle-tuned form, with the oracle-tuned variant reported as an upper bound on batch performance.</p>
+</li>
+<li>
+<p>Formal Delay Tax lemmas (reaction floor, power loss, batch-correlation inflation, and identifiability ceiling) together with their empirical verification.</p>
+</li>
+<li>
+<p>A hybrid two-stage detector that combines a label-free warning with delayed supervised confirmation.</p>
+</li>
+<li>
+<p>A single-node containerised continual-learning service that is instrumented with operational metrics such as prediction latency and memory growth.</p>
+</li>
+</ul>
+<p><em>Out of Scope:</em> The project does not cover distributed training (such as parameter servers or federated learning), regression, clustering, or recommendation tasks, and it does not attempt a Kubernetes multi-cloud production deployment, since the service will run through docker-compose on a single machine. It also excludes novel adaptation algorithms beyond the hybrid architecture and the construction of a new streaming framework, because River serves as the experimental instrument throughout the work.</p>
+<h2 id="chapter-2-literature-survey-critical-review">CHAPTER 2: LITERATURE SURVEY / CRITICAL REVIEW<a class="headerlink" href="#chapter-2-literature-survey-critical-review" title="Permanent link">¶</a></h2>
+<h3 id="21-overview-of-existing-work-literature-review">2.1 Overview of Existing Work / Literature Review<a class="headerlink" href="#21-overview-of-existing-work-literature-review" title="Permanent link">¶</a></h3>
+<p>The field of concept drift adaptation has matured significantly since Gama et al. (2014) published the canonical review in <em>ACM Computing Surveys</em>. Foundational work includes the Very Fast Decision Tree (Domingos &amp; Hulten, 2000), ADWIN adaptive windowing (Bifet &amp; Gavaldà, 2007), and the Drift Detection Method (Gama et al., 2004), while prequential evaluation was formalised as the accepted streaming protocol by Gama, Sebastião and Rodrigues (2013).</p>
+<p><strong>Drift detection methods</strong> watch a one-dimensional error stream and test that stream for a change in its mean. ADWIN provides rigorous guarantees without requiring a fixed window size and has become the de facto standard in the field. DDM tracks bounds on the error rate, issuing a warning at p + 2s and an alarm at p + 3s, but it is weak on gradual drift, whereas EDDM improves sensitivity to gradual drift by tracking the distances between consecutive errors. Page-Hinkley, which belongs to the CUSUM family, and KSWIN, which is based on the Kolmogorov-Smirnov test, offer alternative trade-offs between these properties. Cerqueira et al. (KDD 2026) standardised immediate-label detector benchmarking across 14 detectors, 7 real datasets, and 4 drift types using the F1-detection score and normalised detection time, and they established that no single detector wins on delay, false alarms, and misses simultaneously.</p>
+<p><strong>Adaptive learners</strong> include the Hoeffding Adaptive Tree, which places an ADWIN detector at each node, as well as the Adaptive Random Forest (Gomes et al., 2017) and Leveraging Bagging, which extend adaptation to ensembles. Cano and Krawczyk (2022) showed that ROSE achieves a Kappa of 63.65 against a next-best value of 57.85 across 24 imbalanced real datasets.</p>
+<p><strong>Delayed and partial labels</strong> represent the core gap that this project addresses. Gomes et al. (2022, ACM CSUR) surveyed semi-supervised learning for delayed partially labelled streams but did not provide a detector-level benchmark, while Botacin and Gomes (2024) quantified the cost of label delay in malware pipelines and reported an increase of roughly 50% in exposure together with a decrease of up to 75% in detection. Cerqueira et al. (2023, STUDD) demonstrated semi-supervised drift detection with a missed-detection ratio of about 19% under label scarcity, and Žliobaitė (2010) proved that pure posterior drift with a fixed P(X) cannot be detected from inputs alone, a result that directly motivates the hybrid architecture proposed here.</p>
+<p><strong>Batch vs instance learning under delay</strong> has also been examined, and Amekoe et al. (2024) showed that an oracle-tuned and frequently retrained XGBoost model can beat ARF on delayed-label fraud data (AUC-PR of 23.41 against 14.23), which is honest counter-evidence that defines where claims about streaming must not overreach.</p>
+<h3 id="22-summary-table">2.2 Summary Table<a class="headerlink" href="#22-summary-table" title="Permanent link">¶</a></h3>
+<p>The major literature considered for the development of the proposed project is summarised in Table 2.1.</p>
+<p><strong>Table 2.1: Literature Review Summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Area of Study</th>
+<th>Major Contribution</th>
+<th>Relevance to Proposed Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gama et al. (2014)</td>
+<td>Concept drift survey</td>
+<td>Canonical taxonomy of drift types and adaptation strategies</td>
+<td>Background framework for the Chapter 1 baseline</td>
+</tr>
+<tr>
+<td>Bifet &amp; Gavaldà (2007)</td>
+<td>ADWIN / HAT</td>
+<td>Adaptive windowing with statistical guarantees</td>
+<td>Primary drift detector for the experiments</td>
+</tr>
+<tr>
+<td>Gomes et al. (2017)</td>
+<td>Adaptive Random Forest</td>
+<td>Strongest general adaptive baseline</td>
+<td>Model comparison in the Chapter 1 matrix</td>
+</tr>
+<tr>
+<td>Cerqueira et al. (2026)</td>
+<td>KDD drift benchmark</td>
+<td>14 detectors, 7 datasets, and standard metrics</td>
+<td>Reproduction target for Chapter 1 and control for Chapter 3</td>
+</tr>
+<tr>
+<td>Cano &amp; Krawczyk (2022)</td>
+<td>ROSE ensembles</td>
+<td>Adaptive beats static on 24 imbalanced datasets</td>
+<td>Precedent for streaming superiority on real data</td>
+</tr>
+<tr>
+<td>Gomes et al. (2022)</td>
+<td>DPL survey</td>
+<td>Maps the fragmented delayed-label literature</td>
+<td>Confirms the research gap and names the hybrid as open</td>
+</tr>
+<tr>
+<td>Botacin &amp; Gomes (2024)</td>
+<td>Label delays in security</td>
+<td>Quantified the harm of delay on exposure and detection</td>
+<td>Closest prior work, which Chapter 3 extends with detector isolation</td>
+</tr>
+<tr>
+<td>Cerqueira et al. (2023)</td>
+<td>STUDD</td>
+<td>Semi-supervised drift detection under label scarcity</td>
+<td>Label-efficiency baseline (MDR ≈ 19%)</td>
+</tr>
+<tr>
+<td>Žliobaitė (2010)</td>
+<td>Detectability under delay</td>
+<td>Pure posterior drift is invisible to label-free methods</td>
+<td>Basis of Lemma 4, justifying the hybrid by construction</td>
+</tr>
+<tr>
+<td>Amekoe et al. (2024)</td>
+<td>Batch vs incremental under delay</td>
+<td>Tuned batch beats streaming on rare-class delay</td>
+<td>Counter-evidence fence and honest upper bound</td>
+</tr>
+<tr>
+<td>Demšar (2006)</td>
+<td>Statistical comparison</td>
+<td>Friedman and Nemenyi tests for multi-dataset comparison</td>
+<td>Required rigour for experiments with at least 10 seeds</td>
+</tr>
+<tr>
+<td>Montiel et al. (2021)</td>
+<td>River library</td>
+<td>Standard Python streaming ML framework</td>
+<td>Primary experimental instrument</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-identification-of-research-gaps-limitations-of-existing-methods">2.3 Identification of Research Gaps / Limitations of Existing Methods<a class="headerlink" href="#23-identification-of-research-gaps-limitations-of-existing-methods" title="Permanent link">¶</a></h3>
+<p>Although the existing literature provides mature detectors, adaptive learners, and evaluation protocols, several gaps remain when labels do not arrive immediately, and these gaps define the contribution of this project.</p>
+<h4 id="gap-1-detector-level-degradation-under-delay-is-unquantified">Gap 1: Detector-level degradation under delay is unquantified<a class="headerlink" href="#gap-1-detector-level-degradation-under-delay-is-unquantified" title="Permanent link">¶</a></h4>
+<p>Existing work studies classifiers or active-learning systems under label delay, but almost none of it isolates the drift detector itself and produces clean curves of detection delay against label latency, or of false-alarm rate against label coverage. The Delay Tax lemmas proposed in this project are designed to formalise exactly this degradation.</p>
+<h4 id="gap-2-no-standard-confirmation-protocol-exists">Gap 2: No standard confirmation protocol exists<a class="headerlink" href="#gap-2-no-standard-confirmation-protocol-exists" title="Permanent link">¶</a></h4>
+<p>Prior research explicitly names a two-stage architecture, consisting of a label-free early warning followed by delayed supervised confirmation, as a promising direction that has not yet been built. None of the papers logged during the literature review builds and evaluates this hybrid architecture from end to end.</p>
+<h4 id="gap-3-the-operational-cost-of-continual-learning-is-under-measured">Gap 3: The operational cost of continual learning is under-measured<a class="headerlink" href="#gap-3-the-operational-cost-of-continual-learning-is-under-measured" title="Permanent link">¶</a></h4>
+<p>Published papers report accuracy but rarely report adaptation latency, memory growth, replica divergence, or recovery cost, and the system chapter of this project is designed specifically to address this infrastructure gap.</p>
+<h4 id="gap-4-immediate-label-benchmarks-now-exist-but-delayed-label-benchmarks-do-not">Gap 4: Immediate-label benchmarks now exist, but delayed-label benchmarks do not<a class="headerlink" href="#gap-4-immediate-label-benchmarks-now-exist-but-delayed-label-benchmarks-do-not" title="Permanent link">¶</a></h4>
+<p>Cerqueira et al. (KDD 2026) standardised the evaluation of detectors under immediate labels, but the field still lacks an equivalent benchmark for delayed, partial, and selective labelling regimes.</p>
+<h4 id="limitation-of-frozen-batch-baselines">Limitation of Frozen Batch Baselines<a class="headerlink" href="#limitation-of-frozen-batch-baselines" title="Permanent link">¶</a></h4>
+<p>Frozen models are structurally unable to react to drift, which is a deliberate weakness that this project exploits in order to produce existence evidence, but it must be supplemented with scheduled-retrain and oracle-tuned baselines before any field-wide claims can be made.</p>
+<h4 id="limitation-of-global-accuracy">Limitation of Global Accuracy<a class="headerlink" href="#limitation-of-global-accuracy" title="Permanent link">¶</a></h4>
+<p>Mean accuracy over a stream conflates the pre-drift steady state with the post-drift damage, so temporal reactivity metrics such as recovery time and damage area are required in order to distinguish adaptive behaviour from static behaviour.</p>
+<h2 id="chapter-3-system-design-methodology">CHAPTER 3: SYSTEM DESIGN &amp; METHODOLOGY<a class="headerlink" href="#chapter-3-system-design-methodology" title="Permanent link">¶</a></h2>
+<h3 id="31-proposed-methodology">3.1 Proposed Methodology<a class="headerlink" href="#31-proposed-methodology" title="Permanent link">¶</a></h3>
+<p>The project follows a three-chapter research architecture, and each chapter is designed with its own survivable failure mode, so that the outcome of one chapter does not decide the fate of the others. The three chapters, the prequential loop that they share, and the metrics used throughout are described below.</p>
+<h4 id="chapter-1-baseline-control-condition">Chapter 1: Baseline (Control Condition)<a class="headerlink" href="#chapter-1-baseline-control-condition" title="Permanent link">¶</a></h4>
+<p>Under controlled synthetic drift covering sudden, gradual, incremental, and recurring change, this chapter measures the standard detectors (ADWIN, DDM, EDDM, Page-Hinkley, and KSWIN) and the adaptive models (HAT, ARF, and Leveraging Bagging) against static baselines (Hoeffding Tree and Naive Bayes). The metrics are detection delay, false-alarm rate, missed detections, recovery time, dip depth, damage area, memory, and throughput, and rigour is ensured by using at least 10 seeds together with Friedman and Nemenyi tests across datasets.</p>
+<h4 id="chapter-2-system-infrastructure-spine">Chapter 2: System (Infrastructure Spine)<a class="headerlink" href="#chapter-2-system-infrastructure-spine" title="Permanent link">¶</a></h4>
+<p>This chapter builds a containerised continual-learning service in which the same model both serves predictions and learns from incoming data, following the flow shown below:</p>
+<p><code>Load generator → Event stream (Redis / Kafka) → Continual-learning service (one model that predicts and learns) → Live drift monitor → Prometheus metrics → Grafana dashboard</code></p>
+<p>The quantities measured in this chapter are the p50 and p99 prediction latency during adaptation, the throughput ceiling, memory growth, replica divergence, and the cost of checkpointing and restarting the service.</p>
+<h4 id="chapter-3-delay-tax-research-contribution">Chapter 3: Delay Tax (Research Contribution)<a class="headerlink" href="#chapter-3-delay-tax-research-contribution" title="Permanent link">¶</a></h4>
+<p>This chapter applies four label-observation regimes to the baseline streams, and each regime corresponds to a realistic production scenario, as summarised in the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Process</th>
+<th>Production Story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed delay</td>
+<td>Lₜ = d, with d ∈ {10, 100, 1000}</td>
+<td>Batch reporting on a fixed schedule</td>
+</tr>
+<tr>
+<td>Stochastic delay</td>
+<td>Lₜ ~ Geometric(mean d)</td>
+<td>Variable queue or human latency</td>
+</tr>
+<tr>
+<td>Partial labelling</td>
+<td>Label with probability p ∈ {1, 0.5, 0.1}</td>
+<td>Only some events are confirmed</td>
+</tr>
+<tr>
+<td>Selective labelling</td>
+<td>Only flagged samples are labelled</td>
+<td>Endogenous observation policy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hybrid detector architecture:</strong> The hybrid detector operates in two stages, as shown in the flow below, where the first stage raises a label-free early warning from signals that do not require labels, and the second stage confirms or rejects that warning with a supervised detector once the delayed labels arrive.</p>
+<p><code>Incoming samples → Stage 1: label-free monitor (early warning) → Stage 2: supervised detector on delayed labels (confirmation) → Adaptation on confirmed drift</code></p>
+<p><strong>Prequential evaluation loop (used in all experiments):</strong> In every experiment the prequential loop processes each incoming sample in three fixed steps, so that the prediction is always scored before the model is allowed to learn from the true label:</p>
+<p><code>For each sample (xₜ, yₜ): ŷₜ = model.predict_one(xₜ) → metric.update(yₜ, ŷₜ) → model.learn_one(xₜ, yₜ)</code></p>
+<p><strong>Key metric definitions:</strong> The four drift-window metrics used throughout the report are defined as follows:</p>
+<ul>
+<li>
+<p><strong>κ₀ (pre-drift baseline):</strong> the mean rolling Cohen Kappa computed over the window that precedes the drift point τ.</p>
+</li>
+<li>
+<p><strong>Δκ (dip depth):</strong> the value of κ₀ minus the minimum rolling Kappa observed after τ.</p>
+</li>
+<li>
+<p><strong>Recovery time:</strong> the number of samples from τ until the rolling Kappa stays at or above 0.95·κ₀ for 500 consecutive samples, evaluated within a budget of 5,000 samples.</p>
+</li>
+<li>
+<p><strong>Damage area:</strong> Σ (κ₀ − κₜ) over all post-drift samples where κₜ &lt; κ₀, which prices the total skill lost while the model is wrong.</p>
+</li>
+</ul>
+<p><img alt="Expected post-drift shapes — streaming vs scheduled batch vs frozen" src="../../Phase1%3AExperimentation/figures/thesis-recovery-schematic.png"/></p>
+<p><strong>Figure 3.1: Expected post-drift shapes for streaming, scheduled, and frozen batch models.</strong> The four metric definitions above can be read directly from this shape, where κ₀ is the pre-drift band shown in green, Δκ is the depth of the fall at τ, recovery time is the width of the return, and damage area is the shaded region between κ₀ and the curve. A streaming learner closes that region quickly, a scheduled batch model stays wrong until its next refit, and a frozen model never closes the region at all. The shapes are illustrative rather than measured values, and the measured curves are presented in Chapter 5.</p>
+<h3 id="32-tool-and-technique-selection">3.2 Tool and Technique Selection<a class="headerlink" href="#32-tool-and-technique-selection" title="Permanent link">¶</a></h3>
+<p>The drift detectors considered in this project are compared in Table 3.1 on the basis of their mechanism, strengths, and weaknesses as reported in the literature.</p>
+<p><strong>Table 3.1: Drift Detector Comparison (Literature)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th>Mechanism</th>
+<th>Strength</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADWIN (2007)</td>
+<td>Adaptive sub-window mean test</td>
+<td>Rigorous, with no window parameter</td>
+<td>Slower on gradual drift</td>
+</tr>
+<tr>
+<td>DDM (2004)</td>
+<td>Error rate bounds of p ± s</td>
+<td>Simple and fast on abrupt drift</td>
+<td>Weak on gradual drift</td>
+</tr>
+<tr>
+<td>EDDM (2006)</td>
+<td>Distance between errors</td>
+<td>Better sensitivity to gradual drift</td>
+<td>More complex</td>
+</tr>
+<tr>
+<td>Page-Hinkley (1954)</td>
+<td>CUSUM deviation accumulation</td>
+<td>Classical sequential analysis</td>
+<td>Sensitive to its threshold</td>
+</tr>
+<tr>
+<td>KSWIN (2020)</td>
+<td>KS test on a sliding window</td>
+<td>Non-parametric</td>
+<td>Higher compute cost</td>
+</tr>
+</tbody>
+</table>
+<p>The technologies and tools used for experimentation, documentation, and the planned system chapter are summarised in Table 3.2.</p>
+<p><strong>Table 3.2: Technology and Tool Selection</strong></p>
+<table>
+<thead>
+<tr>
+<th>Technology / Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 3.12</td>
+<td>Primary language, managed with the uv package manager</td>
+</tr>
+<tr>
+<td>River 0.25.x</td>
+<td>Streaming ML framework providing models, metrics, drift detectors, and datasets</td>
+</tr>
+<tr>
+<td>DeepRiver 0.3.4</td>
+<td>PyTorch deep learners (RollingClassifier) used in Exp-01 and Exp-02</td>
+</tr>
+<tr>
+<td>PyTorch 2.5.x</td>
+<td>Neural network backend (RNN head in the pilot experiments)</td>
+</tr>
+<tr>
+<td>scikit-learn 1.9.x</td>
+<td>Frozen batch baseline (RandomForestClassifier)</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>Stream generation and numerics</td>
+</tr>
+<tr>
+<td>Matplotlib</td>
+<td>Generation of the experiment figures</td>
+</tr>
+<tr>
+<td>MkDocs Material</td>
+<td>Documentation site with PDF export</td>
+</tr>
+<tr>
+<td>Playwright / Chromium</td>
+<td>Headless PDF rendering at build time</td>
+</tr>
+<tr>
+<td>Docker / docker-compose</td>
+<td>Planned: containerisation of the continual-learning service</td>
+</tr>
+<tr>
+<td>Redis / Kafka</td>
+<td>Planned: event stream for the system chapter</td>
+</tr>
+<tr>
+<td>Prometheus / Grafana</td>
+<td>Planned: operational metrics dashboard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-4-implementation-testing">CHAPTER 4: IMPLEMENTATION &amp; TESTING<a class="headerlink" href="#chapter-4-implementation-testing" title="Permanent link">¶</a></h2>
+<h3 id="41-experimental-setup">4.1 Experimental Setup<a class="headerlink" href="#41-experimental-setup" title="Permanent link">¶</a></h3>
+<p>The pilot and seed-sweep experiments (Exp-01 and Exp-02) were implemented as reproducible Python scripts in <em>experiments/scripts/</em>, and their results were committed as JSON artifacts in <em>experiments/exp01/</em> and <em>experiments/exp02/</em>. Exp-01 was executed on 2026-09-09 using seed 42, and Exp-02 was executed on 2026-09-12 across 11 seeds with a total runtime of approximately 1,127 s on CUDA. All numbers reported in this document are read directly from the committed JSON artifacts.</p>
+<p><strong>Table 4.1: Experimental Setup and Technology Stack</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language</td>
+<td>Python 3.12</td>
+</tr>
+<tr>
+<td>Package manager</td>
+<td>uv</td>
+</tr>
+<tr>
+<td>Streaming learner</td>
+<td>DeepRiver RollingClassifier (RNN 3→16→2, Adam lr = 1e-3, window = 500)</td>
+</tr>
+<tr>
+<td>Frozen baseline</td>
+<td>sklearn RandomForestClassifier (n_estimators = 100)</td>
+</tr>
+<tr>
+<td>Metrics</td>
+<td>River Accuracy, CohenKappa, and Rolling (window w = 1000)</td>
+</tr>
+<tr>
+<td>Stream generator</td>
+<td>SEA concepts (Street-Kim), U(0,10)³ features, 10% label noise</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>NVIDIA RTX 3050 Laptop GPU (CUDA)</td>
+</tr>
+<tr>
+<td>Reproducibility</td>
+<td>Seeded RNG, committed results.json, and a --figure-only re-render mode</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stream configuration (Exp-01 and Exp-02):</strong> Both experiments share an identical stream configuration, which is described in the points below:</p>
+<ul>
+<li>
+<p>The stream contains 60,000 samples in total, of which the first 12,000 (20%) form the warm-up, leaving an evaluation region of t ∈ [12,000, 60,000).</p>
+</li>
+<li>
+<p>A single abrupt drift occurs at τ = 30,000, where the labelling rule switches from x₀ + x₁ &gt; 8 to x₀ + x₁ &gt; 9.</p>
+</li>
+<li>
+<p>Eleven seeds are used, namely {42, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, and seed 42 is included so that it cross-checks Exp-01 exactly.</p>
+</li>
+</ul>
+<p><strong>Models:</strong> The two models compared in both experiments, together with their warm-up behaviour and update rules, are described in the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Model</th>
+<th>Warm-up</th>
+<th>Update Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Streaming</td>
+<td>DeepRiver RollingClassifier with an RNN head</td>
+<td>Learns from sample 1</td>
+<td>predict → score → learn_one on every sample</td>
+</tr>
+<tr>
+<td>Frozen batch</td>
+<td>sklearn RandomForest</td>
+<td>Fitted once on the first 12,000 warm-up samples</td>
+<td>Never updated after the warm-up</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Experiment pipeline — stream, models, prequential loop, drift-window analysis" src="../figures/results-process-flow.png"/></p>
+<p><strong>Figure 4.1: Experiment pipeline covering the stream, the models, the prequential loop, and the drift-window analysis.</strong> Both models consume the identical sample order from one seeded SEA stream, so the only difference between the two arms is whether the model is allowed to update. Everything below the prequential loop is measurement rather than modelling, since the metrics are recorded per sample and the drift-window quantities of Section 3.1 are computed from them, and the verdict box states the Exp-01 outcome that is reported in Section 5.1.</p>
+<h3 id="42-test-cases-case-study-and-outputs">4.2 Test Cases, Case Study, and Outputs<a class="headerlink" href="#42-test-cases-case-study-and-outputs" title="Permanent link">¶</a></h3>
+<p>Testing followed pre-registered hypotheses with explicit acceptance criteria, and no post-hoc tuning was performed at any stage of the evaluation.</p>
+<p><strong>Table 4.2: Pre-registered Hypotheses and Acceptance Criteria</strong></p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hypothesis</th>
+<th>Test Condition</th>
+<th>Expected Result</th>
+<th>Exp-02 Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>Streaming recovers after drift</td>
+<td>Rolling κ re-enters ≥ 0.95·κ₀ within 5,000 samples of τ</td>
+<td>Recovery on every seed</td>
+<td>PASS (11/11 recovered)</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>Frozen does not recover</td>
+<td>Same recovery criterion</td>
+<td>Never recovers on any seed</td>
+<td>PASS (0/11 recovered)</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>Frozen wins the steady state</td>
+<td>Pre-drift κ₀ comparison</td>
+<td>Frozen κ₀ ≥ streaming κ₀</td>
+<td>PASS (frozen 0.767 vs streaming 0.751)</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>Damage area favours streaming</td>
+<td>Σ samples·κ below baseline after τ</td>
+<td>Streaming much smaller than frozen</td>
+<td>PASS (13 ± 31 vs 3,710 ± 592)</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>At least 10 seeds for statistics</td>
+<td>n ≥ 10 independent replicas</td>
+<td>Distribution reported</td>
+<td>PASS (n = 11)</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>Exp-01 reproducibility</td>
+<td>Seed 42 matches the Exp-01 regime</td>
+<td>Same recovery order of magnitude</td>
+<td>PASS (835 samples, exact match)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="system-workflow-exp-02">System Workflow (Exp-02)<a class="headerlink" href="#system-workflow-exp-02" title="Permanent link">¶</a></h4>
+<p>Each Exp-02 run follows the sequence below, and the same sequence is repeated independently for every seed before the results are aggregated:</p>
+<p><code>Seeded SEA stream → Warm-up on the first 12,000 samples (frozen RF fitted once) → Prequential loop over t ∈ [12,000, 60,000) → Rolling Cohen Kappa (w = 1,000) → Drift-window analysis at τ = 30,000 → Per-seed JSON artifact → Aggregation across 11 seeds</code></p>
+<h4 id="testing-and-validation">Testing and Validation<a class="headerlink" href="#testing-and-validation" title="Permanent link">¶</a></h4>
+<p>Seed 42 reproduced Exp-01 exactly, with an 835-sample recovery and a delta of zero, and every acceptance criterion in Table 4.2 was passed. The pre-drift advantage of the frozen model (H3) confirms that the comparison is fair, since the batch model wins while the stream is stationary and the streaming model wins after the change.</p>
+<h2 id="chapter-5-results-discussion">CHAPTER 5: RESULTS &amp; DISCUSSION<a class="headerlink" href="#chapter-5-results-discussion" title="Permanent link">¶</a></h2>
+<h3 id="51-result-analysis">5.1 Result Analysis<a class="headerlink" href="#51-result-analysis" title="Permanent link">¶</a></h3>
+<p>The aggregate results of Exp-02 across all eleven seeds on the SEA stream with a single abrupt drift are summarised in Table 5.1.</p>
+<p><strong>Table 5.1: Exp-02 Aggregate Results (11 Seeds, SEA Abrupt Drift)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Streaming (DeepRiver)</th>
+<th>Frozen (RandomForest)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovery (seeds recovered / 11)</td>
+<td>11 / 11</td>
+<td>0 / 11</td>
+</tr>
+<tr>
+<td>Recovery time (mean ± SD)</td>
+<td>319 ± 765 samples*</td>
+<td>Never</td>
+</tr>
+<tr>
+<td>Recovery time (median)</td>
+<td>0 (no excursion on 8 of 11 seeds)</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Recovery time (range)</td>
+<td>0 to 2,497</td>
+<td>Not applicable</td>
+</tr>
+<tr>
+<td>Dip depth Δκ (mean ± SD)</td>
+<td>0.045 ± 0.015</td>
+<td>0.173 ± 0.018</td>
+</tr>
+<tr>
+<td>Pre-drift κ₀ (mean ± SD)</td>
+<td>0.751 ± 0.017</td>
+<td>0.767 ± 0.018</td>
+</tr>
+<tr>
+<td>Min post-drift κ (mean ± SD)</td>
+<td>0.706 ± 0.015</td>
+<td>0.594 ± 0.013</td>
+</tr>
+<tr>
+<td>Damage area (mean ± SD)</td>
+<td>13 ± 31 samples·κ</td>
+<td>3,710 ± 592 samples·κ</td>
+</tr>
+<tr>
+<td>Damage area (best seed)</td>
+<td>0</td>
+<td>2,439</td>
+</tr>
+<tr>
+<td>Damage area (worst seed)</td>
+<td>103</td>
+<td>4,368</td>
+</tr>
+<tr>
+<td>Full-run accuracy (mean)</td>
+<td>88.3%</td>
+<td>85.4%</td>
+</tr>
+<tr>
+<td>Full-run Cohen Kappa (mean)</td>
+<td>0.753</td>
+<td>0.685</td>
+</tr>
+</tbody>
+</table>
+<p>*Recovery time has a heavy tail, because 8 of the 11 seeds never left their pre-drift band (recovery = 0), so the mean is not a robust measure of the centre and damage area is the more trustworthy metric.</p>
+<p><img alt="Exp-01 rolling Cohen Kappa — DeepRiver dips and recovers, frozen RF dips and stays down" src="../../Phase1%3AExperimentation/figures/exp01-rolling-kappa-deepriver-vs-frozen.png"/></p>
+<p><strong>Figure 5.1: Exp-01 rolling Cohen Kappa for DeepRiver and the frozen RandomForest on SEA (seed 42).</strong> Before τ the two curves are interleaved and the frozen model is slightly ahead, which is the fair-comparison control of H3. At τ = 30,000 both curves fall, but only the blue curve returns to its pre-drift band, while the red curve settles roughly 0.13 κ lower and stays there for the remaining 30,000 samples, which is precisely the shape that the damage-area metric prices.</p>
+<h4 id="key-findings">Key Findings<a class="headerlink" href="#key-findings" title="Permanent link">¶</a></h4>
+<p><strong>Generalisation of the claim:</strong> The 835-sample recovery observed in Exp-01 turned out to be the value specific to seed 42, and across the 11 seeds recovery ranged from 0 to 2,497 samples, yet the streaming model always recovered within the budget while the frozen model never did, so the claim generalised even though the number did not.</p>
+<p><img alt="Exp-02 seed sweep — recovery time and damage area per seed" src="../../Phase1%3AExperimentation/figures/exp02-seed-sweep-recovery.png"/></p>
+<p><strong>Figure 5.2: Exp-02 recovery time and damage area per seed across 11 seeds.</strong> The left panel shows that seed 42 reproduces the 835-sample pilot value exactly, but eight seeds score 0 and one reaches 2,497, so the mean of 319 sits where almost no individual seed actually lies, and every seed remains far inside the pre-registered 5,000-sample budget. The right panel plots the same eleven seeds on a logarithmic damage-area axis, where the two arms do not overlap at any seed.</p>
+<p><strong>Decisiveness of damage area:</strong> Damage area was approximately 294× smaller for the streaming model (13 against 3,710), and even the worst streaming seed (103) beat the best frozen seed (2,439) by a factor of 24.</p>
+<p><img alt="Exp-02 damage gap as a distribution — one dot per seed" src="../../Phase1%3AExperimentation/figures/exp02-damage-distribution.png"/></p>
+<p><strong>Figure 5.3: Exp-02 damage area as a distribution for the streaming and frozen models, with one dot per seed on a logarithmic axis.</strong> The separation is categorical rather than marginal, since the two clouds lie about three orders of magnitude apart with no overlap, five streaming seeds measured exactly zero (drawn at the axis floor), and the worst streaming seed still sits 24× below the best frozen seed, which makes this the figure behind the 294× claim.</p>
+<p><strong>Confirmation of the honest control:</strong> The frozen RandomForest had a higher pre-drift κ₀ (0.767 against 0.751), which shows that the batch model wins on stationary stretches as expected, while the streaming model wins on post-drift reactivity and on overall run quality.</p>
+<p><img alt="Exp-02 — each model's fall from its own pre-drift baseline, per seed" src="../../Phase1%3AExperimentation/figures/exp02-kappa-collapse.png"/></p>
+<p><strong>Figure 5.4: Exp-02 fall from each model's own pre-drift baseline, shown per seed.</strong> Each stem runs from a model's own κ₀ (open circle) to its worst rolling Kappa after τ (filled circle), so that each arm is judged against itself rather than against the other. The frozen stems start higher, confirming H3, and fall roughly four times further, with a mean of 0.173 against 0.045, which shows that the advantage of the batch model is real but is spent entirely before the drift.</p>
+<p><strong>Methodological finding:</strong> Recovery time under-reports late dips, because shallow excursions that return quickly receive a recovery score of zero, whereas damage area captures the full cost of the drift.</p>
+<p><strong>Exp-01 (seed 42) drift-window detail:</strong> At τ = 30,000, the rolling Kappa of DeepRiver dipped from κ₀ = 0.755 to a minimum of 0.703 (Δκ = 0.052), recovered in 835 samples, and paid a damage area of 31 samples·κ. The frozen RandomForest dipped from κ₀ = 0.759 to 0.592 (Δκ = 0.167), never recovered within the 5,000-sample budget, and paid a damage area of 3,307 samples·κ.</p>
+<p><img alt="Exp-01 measured — recovery time and damage area, seed 42" src="../../Phase1%3AExperimentation/figures/exp01-damage-area-vs-recovery.png"/></p>
+<p><strong>Figure 5.5: Exp-01 recovery time and damage area for seed 42, showing the two pilot numbers quoted above side by side.</strong> The left panel has no frozen bar because recovery never occurred inside the run, which represents an absence of measurement rather than a value of zero. The right panel is logarithmic and compares 31 against 3,307 samples·κ, a ratio of roughly 106× on this single seed against 294× once the results are averaged over the eleven seeds of Exp-02.</p>
+<p><strong>Per-seed damage area (Exp-02):</strong> Streaming values ranged from 0 to 103 samples·κ across the eleven seeds, while frozen values ranged from 2,439 to 4,368 samples·κ, with every frozen seed falling inside that far higher band.</p>
+<h3 id="52-performance-evaluation-and-comparison-with-existing-methods">5.2 Performance Evaluation and Comparison with Existing Methods<a class="headerlink" href="#52-performance-evaluation-and-comparison-with-existing-methods" title="Permanent link">¶</a></h3>
+<p>The structural differences between the frozen batch model and the streaming model, as observed in the experiments, are summarised in Table 5.2.</p>
+<p><strong>Table 5.2: Streaming vs Frozen Batch: Structural Comparison</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Frozen Batch Model</th>
+<th>Streaming Model (DeepRiver)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update trigger</td>
+<td>None (external retrain only)</td>
+<td>Every sample (evidence-driven)</td>
+</tr>
+<tr>
+<td>Reaction to drift</td>
+<td>None, so the model stays wrong indefinitely</td>
+<td>Detects the change via the error signal and adapts on a rolling window</td>
+</tr>
+<tr>
+<td>Recovery time</td>
+<td>Undefined (never recovered in this experiment)</td>
+<td>Bounded at 0 to 2,497 samples (11/11 within budget)</td>
+</tr>
+<tr>
+<td>Damage after drift</td>
+<td>3,710 ± 592 samples·κ</td>
+<td>13 ± 31 samples·κ</td>
+</tr>
+<tr>
+<td>Pre-drift skill</td>
+<td>Higher κ₀ (0.767)</td>
+<td>Lower κ₀ (0.751), as expected</td>
+</tr>
+<tr>
+<td>Post-drift skill</td>
+<td>Collapsed to about 0.59 κ</td>
+<td>Recovered to about 0.71 to 0.76 κ</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Fixed after the warm-up</td>
+<td>Fixed rolling window (500 samples)</td>
+</tr>
+<tr>
+<td>Passes over data</td>
+<td>1 (warm-up only)</td>
+<td>1 (continuous)</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Exp-02 full-run Cohen Kappa per seed" src="../../Phase1%3AExperimentation/figures/exp02-full-run-kappa.png"/></p>
+<p><strong>Figure 5.6: Exp-02 full-run Cohen Kappa per seed.</strong> The structural differences in Table 5.2 also appear in the single aggregate number that the field usually reports, and the shaded gap between the two arms never closes. Streaming leads on all 11 seeds and the per-seed spread within each arm is far smaller than the distance between the arms, so the ordering does not depend on which seed is drawn, and full-run accuracy behaves in the same way at 88.3% against 85.4%.</p>
+<h4 id="comparison-with-literature-expectations">Comparison with Literature Expectations<a class="headerlink" href="#comparison-with-literature-expectations" title="Permanent link">¶</a></h4>
+<ul>
+<li>
+<p><strong>Thesis mechanism confirmed:</strong> The recovery time of the streaming model (d + a) is bounded and driven by data, whereas the frozen batch model has no self-healing mechanism, which is consistent with Gama et al. (2014) and with the pre-registered thesis described in Chapter 3.</p>
+</li>
+<li>
+<p><strong>ROSE precedent (Cano &amp; Krawczyk, 2022):</strong> Adaptive ensembles beat static baselines on real imbalanced data, and the synthetic result obtained in this project is existence evidence that points in the same direction.</p>
+</li>
+<li>
+<p><strong>Counter-evidence acknowledged (Amekoe et al., 2024):</strong> Oracle-tuned batch models can beat streaming models under delayed labels and rare classes, and because this experiment deliberately excluded delay and oracle tuning, it tests only the weakest form of the claim, which is why scheduled-retrain and tuned batch baselines are the next step.</p>
+</li>
+<li>
+<p><strong>Statistical rigour (Demšar, 2006):</strong> Exp-02 meets the requirement of at least 10 seeds on one stream, while the cross-dataset Friedman and Nemenyi analysis remains scheduled for a later phase of the project.</p>
+</li>
+</ul>
+<p><img alt="Exp-01 measured against the pre-registered expectations" src="../figures/expected-vs-measured-sept9.png"/></p>
+<p><strong>Figure 5.7: Exp-01 measured against the pre-registered expectations.</strong> Because the thesis was registered before the run, this figure reports where it was wrong as well as where it held. Recovery took 835 samples against an expected value of about 250, so the predicted magnitude was optimistic by roughly a factor of three, while the damage area came in at 31 against an expected value of about 50 and the frozen arm never recovered, exactly as predicted. The direction of every prediction therefore survived, even though one of the predicted magnitudes did not hold up in the measured run.</p>
+<h4 id="discussion">Discussion<a class="headerlink" href="#discussion" title="Permanent link">¶</a></h4>
+<p>The results support the structural argument that, on a drifting stream, the cost of change is priced in damage area rather than in global accuracy. A frozen model can appear competitive on overall accuracy (85.4% against 88.3%) and yet pay enormously more for the drift itself. This aligns with the project's thesis that temporal reactivity metrics are where streaming wins structurally, and where batch models, by design, cannot compete without external intervention.</p>
+<h2 id="chapter-6-conclusion-future-scope">CHAPTER 6: CONCLUSION &amp; FUTURE SCOPE<a class="headerlink" href="#chapter-6-conclusion-future-scope" title="Permanent link">¶</a></h2>
+<h3 id="61-summary-of-work-and-achievements">6.1 Summary of Work and Achievements<a class="headerlink" href="#61-summary-of-work-and-achievements" title="Permanent link">¶</a></h3>
+<p>Phase 0, the research phase, is complete and has produced eight background notes, a literature review of 38 papers with a gap analysis, and a locked project scope centred on the Delay Tax. Phase 1 experimentation has since produced the first measured evidence, which is summarised below:</p>
+<ul>
+<li>
+<p><strong>Exp-01 (pilot):</strong> This experiment demonstrated that a DeepRiver rolling classifier recovers from abrupt concept drift while a frozen RandomForest does not, with an 835-sample recovery on seed 42.</p>
+</li>
+<li>
+<p><strong>Exp-02 (11-seed sweep):</strong> This experiment confirmed that the result generalises, since the streaming model recovered on 11 of 11 seeds and the frozen model on 0 of 11, with a damage area approximately 294× smaller for streaming.</p>
+</li>
+<li>
+<p><strong>Documentation pipeline:</strong> The project maintains a reproducible experiment harness, committed JSON artifacts, and a MkDocs documentation site that is deployed to GitHub Pages.</p>
+</li>
+</ul>
+<p>The project demonstrates that prequential evaluation combined with temporal reactivity metrics, namely recovery time and damage area, reveals structural advantages of streaming over frozen batch learning that global accuracy alone obscures.</p>
+<h3 id="62-impact-on-society-environmental-sustainability-ethical-issues-and-compliance">6.2 Impact on Society, Environmental Sustainability, Ethical Issues and Compliance<a class="headerlink" href="#62-impact-on-society-environmental-sustainability-ethical-issues-and-compliance" title="Permanent link">¶</a></h3>
+<p>Streaming machine learning systems serve fraud detection, cybersecurity, healthcare monitoring, and financial risk assessment, which are all domains where silent model degradation after drift can cause direct harm. Quantifying the Delay Tax helps practitioners design systems that remain reliable even when labels inevitably arrive late.</p>
+<p>Bounded-memory single-pass learners avoid indefinite data retention and repeated full-dataset retraining, which supports the efficient use of computational resources. Honest reporting of counter-evidence, particularly the cases in which tuned batch models win, prevents overclaiming and supports the responsible deployment of artificial intelligence.</p>
+<h3 id="63-limitations-of-the-work">6.3 Limitations of the Work<a class="headerlink" href="#63-limitations-of-the-work" title="Permanent link">¶</a></h3>
+<p>The current work has the following limitations, each of which is addressed by the plan set out in Section 6.4:</p>
+<ol>
+<li>
+<p><strong>Single synthetic stream:</strong> Both experiments use one SEA generator with one abrupt drift, so the results constitute existence evidence rather than a field-wide claim.</p>
+</li>
+<li>
+<p><strong>Two models only:</strong> The scheduled-retrain batch model, the oracle-tuned XGBoost model, and the classical River baselines (HAT and ARF) have not yet been included in the comparison.</p>
+</li>
+<li>
+<p><strong>No label delay:</strong> The Delay Tax experiments described in Section 3.1 have not yet been run, which means that the core research contribution of the project still lies ahead.</p>
+</li>
+<li>
+<p><strong>Deep learner scope tension:</strong> The project synopsis scopes deep learning out of the main benchmark, yet Exp-01 and Exp-02 used DeepRiver as the pilot subject, so classical River models will be added to complete the full baseline matrix.</p>
+</li>
+<li>
+<p><strong>Pending cross-dataset statistics:</strong> The Friedman and Nemenyi analysis across multiple datasets is scheduled but has not yet been executed.</p>
+</li>
+<li>
+<p><strong>System chapter not started:</strong> The continual-learning service and its operational metrics, including latency, divergence, and recovery cost, remain future work.</p>
+</li>
+</ol>
+<h3 id="64-future-scope">6.4 Future Scope<a class="headerlink" href="#64-future-scope" title="Permanent link">¶</a></h3>
+<p>Future work will first extend the evaluation to real drifting datasets, namely Elec2, Phishing, Forest Covertype, Airlines, and CreditCard fraud, using post-dip behaviour metrics wherever the ground-truth drift times are unknown. It will also complete the full baseline ladder by reporting frozen, scheduled-retrain (every k samples), and oracle-tuned batch models side by side.</p>
+<p>Cross-dataset statistics will be computed using Friedman and Nemenyi tests with critical-difference diagrams, supported by pairwise Wilcoxon signed-rank comparisons and effect sizes. The Delay Tax experiments will then run label-delay sweeps under fixed, stochastic, partial, and selective regimes, verify lemmas 1 to 3 empirically, and evaluate the hybrid detector.</p>
+<p>The continual-learning service will be delivered as a docker-compose stack with an event stream, a live drift monitor, Prometheus and Grafana dashboards, and a load generator, so that adaptation latency, replica divergence, and recovery cost can be measured directly. Finally, one detector comparison from Cerqueira et al. (KDD 2026) will be reproduced as the immediate-label control before it is deliberately broken with the delayed-label regimes.</p>
+<h2 id="references">REFERENCES<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
+<ul>
+<li>
+<p>[1] J. Gama, I. Žliobaitė, A. Bifet, and M. Pechenizkiy, "A Survey on Concept Drift Adaptation," <em>ACM Computing Surveys</em>, vol. 46, no. 4, pp. 1-37, 2014.</p>
+</li>
+<li>
+<p>[2] A. Bifet and R. Gavaldà, "Learning from Time-Changing Data with Adaptive Windowing," in <em>Proc. SIAM Int. Conf. Data Mining (SDM)</em>, 2007, pp. 443-448.</p>
+</li>
+<li>
+<p>[3] J. Gama, P. Medas, G. Castillo, and P. P. Rodrigues, "Learning with Drift Detection," in <em>Proc. Brazilian Symp. Artificial Intelligence (SBIA)</em>, 2004, pp. 286-295.</p>
+</li>
+<li>
+<p>[4] J. Gama, R. Sebastião, and P. P. Rodrigues, "On Evaluating Stream Learning Algorithms," <em>Machine Learning</em>, vol. 90, pp. 317-346, 2013.</p>
+</li>
+<li>
+<p>[5] H. M. Gomes, A. Bifet, J. Read, J. P. Barddal, J. Gama, and F. Enembreck, "Adaptive Random Forests for Evolving Data Stream Classification," <em>Machine Learning</em>, vol. 106, pp. 1469-1495, 2017.</p>
+</li>
+<li>
+<p>[6] A. Cano and B. Krawczyk, "Kappa Updated Ensemble for Data Streams with Concept Drift," <em>Machine Learning</em>, vol. 111, pp. 2561-2599, 2022.</p>
+</li>
+<li>
+<p>[7] V. Cerqueira, H. M. Gomes, A. Bifet, and L. Torgo, "STUDD: A Study of Drift Detection Methods," <em>Machine Learning</em>, vol. 112, pp. 4351-4378, 2023.</p>
+</li>
+<li>
+<p>[8] H. M. Gomes, J. Read, A. Bifet, J. P. Barddal, and J. Gama, "A Survey on Semi-supervised Learning for Delayed Partially Labelled Data Streams," <em>ACM Computing Surveys</em>, vol. 55, no. 4, pp. 1-35, 2022.</p>
+</li>
+<li>
+<p>[9] M. Botacin and H. M. Gomes, "Towards More Realistic Evaluations: Label Delays in Malware Detection Pipelines," <em>Computers &amp; Security</em>, vol. 147, 2024.</p>
+</li>
+<li>
+<p>[10] I. Žliobaitė, "Change with Delayed Labeling: When is it Detectable?" in <em>Proc. IEEE ICDM Workshops</em>, 2010, pp. 843-850.</p>
+</li>
+<li>
+<p>[11] V. Cerqueira et al., "A Framework for Evaluating and Benchmarking Concept Drift Detection Methods," in <em>Proc. ACM SIGKDD</em>, 2026, pp. 8671-8682.</p>
+</li>
+<li>
+<p>[12] K. M. Amekoe et al., "Evaluating the Efficacy of Instance Incremental vs. Batch Learning in Delayed Label Environments," arXiv:2409.10111, 2024.</p>
+</li>
+<li>
+<p>[13] J. Demšar, "Statistical Comparisons of Classifiers over Multiple Data Sets," <em>Journal of Machine Learning Research</em>, vol. 7, pp. 1-30, 2006.</p>
+</li>
+<li>
+<p>[14] J. Montiel et al., "River: Machine Learning for Streaming Data in Python," <em>Journal of Machine Learning Research</em>, vol. 22, no. 253, pp. 1-8, 2021.</p>
+</li>
+<li>
+<p>[15] P. Domingos and G. Hulten, "Mining High-Speed Data Streams," in <em>Proc. ACM SIGKDD</em>, 2000, pp. 71-80.</p>
+</li>
+<li>
+<p>[16] E. S. Page, "Continuous Inspection Schemes," <em>Biometrika</em>, vol. 41, pp. 100-115, 1954.</p>
+</li>
+<li>
+<p>[17] C. Baena-García et al., "Early Drift Detection Method," in <em>Proc. Fourth Int. Workshop Knowledge Discovery from Data Streams</em>, 2006, pp. 77-86.</p>
+</li>
+<li>
+<p>[18] C. Raab, N. Heusinger, and F.-M. Schleif, "Reactive Soft Prototype Computing for Concept Drift Detection," <em>Neurocomputing</em>, vol. 416, pp. 340-351, 2020.</p>
+</li>
+<li>
+<p>[19] River Development Team, "River Documentation," riverml.xyz. [Online]. Available: https://riverml.xyz/</p>
+</li>
+<li>
+<p>[20] GitHub Repository, "Streaming Machine Learning: The Delay Tax." [Online]. Available: https://github.com/priyansh6747/Streaming-machine-learning-</p>
+</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

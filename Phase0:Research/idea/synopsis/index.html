@@ -1,0 +1,2940 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Phase0%3AResearch/idea/synopsis/" rel="canonical"/>
+<link href="../../explore/03-streaming-finance-bridge/" rel="prev"/>
+<link href="../scope/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Synopsis - Major Project — Streaming ML</title>
+<link href="../../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#the-delay-tax">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Synopsis
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-summary">
+<span class="md-ellipsis">
+      
+        1. Summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-background-what-streaming-machine-learning-is">
+<span class="md-ellipsis">
+      
+        2. Background: what streaming machine learning is
+      
+    </span>
+</a>
+<nav aria-label="2. Background: what streaming machine learning is" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-the-three-constraints">
+<span class="md-ellipsis">
+      
+        2.1 The three constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-why-it-matters">
+<span class="md-ellipsis">
+      
+        2.2 Why it matters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-the-river-framework">
+<span class="md-ellipsis">
+      
+        2.3 The River framework
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-background-concept-drift">
+<span class="md-ellipsis">
+      
+        3. Background: concept drift
+      
+    </span>
+</a>
+<nav aria-label="3. Background: concept drift" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-definition">
+<span class="md-ellipsis">
+      
+        3.1 Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-two-flavours-that-matter">
+<span class="md-ellipsis">
+      
+        3.2 Two flavours that matter
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-types-by-shape-over-time">
+<span class="md-ellipsis">
+      
+        3.3 Types by shape over time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-how-detectors-work">
+<span class="md-ellipsis">
+      
+        3.4 How detectors work
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-how-models-adapt">
+<span class="md-ellipsis">
+      
+        3.5 How models adapt
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-how-a-streaming-model-is-evaluated">
+<span class="md-ellipsis">
+      
+        3.6 How a streaming model is evaluated
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-problem-labels-are-late-partial-and-biased">
+<span class="md-ellipsis">
+      
+        4. The problem: labels are late, partial, and biased
+      
+    </span>
+</a>
+<nav aria-label="4. The problem: labels are late, partial, and biased" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-the-hidden-assumption">
+<span class="md-ellipsis">
+      
+        4.1 The hidden assumption
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-the-cascade-of-consequences">
+<span class="md-ellipsis">
+      
+        4.2 The cascade of consequences
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-why-this-is-a-research-gap-not-a-tutorial-topic">
+<span class="md-ellipsis">
+      
+        4.3 Why this is a research gap, not a tutorial topic
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-research-questions">
+<span class="md-ellipsis">
+      
+        5. Research questions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-mathematical-angle-the-delay-tax">
+<span class="md-ellipsis">
+      
+        6. The mathematical angle: the delay tax
+      
+    </span>
+</a>
+<nav aria-label="6. The mathematical angle: the delay tax" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-the-formal-setting">
+<span class="md-ellipsis">
+      
+        6.1 The formal setting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-lemma-1-the-reaction-floor">
+<span class="md-ellipsis">
+      
+        6.2 Lemma 1 — The reaction floor
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-lemma-2-the-power-loss">
+<span class="md-ellipsis">
+      
+        6.3 Lemma 2 — The power loss
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival">
+<span class="md-ellipsis">
+      
+        6.4 Lemma 3 — False-alarm inflation under batch arrival
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-lemma-4-the-identifiability-ceiling">
+<span class="md-ellipsis">
+      
+        6.5 Lemma 4 — The identifiability ceiling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#66-what-the-mathematics-is-for">
+<span class="md-ellipsis">
+      
+        6.6 What the mathematics is for
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-chapter-1-the-baseline-the-control-condition">
+<span class="md-ellipsis">
+      
+        7. Chapter 1 — The baseline (the control condition)
+      
+    </span>
+</a>
+<nav aria-label="7. Chapter 1 — The baseline (the control condition)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-purpose">
+<span class="md-ellipsis">
+      
+        7.1 Purpose
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-the-run-matrix">
+<span class="md-ellipsis">
+      
+        7.2 The run matrix
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#73-detector-metrics-precise-definitions">
+<span class="md-ellipsis">
+      
+        7.3 Detector metrics — precise definitions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#74-deliverable">
+<span class="md-ellipsis">
+      
+        7.4 Deliverable
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-chapter-3-the-delayed-label-contribution-the-research">
+<span class="md-ellipsis">
+      
+        8. Chapter 3 — The delayed-label contribution (the research)
+      
+    </span>
+</a>
+<nav aria-label="8. Chapter 3 — The delayed-label contribution (the research)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-step-1-the-delay-regimes">
+<span class="md-ellipsis">
+      
+        8.1 Step 1 — The delay regimes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-step-2-measure-the-degradation">
+<span class="md-ellipsis">
+      
+        8.2 Step 2 — Measure the degradation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#83-step-3-build-the-hybrid">
+<span class="md-ellipsis">
+      
+        8.3 Step 3 — Build the hybrid
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#84-step-4-evaluate">
+<span class="md-ellipsis">
+      
+        8.4 Step 4 — Evaluate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#85-the-failsafe">
+<span class="md-ellipsis">
+      
+        8.5 The failsafe
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-chapter-2-the-system-the-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        9. Chapter 2 — The system (the infrastructure spine)
+      
+    </span>
+</a>
+<nav aria-label="9. Chapter 2 — The system (the infrastructure spine)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#91-what-is-built">
+<span class="md-ellipsis">
+      
+        9.1 What is built
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#92-what-is-measured-the-reality-tax">
+<span class="md-ellipsis">
+      
+        9.2 What is measured (the "reality tax")
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#93-why-it-is-a-research-chapter-not-a-demo">
+<span class="md-ellipsis">
+      
+        9.3 Why it is a research chapter, not a demo
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-datasets">
+<span class="md-ellipsis">
+      
+        10. Datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-scope-guards">
+<span class="md-ellipsis">
+      
+        11. Scope guards
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-references-key-works">
+<span class="md-ellipsis">
+      
+        12. References (key works)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-timeline">
+<span class="md-ellipsis">
+      
+        13. Timeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-deliverables">
+<span class="md-ellipsis">
+      
+        14. Deliverables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        15. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-summary">
+<span class="md-ellipsis">
+      
+        1. Summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-background-what-streaming-machine-learning-is">
+<span class="md-ellipsis">
+      
+        2. Background: what streaming machine learning is
+      
+    </span>
+</a>
+<nav aria-label="2. Background: what streaming machine learning is" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-the-three-constraints">
+<span class="md-ellipsis">
+      
+        2.1 The three constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-why-it-matters">
+<span class="md-ellipsis">
+      
+        2.2 Why it matters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-the-river-framework">
+<span class="md-ellipsis">
+      
+        2.3 The River framework
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-background-concept-drift">
+<span class="md-ellipsis">
+      
+        3. Background: concept drift
+      
+    </span>
+</a>
+<nav aria-label="3. Background: concept drift" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-definition">
+<span class="md-ellipsis">
+      
+        3.1 Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-two-flavours-that-matter">
+<span class="md-ellipsis">
+      
+        3.2 Two flavours that matter
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-types-by-shape-over-time">
+<span class="md-ellipsis">
+      
+        3.3 Types by shape over time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-how-detectors-work">
+<span class="md-ellipsis">
+      
+        3.4 How detectors work
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-how-models-adapt">
+<span class="md-ellipsis">
+      
+        3.5 How models adapt
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#36-how-a-streaming-model-is-evaluated">
+<span class="md-ellipsis">
+      
+        3.6 How a streaming model is evaluated
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-problem-labels-are-late-partial-and-biased">
+<span class="md-ellipsis">
+      
+        4. The problem: labels are late, partial, and biased
+      
+    </span>
+</a>
+<nav aria-label="4. The problem: labels are late, partial, and biased" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-the-hidden-assumption">
+<span class="md-ellipsis">
+      
+        4.1 The hidden assumption
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-the-cascade-of-consequences">
+<span class="md-ellipsis">
+      
+        4.2 The cascade of consequences
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-why-this-is-a-research-gap-not-a-tutorial-topic">
+<span class="md-ellipsis">
+      
+        4.3 Why this is a research gap, not a tutorial topic
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-research-questions">
+<span class="md-ellipsis">
+      
+        5. Research questions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-mathematical-angle-the-delay-tax">
+<span class="md-ellipsis">
+      
+        6. The mathematical angle: the delay tax
+      
+    </span>
+</a>
+<nav aria-label="6. The mathematical angle: the delay tax" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-the-formal-setting">
+<span class="md-ellipsis">
+      
+        6.1 The formal setting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-lemma-1-the-reaction-floor">
+<span class="md-ellipsis">
+      
+        6.2 Lemma 1 — The reaction floor
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-lemma-2-the-power-loss">
+<span class="md-ellipsis">
+      
+        6.3 Lemma 2 — The power loss
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival">
+<span class="md-ellipsis">
+      
+        6.4 Lemma 3 — False-alarm inflation under batch arrival
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-lemma-4-the-identifiability-ceiling">
+<span class="md-ellipsis">
+      
+        6.5 Lemma 4 — The identifiability ceiling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#66-what-the-mathematics-is-for">
+<span class="md-ellipsis">
+      
+        6.6 What the mathematics is for
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-chapter-1-the-baseline-the-control-condition">
+<span class="md-ellipsis">
+      
+        7. Chapter 1 — The baseline (the control condition)
+      
+    </span>
+</a>
+<nav aria-label="7. Chapter 1 — The baseline (the control condition)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-purpose">
+<span class="md-ellipsis">
+      
+        7.1 Purpose
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-the-run-matrix">
+<span class="md-ellipsis">
+      
+        7.2 The run matrix
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#73-detector-metrics-precise-definitions">
+<span class="md-ellipsis">
+      
+        7.3 Detector metrics — precise definitions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#74-deliverable">
+<span class="md-ellipsis">
+      
+        7.4 Deliverable
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-chapter-3-the-delayed-label-contribution-the-research">
+<span class="md-ellipsis">
+      
+        8. Chapter 3 — The delayed-label contribution (the research)
+      
+    </span>
+</a>
+<nav aria-label="8. Chapter 3 — The delayed-label contribution (the research)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-step-1-the-delay-regimes">
+<span class="md-ellipsis">
+      
+        8.1 Step 1 — The delay regimes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-step-2-measure-the-degradation">
+<span class="md-ellipsis">
+      
+        8.2 Step 2 — Measure the degradation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#83-step-3-build-the-hybrid">
+<span class="md-ellipsis">
+      
+        8.3 Step 3 — Build the hybrid
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#84-step-4-evaluate">
+<span class="md-ellipsis">
+      
+        8.4 Step 4 — Evaluate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#85-the-failsafe">
+<span class="md-ellipsis">
+      
+        8.5 The failsafe
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-chapter-2-the-system-the-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        9. Chapter 2 — The system (the infrastructure spine)
+      
+    </span>
+</a>
+<nav aria-label="9. Chapter 2 — The system (the infrastructure spine)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#91-what-is-built">
+<span class="md-ellipsis">
+      
+        9.1 What is built
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#92-what-is-measured-the-reality-tax">
+<span class="md-ellipsis">
+      
+        9.2 What is measured (the "reality tax")
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#93-why-it-is-a-research-chapter-not-a-demo">
+<span class="md-ellipsis">
+      
+        9.3 Why it is a research chapter, not a demo
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-datasets">
+<span class="md-ellipsis">
+      
+        10. Datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-scope-guards">
+<span class="md-ellipsis">
+      
+        11. Scope guards
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-references-key-works">
+<span class="md-ellipsis">
+      
+        12. References (key works)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-timeline">
+<span class="md-ellipsis">
+      
+        13. Timeline
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-deliverables">
+<span class="md-ellipsis">
+      
+        14. Deliverables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        15. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Synopsis.pdf" href="../../../Phase0:Research/idea/synopsis/index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="the-delay-tax">The Delay Tax<a class="headerlink" href="#the-delay-tax" title="Permanent link">¶</a></h1>
+<p><strong>Drift detection and adaptation when labels are late, partial, and biased</strong></p>
+<p><em>Project synopsis — streaming (online) machine learning with a systems engineering
+spine</em></p>
+<hr/>
+<h2 id="1-summary">1. Summary<a class="headerlink" href="#1-summary" title="Permanent link">¶</a></h2>
+<p>Almost all machine learning assumes the dataset is a finished object: it sits on
+disk, you load it, you split it, you fit a model, and you are done. <strong>Streaming
+machine learning</strong> drops that assumption. Data arrives one sample at a time,
+potentially forever, and is too large or too fast to store. The model must learn
+incrementally, in a single pass, using bounded memory — and because the world that
+generates the data keeps changing, it must also <em>notice when it becomes wrong</em> and
+adapt. That last part, <strong>concept drift</strong>, is the research problem.</p>
+<p>This project targets a specific, under-studied failure of the field's core
+assumption. Nearly every paper on drift detection and adaptation assumes labels
+arrive <strong>instantly, completely, and without bias</strong> alongside each sample. In
+production they do not: fraud is confirmed 30–90 days after the fact, ad
+conversions arrive a week later, analyst verdicts sometimes never come. This
+project asks what happens when that assumption breaks — formally, measurably, and
+end to end — and whether a practical remedy exists.</p>
+<p>The project has three parts, in increasing order of novelty:</p>
+<ol>
+<li><strong>Baseline.</strong> A rigorous detector-and-adaptation benchmark under controlled
+   synthetic drift (the field's "what happens" reference numbers).</li>
+<li><strong>System.</strong> A real, containerised continual-learning service — the same model
+   that serves predictions is the model that learns — with live drift monitoring,
+   measured for the operational costs the literature never reports: adaptation
+   latency, memory growth, replica divergence, recovery cost.</li>
+<li><strong>Contribution.</strong> A formal model of <strong>delayed, partial, and selective labelling</strong>
+   as a <em>delay tax</em> — four provable lemmas describing exactly how detection
+   degrades — plus a <strong>hybrid detector</strong> that pairs a label-free early warning with
+   delayed supervised confirmation, evaluated against the baseline.</li>
+</ol>
+<p>The mathematical contribution is deliberately applied: concentration bounds,
+quickest-detection theory, and hypothesis testing, all of which can be verified
+empirically. The systems contribution is measurement the field lacks because the
+field is populated by ML researchers rather than infrastructure engineers. Every
+chapter has a survivable failure mode; no single bet can sink the project.</p>
+<hr/>
+<h2 id="2-background-what-streaming-machine-learning-is">2. Background: what streaming machine learning is<a class="headerlink" href="#2-background-what-streaming-machine-learning-is" title="Permanent link">¶</a></h2>
+<h3 id="21-the-three-constraints">2.1 The three constraints<a class="headerlink" href="#21-the-three-constraints" title="Permanent link">¶</a></h3>
+<p>Standard batch learning rests on an assumption so common it is usually invisible:
+the data is finite, available all at once, and drawn i.i.d. from a fixed
+distribution that will not change. Streaming ML drops all three parts. Any
+algorithm that claims to be a streaming algorithm must respect three hard
+constraints:</p>
+<ol>
+<li><strong>Single pass.</strong> Each sample is seen exactly once; you cannot go back and
+   revisit sample #5.</li>
+<li><strong>Bounded memory.</strong> Memory usage must not grow with the number of samples seen.
+   A model that processed ten billion rows must occupy roughly the same space as
+   one that processed ten thousand.</li>
+<li><strong>Bounded time per sample.</strong> Processing must keep up with the arrival rate, or
+   the learner falls behind forever.</li>
+</ol>
+<p>A useful test: <em>if this ran for a year without restarting, would it still work?</em>
+If the answer involves "well, memory would…", it is not a streaming algorithm.</p>
+<h3 id="22-why-it-matters">2.2 Why it matters<a class="headerlink" href="#22-why-it-matters" title="Permanent link">¶</a></h3>
+<p>There are two distinct motivations, often confused:</p>
+<ul>
+<li><strong>The engineering motivation — scale and latency.</strong> The data does not fit in
+  RAM, arrives too fast, or needs a model updated <em>now</em> rather than after
+  tonight's retraining job. Clickstreams, sensors, network packets, financial
+  ticks.</li>
+<li><strong>The statistical motivation — the world changes.</strong> Even if the data <em>did</em> fit
+  in memory, a model trained on last year's data may be wrong about this year,
+  because the process generating the data has changed. Batch learning has no
+  mechanism to notice this. Streaming learning does.</li>
+</ul>
+<p>The statistical motivation is the spine of this project. In streaming ML, the
+central question is not "how accurate is my model?" — a single number — but <em>"how
+does accuracy behave over time?"</em> — a curve. Accuracy becomes a time series;
+drops, recoveries, and recovery speed are the interesting phenomena. Almost every
+good figure in this field plots something against "number of samples seen."</p>
+<h3 id="23-the-river-framework">2.3 The River framework<a class="headerlink" href="#23-the-river-framework" title="Permanent link">¶</a></h3>
+<p>River is "scikit-learn for data streams" — the standard Python library for online
+machine learning (Montiel et al., JMLR 2021; merger of <em>creme</em> and
+<em>scikit-multiflow</em>). It is the instrument for this project, not the subject. Its
+core API is four methods:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="n">model</span><span class="o">.</span><span class="n">learn_one</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>        <span class="c1"># update the model with ONE labelled sample</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="n">model</span><span class="o">.</span><span class="n">predict_one</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>         <span class="c1"># predict a label for ONE sample</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="n">model</span><span class="o">.</span><span class="n">predict_proba_one</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># predict class probabilities</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>     <span class="c1"># update a running score — TRUE label first</span>
+</code></pre></div>
+<p>where <code>x</code> is a Python dict — a deliberate design choice that lets features appear,
+disappear, or stay sparse without reshaping. River ships the models this project
+needs (Hoeffding trees, adaptive forests, linear models), the drift detectors
+(ADWIN, DDM, EDDM, Page-Hinkley, KSWIN), synthetic generators with ground-truth
+drift, real datasets, and incrementally-updated metrics.</p>
+<hr/>
+<h2 id="3-background-concept-drift">3. Background: concept drift<a class="headerlink" href="#3-background-concept-drift" title="Permanent link">¶</a></h2>
+<h3 id="31-definition">3.1 Definition<a class="headerlink" href="#31-definition" title="Permanent link">¶</a></h3>
+<p>A model estimates a joint distribution <span class="arithmatex">\(P(X, y)\)</span>, usually decomposed as
+<span class="arithmatex">\(P(y \mid X) \cdot P(X)\)</span>. <strong>Concept drift</strong> is when that distribution changes over
+time:</p>
+<div class="arithmatex">\[P_t(X, y) \neq P_{t+\Delta}(X, y).\]</div>
+<p>The world that produced the training data is not the world being predicted in.</p>
+<h3 id="32-two-flavours-that-matter">3.2 Two flavours that matter<a class="headerlink" href="#32-two-flavours-that-matter" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Real drift</strong> — <span class="arithmatex">\(P(y \mid X)\)</span> changes. The input–output relationship itself
+  changed, which genuinely breaks the model.</li>
+<li><strong>Virtual drift / covariate shift</strong> — <span class="arithmatex">\(P(X)\)</span> changes while <span class="arithmatex">\(P(y \mid X)\)</span> holds.
+  The inputs have shifted but the rule is intact; accuracy may not suffer.</li>
+</ul>
+<p>The distinction drives detector design: detectors that watch the <em>input
+distribution</em> fire on virtual drift (false alarms from the model's point of view);
+detectors that watch the <em>error stream</em> only fire on drift that actually costs
+accuracy. This tension is central to this project.</p>
+<h3 id="33-types-by-shape-over-time">3.3 Types by shape over time<a class="headerlink" href="#33-types-by-shape-over-time" title="Permanent link">¶</a></h3>
+<p>The standard taxonomy, in terms of which concept is active:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>SUDDEN (abrupt)         GRADUAL                 INCREMENTAL             RECURRING
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a> ────┐                   ──┐ ┌┐ ┌──┐             ──╲                 ──┐   ┌──┐   ┌──
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>     │                     └─┘└─┘  └───            ╲___                └───┘  └───┘
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>     └────────                                        ╲──
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>concept A flips        A and B interleave,      A morphs smoothly     A and B alternate
+<a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>to concept B           B wins over time         into B                (e.g. seasonal)
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a>instantly
+</code></pre></div>
+<ul>
+<li><strong>Sudden / abrupt</strong> — an instantaneous switch; easiest to detect, most damaging.</li>
+<li><strong>Gradual</strong> — a transition window during which samples come from A <em>or</em> B with
+  shifting probability; hard to detect, because error rises slowly and noisily.</li>
+<li><strong>Incremental</strong> — the concept deforms continuously through intermediate states.</li>
+<li><strong>Recurring</strong> — old concepts return (day/night, seasons). Forgetting the old
+  concept is actively wasteful, motivating archive-and-restore approaches.</li>
+</ul>
+<p>There is also the <strong>blip</strong> — a one-off anomaly that is <em>not</em> drift. A good detector
+must not fire on it. This is the stability–plasticity trade-off: react fast enough
+to catch real drift, but not so fast that noise triggers a reset.</p>
+<h3 id="34-how-detectors-work">3.4 How detectors work<a class="headerlink" href="#34-how-detectors-work" title="Permanent link">¶</a></h3>
+<p>Most detectors do not look at the features at all. They watch a one-dimensional
+stream of the model's errors (<span class="arithmatex">\(1\)</span> = wrong, <span class="arithmatex">\(0\)</span> = right) and ask: <em>has this
+stream's mean changed?</em></p>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th>Idea</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DDM</strong> (2004)</td>
+<td>Track error rate <span class="arithmatex">\(p\)</span> and its std <span class="arithmatex">\(s\)</span>; warn at <span class="arithmatex">\(p + s &gt; p_{min} + 2s_{min}\)</span>, alarm at <span class="arithmatex">\(3s\)</span></td>
+<td>Simple, cheap; weak on gradual drift</td>
+</tr>
+<tr>
+<td><strong>EDDM</strong> (2006)</td>
+<td>Track the <em>distance between</em> errors instead</td>
+<td>Designed to fix DDM's gradual-drift weakness</td>
+</tr>
+<tr>
+<td><strong>ADWIN</strong> (2007)</td>
+<td>Adaptive window; when two sub-windows have statistically different means, drop the older part</td>
+<td>Rigorous guarantees, no window-size parameter; the de-facto standard</td>
+</tr>
+<tr>
+<td><strong>Page-Hinkley</strong> (1954)</td>
+<td>CUSUM-family: accumulates deviation from the running mean</td>
+<td>Classical sequential analysis; threshold-sensitive</td>
+</tr>
+<tr>
+<td><strong>KSWIN</strong> (2020)</td>
+<td>Kolmogorov–Smirnov test between a sliding window and a reference</td>
+<td>Non-parametric, distribution-based</td>
+</tr>
+</tbody>
+</table>
+<p>The trade-off is always the same: <strong>sensitivity vs. false alarms.</strong> Tune a
+detector to catch drift faster and it fires on noise. That trade-off curve is
+measurable, and measuring it is part of this project's baseline chapter.</p>
+<h3 id="35-how-models-adapt">3.5 How models adapt<a class="headerlink" href="#35-how-models-adapt" title="Permanent link">¶</a></h3>
+<p>Three responses to drift:</p>
+<ol>
+<li><strong>Blind adaptation (no detector).</strong> Keep learning and let recent data outweigh
+   old data — sliding windows, fading factors, a learning rate that never reaches
+   zero. Always-on, simple, but adapts slowly to sudden drift and permanently
+   discards old-but-still-valid knowledge.</li>
+<li><strong>Informed adaptation (detector + reaction).</strong> Run an explicit detector; when it
+   fires, reset the model, retrain on a recent buffer, or swap in a background
+   model trained in parallel. Reacts sharply, but a false alarm throws away a good
+   model.</li>
+<li><strong>Ensembles.</strong> Keep a pool of models, weight them by recent performance, drop
+   the worst, add fresh ones. Drift handling is emergent. This is what <strong>Adaptive
+   Random Forest (ARF)</strong> does, and it is the strongest general baseline.</li>
+</ol>
+<p>The deep question — whether explicit detection actually <em>beats</em> passive
+adaptation — is contested in the literature, and this project measures it directly
+in its baseline chapter.</p>
+<h3 id="36-how-a-streaming-model-is-evaluated">3.6 How a streaming model is evaluated<a class="headerlink" href="#36-how-a-streaming-model-is-evaluated" title="Permanent link">¶</a></h3>
+<p>Random train/test splitting is invalid for ordered streams: order is meaningful,
+there is no "end" to hold out, and a random split leaks future information into
+training. The standard protocol is <strong>prequential evaluation</strong> (test-then-train):</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_one</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># model has NEVER seen this sample</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>        <span class="c1"># so this score is honest</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="n">model</span><span class="o">.</span><span class="n">learn_one</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>           <span class="c1"># now let it learn</span>
+</code></pre></div>
+<p>Every sample is used for testing and training, in that order — nothing wasted,
+nothing leaked. Cumulative metrics converge and hide drift; <strong>rolling</strong> metrics
+over a recent window reveal dips and recoveries. The accuracy-over-time curve is a
+result in itself: dip depth and recovery slope are what get compared.</p>
+<p>Two evaluation facts anchor this project:</p>
+<ul>
+<li><strong>Memory and per-sample time are first-class results</strong> in streaming ML, not
+  afterthoughts — the field's whole claim is bounded resources.</li>
+<li><strong>Statistical rigour is expected</strong>: multiple seeds reported as mean ± std,
+  fixed experimental budgets, and the <strong>Friedman test + Nemenyi post-hoc</strong> with a
+  critical-difference diagram (Demšar, 2006) as the accepted convention for
+  comparing many methods over many datasets.</li>
+</ul>
+<hr/>
+<h2 id="4-the-problem-labels-are-late-partial-and-biased">4. The problem: labels are late, partial, and biased<a class="headerlink" href="#4-the-problem-labels-are-late-partial-and-biased" title="Permanent link">¶</a></h2>
+<h3 id="41-the-hidden-assumption">4.1 The hidden assumption<a class="headerlink" href="#41-the-hidden-assumption" title="Permanent link">¶</a></h3>
+<p>Every paper in the field's canonical evaluation loop assumes the label <code>y</code> arrives
+in the same tick as the sample <code>x</code>. The detector watches the error stream <span class="arithmatex">\(e_t\)</span> in
+real time; the evaluator scores each prediction immediately; the learner updates
+immediately. In production, none of this holds:</p>
+<ul>
+<li>A fraud model approves a transaction <em>now</em> and learns the truth <strong>30–90 days
+  later</strong>, when the chargeback lands.</li>
+<li>An ad model serves an impression <em>now</em> and learns the conversion <strong>next week</strong>.</li>
+<li>An intrusion model flags a login <em>now</em> and receives the analyst's verdict
+  <strong>later — or never</strong>.</li>
+<li>Labels arrive <strong>in batches</strong> (overnight reconciliation), <strong>out of order</strong>, and
+  <strong>only for flagged cases</strong> — which makes the observed errors a biased sample of
+  true errors.</li>
+</ul>
+<h3 id="42-the-cascade-of-consequences">4.2 The cascade of consequences<a class="headerlink" href="#42-the-cascade-of-consequences" title="Permanent link">¶</a></h3>
+<p>Follow the consequence of a late label; it is not obvious and it is nasty:</p>
+<ol>
+<li><strong>Detection is late.</strong> A drift detector works by watching the error stream. If
+   the error stream is <span class="arithmatex">\(d\)</span> days late, drift is detected <span class="arithmatex">\(d\)</span> days after it
+   happened — and the model has been silently wrong for a month.</li>
+<li><strong>Evaluation breaks first.</strong> Prequential evaluation cannot score a prediction
+   whose label has not arrived. The instrument the entire field uses to measure
+   success does not work in the setting the field claims to serve: <strong>you cannot
+   even measure your own accuracy in real time</strong>.</li>
+<li><strong>Adaptation compounds the error.</strong> While labels are pending, the model keeps
+   learning from stale samples. After a drift, it is not just slow to adapt — it
+   is actively <em>reinforcing the pre-drift concept</em> with outdated data.</li>
+<li><strong>The label process itself misbehaves.</strong> Batch arrival injects autocorrelation
+   into the error stream; selective labelling injects bias. Detectors calibrated
+   for i.i.d. errors misread both — false alarms, or missed drift entirely.</li>
+</ol>
+<h3 id="43-why-this-is-a-research-gap-not-a-tutorial-topic">4.3 Why this is a research gap, not a tutorial topic<a class="headerlink" href="#43-why-this-is-a-research-gap-not-a-tutorial-topic" title="Permanent link">¶</a></h3>
+<p>The research phase of this project (a deep literature survey; see the reference
+list, §12) established three things:</p>
+<ul>
+<li><strong>The area is active but fragmented.</strong> The delayed/partial-label literature
+  spans roughly 2008–2026, but terminology alone is split across <em>verification
+  latency, delayed labelling, label latency, extreme verification latency, and
+  partially labelled streams</em> — and the same problem is studied separately in
+  semi-supervised streaming, stream active learning, and positive-unlabelled
+  learning. No widely accepted benchmark or evaluation protocol exists.</li>
+<li><strong>The specific degradation is unquantified.</strong> Papers show that delayed labels
+  <em>harm</em> classifiers or active-learning systems, but almost none isolates the
+  <strong>detector</strong> and produces a clean curve of detection delay vs. label latency, or
+  false-alarm rate vs. label coverage.</li>
+<li><strong>The confirmation protocol is unbuilt.</strong> Research explicitly names "a
+  two-stage detector: label-free alarm, delayed supervised confirmation, calibrated
+  action" as a promising, unbuilt architecture. This project builds exactly that.</li>
+</ul>
+<p>The most relevant prior syntheses: Gomes et al. (2022), the <em>ACM Computing Surveys</em>
+survey on semi-supervised learning for delayed partially labelled streams; and a
+2026 experimental survey on concept-drift detection in delayed and partially
+labelled streams (<em>Digital Signal Processing</em>). Both confirm the gap this project
+targets.</p>
+<hr/>
+<h2 id="5-research-questions">5. Research questions<a class="headerlink" href="#5-research-questions" title="Permanent link">¶</a></h2>
+<p>Three questions, one spine. Each is falsifiable and measurable.</p>
+<ul>
+<li>
+<p><strong>RQ1 — Baseline (guaranteed results).</strong> Under controlled synthetic drift —
+  sudden, gradual, incremental, recurring — how do the standard detectors (ADWIN,
+  DDM, EDDM, Page-Hinkley, KSWIN) compare on detection delay, false-alarm rate, and
+  missed detections; and how do adaptive models (Hoeffding Adaptive Tree, Adaptive
+  Random Forest) recover relative to static ones (plain Hoeffding Tree, Naive
+  Bayes)? <em>This is the control condition: the idealised numbers the field's papers
+  assume, measured with our own rigour.</em></p>
+</li>
+<li>
+<p><strong>RQ2 — System (novel by measurement).</strong> What does running continual learning as
+  a real service cost — p50/p99 prediction latency during adaptation, throughput
+  ceiling, memory growth, checkpoint/restart cost, and <strong>how fast do scaled-out
+  replicas diverge</strong> from each other? Where does it break first?</p>
+</li>
+<li>
+<p><strong>RQ3 — Contribution (the gap).</strong> By how much — exactly — does delayed, partial,
+  and selective labelling degrade drift detection and adaptation? Can a <strong>hybrid
+  detector</strong> (label-free early warning + delayed supervised confirmation) recover
+  the immediate-label baseline, or come provably close? Do the four lemmas of §6
+  hold empirically?</p>
+</li>
+</ul>
+<hr/>
+<h2 id="6-the-mathematical-angle-the-delay-tax">6. The mathematical angle: the delay tax<a class="headerlink" href="#6-the-mathematical-angle-the-delay-tax" title="Permanent link">¶</a></h2>
+<p>The project's theory. It formalises "delayed labels are bad" into <strong>four provable
+claims</strong> about <em>how</em> and <em>by what factor</em> detection degrades. The mathematics is
+deliberately applied — probability, concentration bounds, hypothesis testing,
+classical quickest detection — every lemma has an attached experiment, and none
+requires novel analysis.</p>
+<h3 id="61-the-formal-setting">6.1 The formal setting<a class="headerlink" href="#61-the-formal-setting" title="Permanent link">¶</a></h3>
+<p>Let the concept be <span class="arithmatex">\(C_t \in \{C_0, C_1\}\)</span> with a real drift at time <span class="arithmatex">\(\tau\)</span>. The
+model predicts <span class="arithmatex">\(\hat{y}_t\)</span>; the instantaneous error is</p>
+<div class="arithmatex">\[e_t = \mathbb{1}[\hat{y}_t \neq y_t].\]</div>
+<p><strong>Immediate labelling.</strong> The detector observes <span class="arithmatex">\((e_t)\)</span> in real time and raises an
+alarm at a stopping time <span class="arithmatex">\(T\)</span>. This is the classical <strong>quickest detection</strong> problem
+(Page 1954; Lorden 1971; Shiryaev). The field's "detection delay vs. false-alarm
+trade-off" is the empirical image of Lorden's minimax criterion: minimise
+worst-case detection delay subject to a false-alarm constraint (average run
+length between false alarms).</p>
+<p><strong>Delayed labelling.</strong> Each error <span class="arithmatex">\(e_t\)</span> becomes observable only at time
+<span class="arithmatex">\(t + L_t\)</span>, where <span class="arithmatex">\(L_t\)</span> is a latency process — fixed (<span class="arithmatex">\(L_t = d\)</span>), stochastic
+(e.g. geometric with mean <span class="arithmatex">\(d\)</span>), or driven by a review policy (only flagged samples
+are ever labelled). The detector's information set at time <span class="arithmatex">\(t\)</span> is the filtration</p>
+<div class="arithmatex">\[\mathcal{F}_t = \sigma\big( e_s : s + L_s \le t \big).\]</div>
+<p>This is <strong>quickest detection with delayed observations</strong> — a variant the
+literature has barely touched. The four lemmas follow from this setting.</p>
+<h3 id="62-lemma-1-the-reaction-floor">6.2 Lemma 1 — The reaction floor<a class="headerlink" href="#62-lemma-1-the-reaction-floor" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>Any detector that observes only the error stream cannot alarm before the
+drift's labels arrive: <span class="arithmatex">\(T \ge \tau + L_\tau\)</span> pointwise, hence
+<span class="arithmatex">\(\mathbb{E}[T] \ge \tau + \mathbb{E}[L]\)</span>.</p>
+</blockquote>
+<p><em>Proof idea.</em> The first error containing information about the new concept is
+<span class="arithmatex">\(e_\tau\)</span>, and it enters <span class="arithmatex">\(\mathcal{F}_t\)</span> only at <span class="arithmatex">\(t = \tau + L_\tau\)</span>. The alarm is
+a stopping time with respect to <span class="arithmatex">\(\mathcal{F}_t\)</span>, so it cannot precede that
+information. Trivial — and that triviality is the point: it is a <strong>hard lower
+bound that no algorithm can beat</strong>, independent of detector quality. It converts
+"you detect drift a month late" from a complaint into a theorem.</p>
+<p><em>Experiment.</em> For each delay regime, measure every detector's detection delay and
+confirm it never dips below <span class="arithmatex">\(d\)</span> (fixed) or <span class="arithmatex">\(\mathbb{E}[L]\)</span> (stochastic).</p>
+<h3 id="63-lemma-2-the-power-loss">6.3 Lemma 2 — The power loss<a class="headerlink" href="#63-lemma-2-the-power-loss" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>With only a fraction <span class="arithmatex">\(p\)</span> of labels arriving, a windowed detector's sensitivity
+degrades by the factor <span class="arithmatex">\(1/\sqrt{p}\)</span>: its minimum detectable mean shift grows
+from <span class="arithmatex">\(\Delta_{\min} \propto 1/\sqrt{W}\)</span> to
+<span class="arithmatex">\(\Delta_{\min} \propto 1/\sqrt{pW}\)</span>.</p>
+</blockquote>
+<p><em>Proof idea.</em> The observed error stream is a randomly thinned version of the true
+one: a window of <span class="arithmatex">\(W\)</span> arrivals yields only ~<span class="arithmatex">\(pW\)</span> distinct fresh errors. Any
+mean-estimate test has standard error <span class="arithmatex">\(\sigma / \sqrt{n}\)</span> with <span class="arithmatex">\(n = pW\)</span>
+(Hoeffding / CLT-based; ADWIN's threshold is a constant times
+<span class="arithmatex">\(\sqrt{\ln(1/\delta)/W}\)</span>). Thinning inflates the standard error by <span class="arithmatex">\(1/\sqrt{p}\)</span>.</p>
+<p><em>Experiment.</em> For label coverage <span class="arithmatex">\(p \in \{1, .5, .25, .1\}\)</span> and a fixed drift
+magnitude, measure ADWIN's detection delay and verify it tracks the predicted
+<span class="arithmatex">\(1/\sqrt{p}\)</span> inflation.</p>
+<h3 id="64-lemma-3-false-alarm-inflation-under-batch-arrival">6.4 Lemma 3 — False-alarm inflation under batch arrival<a class="headerlink" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>If labels arrive in batches of size <span class="arithmatex">\(b\)</span>, the observed error stream inherits
+intra-batch correlation <span class="arithmatex">\(\rho &gt; 0\)</span>, inflating the variance of the estimated
+error rate by the clustered-data factor <span class="arithmatex">\(1 + (b-1)\rho\)</span>. Detectors calibrated
+for i.i.d. errors then fire spuriously: DDM's alarm rate rises above its
+nominal level <span class="arithmatex">\(\alpha\)</span>.</p>
+</blockquote>
+<p><em>Proof idea.</em> The variance of a clustered sample mean carries the standard design
+effect <span class="arithmatex">\(1 + (b-1)\rho\)</span>. DDM's thresholds assume independent Bernoulli errors.
+Batch arrival — exactly what overnight or weekly label reconciliation does in
+production — violates that assumption, so the detector sees "drift" in pure noise.</p>
+<p><em>Experiment.</em> Feed detectors a delayed-error stream under batch arrival with <em>no</em>
+actual drift; measure false-alarm rate vs. batch size <span class="arithmatex">\(b\)</span>.</p>
+<h3 id="65-lemma-4-the-identifiability-ceiling">6.5 Lemma 4 — The identifiability ceiling<a class="headerlink" href="#65-lemma-4-the-identifiability-ceiling" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>If <span class="arithmatex">\(P(X)\)</span> is unchanged but <span class="arithmatex">\(P(y \mid X)\)</span> differs between concepts (pure
+posterior drift), no label-free detector has any power: the likelihood ratio of
+the observed <span class="arithmatex">\(X\)</span>-stream is identically 1, so the KL divergence between the two
+hypotheses is 0.</p>
+</blockquote>
+<p><em>Proof idea.</em> The marginal <span class="arithmatex">\(P(X)\)</span> cannot distinguish between two joints that share
+it. Formally, the two candidate distributions over <span class="arithmatex">\(X\)</span>-observations are identical,
+so no test can have power above its size. This is the formal content of
+Žliobaitė's detectability analysis (2010) — and it <strong>justifies the hybrid by
+construction</strong>: label-free signals can only ever be an early warning; confirmation
+requires labels. The hybrid of §8 is the information-maximal architecture
+available, which is the strongest design statement a scoping document can make.</p>
+<p><em>Experiment.</em> Construct a generator with pure posterior drift (flip <span class="arithmatex">\(P(y \mid X)\)</span>
+in a region while keeping the marginal fixed); confirm label-free detectors miss
+it while the hybrid's delayed confirmation catches it.</p>
+<h3 id="66-what-the-mathematics-is-for">6.6 What the mathematics is for<a class="headerlink" href="#66-what-the-mathematics-is-for" title="Permanent link">¶</a></h3>
+<p>The lemmas give the report a theory section that is genuinely provable — each with
+an empirical counterpart — without betting the project on novel analysis. They
+convert Chapter 3's headline from a table of numbers into a narrative:</p>
+<blockquote>
+<p><em>Detection under delay is bounded below by the reaction floor, weakened by
+<span class="arithmatex">\(1/\sqrt{p}\)</span>, distorted by batch autocorrelation, and capped by
+identifiability — and the hybrid is the best possible response.</em></p>
+</blockquote>
+<p>Explicitly <strong>out of mathematical scope</strong>: new change-detection algorithms, regret
+bounds, online convex optimisation, statistical learning theory, and any theorem
+beyond the four lemmas. If a lemma resists a clean proof, it degrades to an
+empirical claim with a simulation study — the project survives either way.</p>
+<hr/>
+<h2 id="7-chapter-1-the-baseline-the-control-condition">7. Chapter 1 — The baseline (the control condition)<a class="headerlink" href="#7-chapter-1-the-baseline-the-control-condition" title="Permanent link">¶</a></h2>
+<h3 id="71-purpose">7.1 Purpose<a class="headerlink" href="#71-purpose" title="Permanent link">¶</a></h3>
+<p>Everything later is measured against "what the literature says happens." Chapter 1
+produces those idealised numbers ourselves, with documented rigour, so that
+Chapter 3 can show reality is worse.</p>
+<h3 id="72-the-run-matrix">7.2 The run matrix<a class="headerlink" href="#72-the-run-matrix" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drift type</td>
+<td>sudden (SEA), incremental (Hyperplane), gradual (RandomRBF), recurring (ConceptDriftStream composition)</td>
+</tr>
+<tr>
+<td>Detector</td>
+<td>ADWIN, DDM, EDDM, Page-Hinkley, KSWIN</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Hoeffding Tree (static), Hoeffding Adaptive Tree (adaptive), ARF (ensemble), Logistic Regression (blind/passive)</td>
+</tr>
+<tr>
+<td>Detector metrics</td>
+<td>detection delay, false-positive rate, missed detections, MTFA / MTD</td>
+</tr>
+<tr>
+<td>Model metrics</td>
+<td>dip depth, recovery time, rolling accuracy, memory, throughput</td>
+</tr>
+<tr>
+<td>Rigour</td>
+<td>≥ 10 seeds, fixed stream length (~100k), fixed drift positions, mean ± std, Friedman + Nemenyi</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-detector-metrics-precise-definitions">7.3 Detector metrics — precise definitions<a class="headerlink" href="#73-detector-metrics-precise-definitions" title="Permanent link">¶</a></h3>
+<p>Detector metrics require <strong>known ground-truth drift points</strong>, which is why
+synthetic streams are non-negotiable for this part:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Definition</th>
+<th>Good value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Detection delay</strong></td>
+<td>samples between true drift and first alarm</td>
+<td>low</td>
+</tr>
+<tr>
+<td><strong>False positives (FP)</strong></td>
+<td>alarms with no drift nearby</td>
+<td>low</td>
+</tr>
+<tr>
+<td><strong>Missed detections (FN)</strong></td>
+<td>drift points with no alarm within a tolerance window</td>
+<td>low</td>
+</tr>
+<tr>
+<td><strong>MTFA</strong></td>
+<td>mean time between false alarms</td>
+<td>high</td>
+</tr>
+<tr>
+<td><strong>MTD</strong></td>
+<td>mean time to detection</td>
+<td>low</td>
+</tr>
+<tr>
+<td><strong>Recovery time</strong></td>
+<td>samples until rolling accuracy returns to pre-drift level</td>
+<td>low</td>
+</tr>
+</tbody>
+</table>
+<p>A <strong>tolerance window</strong> must be defined explicitly: a drift at index 5000 with an
+alarm at 5040 is a successful detection with delay 40; an alarm at 9000 is a false
+positive plus a missed detection. Papers vary; stating and justifying the window is
+a mark of rigour.</p>
+<p>The central finding to expect: <strong>no detector wins on all three of delay, FP, and
+FN.</strong> Sensitivity trades against false alarms. Showing that trade-off with real
+numbers is a legitimate result — and it becomes the baseline against which the
+hybrid is judged.</p>
+<h3 id="74-deliverable">7.4 Deliverable<a class="headerlink" href="#74-deliverable" title="Permanent link">¶</a></h3>
+<p>A reusable, config-driven, seeded experiment harness (one runner serves both
+Chapter 1 and Chapter 3), plus the first real results: trade-off tables,
+accuracy-over-time curves, and statistical comparisons.</p>
+<hr/>
+<h2 id="8-chapter-3-the-delayed-label-contribution-the-research">8. Chapter 3 — The delayed-label contribution (the research)<a class="headerlink" href="#8-chapter-3-the-delayed-label-contribution-the-research" title="Permanent link">¶</a></h2>
+<p><em>Chapter 2, the system, is described in §9; Chapter 3 is presented here because it
+is the intellectual heart of the project.</em></p>
+<h3 id="81-step-1-the-delay-regimes">8.1 Step 1 — The delay regimes<a class="headerlink" href="#81-step-1-the-delay-regimes" title="Permanent link">¶</a></h3>
+<p>Labels are withheld from the baseline streams according to explicit observation
+processes:</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Process</th>
+<th>Production story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fixed delay</strong></td>
+<td><span class="arithmatex">\(L_t = d\)</span>, for <span class="arithmatex">\(d \in \{10, 100, 1000\}\)</span> samples</td>
+<td>Batch reporting on a fixed schedule</td>
+</tr>
+<tr>
+<td><strong>Stochastic delay</strong></td>
+<td><span class="arithmatex">\(L_t \sim\)</span> Geometric(mean <span class="arithmatex">\(d\)</span>)</td>
+<td>Variable human/queue latency</td>
+</tr>
+<tr>
+<td><strong>Partial labelling</strong></td>
+<td>label arrives with probability <span class="arithmatex">\(p \in \{1, .5, .1\}\)</span></td>
+<td>Only some events ever get confirmed</td>
+</tr>
+<tr>
+<td><strong>Selective labelling</strong></td>
+<td>only samples the model <em>flagged</em> get labelled</td>
+<td>"Only flagged cases are reviewed" — the biased case</td>
+</tr>
+</tbody>
+</table>
+<p>The selective regime is the subtle one: it is not mere label scarcity but an
+<strong>endogenous observation policy</strong>, because the probability of being labelled
+depends on the model's own prediction. Any detector trained on those labels
+estimates the review policy, not the deployed model.</p>
+<h3 id="82-step-2-measure-the-degradation">8.2 Step 2 — Measure the degradation<a class="headerlink" href="#82-step-2-measure-the-degradation" title="Permanent link">¶</a></h3>
+<p>For every regime, re-run the Chapter 1 matrix and compare against the <span class="arithmatex">\(d = 0\)</span>
+control, at two levels:</p>
+<ul>
+<li><strong>Detector level:</strong> how do detection delay, FP rate, and missed-detection rate
+  change with <span class="arithmatex">\(d\)</span> and <span class="arithmatex">\(p\)</span>? This is the clean, largely-unpublished curve the field
+  lacks — and it is exactly where the lemmas live.</li>
+<li><strong>Downstream level:</strong> how does the <em>model's</em> accuracy-over-time curve degrade?
+  Dip depth, recovery time, and whether the model ever returns to baseline.</li>
+</ul>
+<h3 id="83-step-3-build-the-hybrid">8.3 Step 3 — Build the hybrid<a class="headerlink" href="#83-step-3-build-the-hybrid" title="Permanent link">¶</a></h3>
+<p>The hybrid is a two-stage architecture:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a>input stream x_t ──► label-free early warning (monitors P(X))
+<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>                        │
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>                        ▼
+<a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>                   "possible drift"   (fast, but fires on virtual drift too)
+<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>                        │
+<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>                        ▼
+<a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>        delayed error stream e_{t-d} ──► supervised confirmation
+<a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>                        │
+<a href="#__codelineno-3-9" id="__codelineno-3-9" name="__codelineno-3-9"></a>                        ▼
+<a href="#__codelineno-3-10" id="__codelineno-3-10" name="__codelineno-3-10"></a>              confirmed alarm → adaptation (reset / retrain / swap)
+</code></pre></div>
+<ul>
+<li><strong>Stage 1 (label-free, immediate):</strong> monitors the input distribution <span class="arithmatex">\(P(X)\)</span>
+  (windowed two-sample tests, e.g. KS / MMD-style statistics). Fires early —
+  possibly on harmless virtual drift — but provides a <em>warning within a tolerance
+  window</em>.</li>
+<li><strong>Stage 2 (supervised, delayed):</strong> confirmation from the error stream once the
+  delayed labels arrive. A confirmed alarm triggers adaptation; an
+  unconfirmed warning is revoked (with the false-alarm cost explicitly
+  recorded).</li>
+</ul>
+<p>The design is not ad hoc: <strong>Lemma 4 shows stage 1 cannot confirm, and Lemma 1
+shows stage 2 cannot be early.</strong> The hybrid is the only architecture that is both
+early <em>and</em> reliable, given the information available.</p>
+<h3 id="84-step-4-evaluate">8.4 Step 4 — Evaluate<a class="headerlink" href="#84-step-4-evaluate" title="Permanent link">¶</a></h3>
+<p>Compare four systems on the full delay matrix: (a) naive delayed-supervised
+detector, (b) label-free only, (c) the hybrid, (d) the immediate-label control
+from Chapter 1. Test the lemmas empirically; verify the <span class="arithmatex">\(1/\sqrt{p}\)</span> factor and
+the batch-correlation inflation with real measurements.</p>
+<h3 id="85-the-failsafe">8.5 The failsafe<a class="headerlink" href="#85-the-failsafe" title="Permanent link">¶</a></h3>
+<p>If the hybrid does not beat the naive baselines, that is a complete, publishable
+<strong>negative result</strong>: "we quantified exactly how delayed labels break existing
+methods, and showed why the obvious fix is insufficient." Lemmas 1–3 hold
+regardless and remain the contribution. Chapter 3 <strong>cannot fail</strong> — which is
+precisely why it is the bet.</p>
+<hr/>
+<h2 id="9-chapter-2-the-system-the-infrastructure-spine">9. Chapter 2 — The system (the infrastructure spine)<a class="headerlink" href="#9-chapter-2-the-system-the-infrastructure-spine" title="Permanent link">¶</a></h2>
+<h3 id="91-what-is-built">9.1 What is built<a class="headerlink" href="#91-what-is-built" title="Permanent link">¶</a></h3>
+<p>A real, containerised, reproducible continual-learning service — the part that
+makes this a major project rather than a notebook:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a>events ──► event stream (Redis Streams / Kafka) ──► learning consumer
+<a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>                                                        │
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>                                                        ▼
+<a href="#__codelineno-4-4" id="__codelineno-4-4" name="__codelineno-4-4"></a>                     POST /predict ◄── model service (serves AND learns, one pass)
+<a href="#__codelineno-4-5" id="__codelineno-4-5" name="__codelineno-4-5"></a>                                                        │
+<a href="#__codelineno-4-6" id="__codelineno-4-6" name="__codelineno-4-6"></a>                                                        ▼
+<a href="#__codelineno-4-7" id="__codelineno-4-7" name="__codelineno-4-7"></a>                          live drift monitor (a real service, not a script)
+<a href="#__codelineno-4-8" id="__codelineno-4-8" name="__codelineno-4-8"></a>                                                        │
+<a href="#__codelineno-4-9" id="__codelineno-4-9" name="__codelineno-4-9"></a>                                                        ▼
+<a href="#__codelineno-4-10" id="__codelineno-4-10" name="__codelineno-4-10"></a>                     Prometheus metrics ──► Grafana dashboard
+<a href="#__codelineno-4-11" id="__codelineno-4-11" name="__codelineno-4-11"></a>                     load generator ──► pushes the system until something breaks
+</code></pre></div>
+<p>The defining property: <strong>the same model that serves predictions is the model that
+learns</strong> — not a served snapshot and a separate offline trainer. That is what makes
+the operational questions real.</p>
+<h3 id="92-what-is-measured-the-reality-tax">9.2 What is measured (the "reality tax")<a class="headerlink" href="#92-what-is-measured-the-reality-tax" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Adaptation cost.</strong> What do model resets, background retraining, and drift
+  reactions do to p50/p99 prediction latency and throughput? What happens when a
+  reset coincides with peak load?</li>
+<li><strong>Replica divergence.</strong> Scale the service to 3 replicas. Each learns from the
+  events it happens to consume; they diverge. How fast? Which one is "the model"?
+  Nobody has a clean answer to horizontal scaling of a stateful learner —
+  measuring the divergence is itself a publishable observation.</li>
+<li><strong>Backpressure.</strong> When consumers fall behind, do we drop learning or drop
+  serving? What is the cost of each?</li>
+<li><strong>Recovery.</strong> How expensive is checkpointing and restarting model state? A batch
+  model is an immutable artifact you can roll back; a streaming model has no
+  artifact. What does recovery even mean?</li>
+</ul>
+<h3 id="93-why-it-is-a-research-chapter-not-a-demo">9.3 Why it is a research chapter, not a demo<a class="headerlink" href="#93-why-it-is-a-research-chapter-not-a-demo" title="Permanent link">¶</a></h3>
+<p>The field evaluates by replaying a CSV in a single Python process: labels arrive
+instantly and always, no network, no queue, no concurrency, no backpressure, and
+success is measured almost entirely as accuracy. Production violates every one of
+those assumptions. The system chapter measures the gap — the operational cost the
+literature never reports — and it exists because the field is populated by ML
+researchers, not infrastructure people. This is the author's home turf, and it is
+deliberately scoped to a single node (docker-compose), which is sufficient for the
+measurements and honest about their limits.</p>
+<hr/>
+<h2 id="10-datasets">10. Datasets<a class="headerlink" href="#10-datasets" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Data</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synthetic</td>
+<td>SEA, Hyperplane, RandomRBF, STAGGER, ConceptDriftStream compositions</td>
+<td>Ground-truth drift positions → detector metrics, lemmas 1–4</td>
+</tr>
+<tr>
+<td>Real</td>
+<td>Elec2, Phishing, CreditCard (≤ 3)</td>
+<td>External validity; natural delayed-label story (fraud)</td>
+</tr>
+<tr>
+<td>Baseline honesty</td>
+<td>Elec2</td>
+<td>Known temporal autocorrelation: report a no-change baseline and Kappa+, never accuracy alone</td>
+</tr>
+</tbody>
+</table>
+<p>Synthetic streams are the main experimental tool because drift position is known
+exactly — detection delay would otherwise be uncomputable. Real streams validate
+that the findings are not artefacts of generators. Elec2's known flaws are handled
+by reporting a "predict the previous label" baseline and temporal-aware metrics,
+rather than treating it as neutral ground truth.</p>
+<hr/>
+<h2 id="11-scope-guards">11. Scope guards<a class="headerlink" href="#11-scope-guards" title="Permanent link">¶</a></h2>
+<p>The most common way student projects fail is scope creep, not difficulty. Written
+down and defended:</p>
+<table>
+<thead>
+<tr>
+<th>❌ Out of scope</th>
+<th>✅ Instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deep learning / online neural nets</td>
+<td>Classical models + ensembles (River)</td>
+</tr>
+<tr>
+<td>Regression, clustering, recommendation</td>
+<td><strong>Classification only</strong></td>
+</tr>
+<tr>
+<td>Distributed <em>training</em> (parameter servers, federated learning)</td>
+<td>Single-node service; measuring replica divergence is in scope</td>
+</tr>
+<tr>
+<td>Building a streaming framework</td>
+<td>River; we build the harness and system <em>around</em> it</td>
+</tr>
+<tr>
+<td>Kubernetes / multi-cloud production deployment</td>
+<td>docker-compose on one machine</td>
+</tr>
+<tr>
+<td>More than ~3 real datasets</td>
+<td>Exactly 3, chosen and justified</td>
+</tr>
+<tr>
+<td>Novel adaptation algorithms</td>
+<td>Hybrid architecture + formal delay model + measurement</td>
+</tr>
+<tr>
+<td>Theorem-proving beyond the four lemmas</td>
+<td>The lemmas; anything harder degrades to empirical</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="12-references-key-works">12. References (key works)<a class="headerlink" href="#12-references-key-works" title="Permanent link">¶</a></h2>
+<p>Citations from the research phase — <strong>each must be verified on Google Scholar or
+Semantic Scholar before entering the report bibliography.</strong></p>
+<p><strong>Foundational</strong>
+- Domingos &amp; Hulten (2000). <em>Mining High-Speed Data Streams</em> (VFDT / Hoeffding Tree). KDD.
+- Bifet &amp; Gavaldà (2007). <em>Learning from Time-Changing Data with Adaptive Windowing</em> (ADWIN). SDM.
+- Gama et al. (2004). <em>Learning with Drift Detection</em> (DDM). SBIA.
+- Baena-García et al. (2006). <em>Early Drift Detection Method</em> (EDDM).
+- Raab, Heusinger &amp; Schleif (2020). <em>Reactive Soft Prototype Computing</em> (KSWIN). Neurocomputing.
+- Page (1954). <em>Continuous Inspection Schemes</em>. Biometrika. (Roots of Page-Hinkley / CUSUM.)</p>
+<p><strong>Surveys and methodology</strong>
+- Gama, Žliobaitė, Bifet, Pechenizkiy &amp; Bouchachia (2014). <em>A Survey on Concept Drift Adaptation</em>. ACM Computing Surveys. <strong>The reference.</strong>
+- Lu et al. (2019). <em>Learning under Concept Drift: A Review</em>. IEEE TKDE.
+- Gama, Sebastião &amp; Rodrigues (2013). <em>On Evaluating Stream Learning Algorithms</em>. Machine Learning. (Prequential justification.)
+- Demšar (2006). <em>Statistical Comparisons of Classifiers over Multiple Data Sets</em>. JMLR. (Friedman + Nemenyi.)</p>
+<p><strong>Delayed and partial labels (the gap)</strong>
+- Žliobaitė (2010). <em>Change with Delayed Labeling: When is it Detectable?</em> IEEE ICDM Workshops. (Identifiability — Lemma 4.)
+- Grzenda, Gomes &amp; Bifet (2020). <em>Delayed Labelling Evaluation for Data Streams</em>. Data Mining and Knowledge Discovery.
+- Gomes et al. (2022). <em>A Survey on Semi-supervised Learning for Delayed Partially Labelled Data Streams</em>. ACM Computing Surveys.
+- Alencar et al. (2026). <em>Concept drift detection in delayed and partially labeled data streams: An experimental survey</em>. Digital Signal Processing.</p>
+<p><strong>Models and tools</strong>
+- Gomes et al. (2017). <em>Adaptive Random Forests for Evolving Data Stream Classification</em>. Machine Learning.
+- Oza &amp; Russell (2001). <em>Online Bagging and Boosting</em>.
+- Montiel et al. (2021). <em>River: Machine Learning for Streaming Data in Python</em>. JMLR.</p>
+<hr/>
+<h2 id="13-timeline">13. Timeline<a class="headerlink" href="#13-timeline" title="Permanent link">¶</a></h2>
+<p>Roughly 10–15 hours/week alongside coursework, deliberate slack built in:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Weeks</th>
+<th>Work</th>
+<th>Exit criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0 — Orientation</strong></td>
+<td>1–4</td>
+<td>Verify citations; get River running; reproduce one published baseline number</td>
+<td>A baseline number reproduced; bibliography skeleton</td>
+</tr>
+<tr>
+<td><strong>1 — Baseline</strong></td>
+<td>5–12</td>
+<td>Harness + Chapter 1 run matrix</td>
+<td>Reusable harness; idealised numbers done</td>
+</tr>
+<tr>
+<td><strong>2 — System</strong></td>
+<td>13–24</td>
+<td>Event stream, model service, live monitor, metrics, load generator</td>
+<td>Running docker-compose stack</td>
+</tr>
+<tr>
+<td><strong>3 — Break it</strong></td>
+<td>25–32</td>
+<td>Latency / throughput / memory / divergence / recovery measurements</td>
+<td>"Reality tax" data</td>
+</tr>
+<tr>
+<td><strong>4 — Delay tax</strong></td>
+<td>33–44</td>
+<td>Delay regimes → degradation curves → hybrid → lemma verification</td>
+<td>The contribution (or the negative result)</td>
+</tr>
+<tr>
+<td><strong>5 — Write-up</strong></td>
+<td>45–52</td>
+<td>Report, figures, statistics, README, demo</td>
+<td>Submittable project</td>
+</tr>
+</tbody>
+</table>
+<p>Phases 2–3 can shrink if the year tightens; Phase 4 keeps its budget. Phase 1 goes
+first because everything depends on the control condition.</p>
+<hr/>
+<h2 id="14-deliverables">14. Deliverables<a class="headerlink" href="#14-deliverables" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Experiment harness</strong> — config-driven, seeded, reusable; one runner for
+   Chapters 1 and 3.</li>
+<li><strong>The running system</strong> — docker-compose stack: event stream, model service,
+   live drift monitor, Prometheus/Grafana, load generator.</li>
+<li><strong>Results</strong> — accuracy-over-time curves; delay/FP/FN trade-off tables; the
+   delay-tax measurements (lemmas 1–3); system cost curves (latency, throughput,
+   memory, divergence).</li>
+<li><strong>The report</strong> — verified literature review, methodology chapter, the four
+   lemmas with proofs, three results chapters, statistical testing.</li>
+<li><strong>Repo hygiene</strong> — README, pinned versions, seed policy, one-command
+   reproduction.</li>
+<li><strong>Demo</strong> — a live drift-and-recovery dashboard, as a viva prop.</li>
+</ol>
+<hr/>
+<h2 id="15-risks-and-fallbacks">15. Risks and fallbacks<a class="headerlink" href="#15-risks-and-fallbacks" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hybrid does not beat naive baselines</td>
+<td>Complete, publishable negative result; lemmas 1–3 still hold and are the contribution</td>
+</tr>
+<tr>
+<td>A lemma's proof does not cleanly go through</td>
+<td>Degrade to an empirical claim + simulation study; report honestly</td>
+</tr>
+<tr>
+<td>System chapter overruns</td>
+<td>Shrink Phase 3; Chapter 2 remains a complete chapter</td>
+</tr>
+<tr>
+<td>Elec2 results contested</td>
+<td>Pre-empt with no-change baseline + Kappa+ + exact preprocessing statement</td>
+</tr>
+<tr>
+<td>Scope creep (the real killer)</td>
+<td>§11 guards; anything new must pass "which research question does this serve?"</td>
+</tr>
+<tr>
+<td>Teacher requires novelty beyond the hybrid</td>
+<td>The hybrid <em>is</em> the novelty; if novelty is mandatory, its weight increases, not the project's size</td>
+</tr>
+</tbody>
+</table>
+<p>Every chapter has a survivable failure mode. The project cannot fail as a whole
+unless it is abandoned — and the safeguards above exist to prevent exactly that.</p>
+<hr/>
+<p><em>This synopsis is self-contained. A more detailed working document
+(<code>idea/scope.md</code>) tracks open decisions, the full literature landscape, and
+implementation notes.</em></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

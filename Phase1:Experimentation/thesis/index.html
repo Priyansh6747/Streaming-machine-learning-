@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Phase1%3AExperimentation/thesis/" rel="canonical"/>
+<link href="../exp02-seed-sweep-sea/" rel="prev"/>
+<link href="../streaming-vs-batch-metrics/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Thesis: beating batch on reactivity metrics - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#thesis-how-streaming-models-beat-batch-models-and-on-what">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Thesis: beating batch on reactivity metrics
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-idea">
+<span class="md-ellipsis">
+      
+        1. The idea
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-setting-and-definitions">
+<span class="md-ellipsis">
+      
+        2. Setting and definitions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-mechanism">
+<span class="md-ellipsis">
+      
+        3. The mechanism
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-facts-it-is-based-on-with-sources">
+<span class="md-ellipsis">
+      
+        4. Facts it is based on (with sources)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-expected-events-experiment-timeline">
+<span class="md-ellipsis">
+      
+        5. Expected events (experiment timeline)
+      
+    </span>
+</a>
+<nav aria-label="5. Expected events (experiment timeline)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-synthetic-streams-ground-truth-drift-sea-agrawal-hyperplane-randomrbf-stagger-led">
+<span class="md-ellipsis">
+      
+        5a. Synthetic streams (ground-truth drift: SEA, Agrawal, Hyperplane, RandomRBF, STAGGER, LED)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-real-streams-elec2-phishing-covertype-airlines-creditcard">
+<span class="md-ellipsis">
+      
+        5b. Real streams (Elec2, Phishing, Covertype, Airlines, CreditCard)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-expected-results">
+<span class="md-ellipsis">
+      
+        6. Expected results
+      
+    </span>
+</a>
+<nav aria-label="6. Expected results" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6a-the-picture-we-expect-rolling-kappa-over-time">
+<span class="md-ellipsis">
+      
+        6a. The picture we expect: rolling Kappa over time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6b-illustrative-recovery-time-numbers-one-drift-synthetic-stream">
+<span class="md-ellipsis">
+      
+        6b. Illustrative recovery-time numbers (one drift, synthetic stream)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6c-detector-metrics-synthetic-ground-truth">
+<span class="md-ellipsis">
+      
+        6c. Detector metrics (synthetic, ground-truth)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6d-resource-metrics-measured-structural-expectations">
+<span class="md-ellipsis">
+      
+        6d. Resource metrics (measured; structural expectations)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6e-the-real-data-win-card-expected-direction-per-claim">
+<span class="md-ellipsis">
+      
+        6e. The real-data win card (expected direction per claim)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6f-what-would-falsify-the-thesis">
+<span class="md-ellipsis">
+      
+        6f. What would falsify the thesis
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-protocol-and-statistics">
+<span class="md-ellipsis">
+      
+        7. Protocol and statistics
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-sources">
+<span class="md-ellipsis">
+      
+        8. Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-idea">
+<span class="md-ellipsis">
+      
+        1. The idea
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-setting-and-definitions">
+<span class="md-ellipsis">
+      
+        2. Setting and definitions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-mechanism">
+<span class="md-ellipsis">
+      
+        3. The mechanism
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-facts-it-is-based-on-with-sources">
+<span class="md-ellipsis">
+      
+        4. Facts it is based on (with sources)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-expected-events-experiment-timeline">
+<span class="md-ellipsis">
+      
+        5. Expected events (experiment timeline)
+      
+    </span>
+</a>
+<nav aria-label="5. Expected events (experiment timeline)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-synthetic-streams-ground-truth-drift-sea-agrawal-hyperplane-randomrbf-stagger-led">
+<span class="md-ellipsis">
+      
+        5a. Synthetic streams (ground-truth drift: SEA, Agrawal, Hyperplane, RandomRBF, STAGGER, LED)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-real-streams-elec2-phishing-covertype-airlines-creditcard">
+<span class="md-ellipsis">
+      
+        5b. Real streams (Elec2, Phishing, Covertype, Airlines, CreditCard)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-expected-results">
+<span class="md-ellipsis">
+      
+        6. Expected results
+      
+    </span>
+</a>
+<nav aria-label="6. Expected results" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6a-the-picture-we-expect-rolling-kappa-over-time">
+<span class="md-ellipsis">
+      
+        6a. The picture we expect: rolling Kappa over time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6b-illustrative-recovery-time-numbers-one-drift-synthetic-stream">
+<span class="md-ellipsis">
+      
+        6b. Illustrative recovery-time numbers (one drift, synthetic stream)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6c-detector-metrics-synthetic-ground-truth">
+<span class="md-ellipsis">
+      
+        6c. Detector metrics (synthetic, ground-truth)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6d-resource-metrics-measured-structural-expectations">
+<span class="md-ellipsis">
+      
+        6d. Resource metrics (measured; structural expectations)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6e-the-real-data-win-card-expected-direction-per-claim">
+<span class="md-ellipsis">
+      
+        6e. The real-data win card (expected direction per claim)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6f-what-would-falsify-the-thesis">
+<span class="md-ellipsis">
+      
+        6f. What would falsify the thesis
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-protocol-and-statistics">
+<span class="md-ellipsis">
+      
+        7. Protocol and statistics
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-sources">
+<span class="md-ellipsis">
+      
+        8. Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Thesis: beating batch on reactivity metrics.pdf" href="../../Phase1:Experimentation/thesis/index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="thesis-how-streaming-models-beat-batch-models-and-on-what">Thesis — How streaming models beat batch models, and on what<a class="headerlink" href="#thesis-how-streaming-models-beat-batch-models-and-on-what" title="Permanent link">¶</a></h1>
+<p><strong>Purpose:</strong> The argument behind the teacher's plan — <em>"take some models that are not
+streaming and beat them on real metrics."</em> This page states the idea, the established
+facts it rests on (with sources), the expected course of an experiment, and the
+results we expect to see. Everything marked <strong>illustrative</strong> is a pre-registered
+expectation, to be replaced by measured numbers from the Ch1 run.</p>
+<p><strong>Status:</strong> Thesis expanded (idea → facts → expected events → expected results).
+Derivations and estimator definitions to follow in <code>calculation.md</code>.</p>
+<p><strong>Formatting note:</strong> math is written in Unicode (τ, κ₀, Δκ, ≈, ≥) so it renders
+identically in Obsidian, GitHub, and the mkdocs site — no LaTeX pipeline required.</p>
+<hr/>
+<h2 id="1-the-idea">1. The idea<a class="headerlink" href="#1-the-idea" title="Permanent link">¶</a></h2>
+<blockquote>
+<p>On a drifting, unbounded, label-scarce stream, a streaming model with a drift
+detector returns to pre-drift performance within a bounded number of samples of a
+concept change, and a batch model does not — because batch models update on a
+<strong>clock</strong>, while streaming models update on <strong>evidence</strong>.</p>
+</blockquote>
+<p>Three scope clauses make the claim precise rather than grandiose:</p>
+<ol>
+<li><strong>"Beat" is per-metric, never global.</strong> The claim is about the <em>temporal
+   reactivity</em> family — recovery time, detection delay, performance between
+   retrains, memory, label efficiency. It is explicitly <strong>not</strong> about raw mean
+   accuracy over the whole stream, where a properly tuned, frequently retrained
+   batch model can win (Fact 7 below).</li>
+<li><strong>The comparison is fair.</strong> Batch baselines get a warm-up window, get retrained,
+   and see the same data in the same order, evaluated under the same prequential
+   protocol. The asymmetry is <em>structural</em>: a batch model's update schedule does not
+   depend on what the data is doing.</li>
+<li><strong>The claim is falsifiable.</strong> Section 6 lists the observable outcomes that would
+   sink it. If streaming's recovery time is not bounded and smaller than a sane
+   retrain interval, the thesis is wrong.</li>
+</ol>
+<hr/>
+<h2 id="2-setting-and-definitions">2. Setting and definitions<a class="headerlink" href="#2-setting-and-definitions" title="Permanent link">¶</a></h2>
+<p>Let a stream arrive one sample at a time, and let a concept drift occur at time τ,
+after which the error rate of every model trained on the old concept rises by Δe.
+Define:</p>
+<ul>
+<li><strong>d — detection delay:</strong> samples from τ until the drift detector alarms.</li>
+<li><strong>a — adaptation time:</strong> samples from the alarm until the model's rolling
+  performance returns to its pre-drift level.</li>
+<li><strong>r_next — the next scheduled retrain</strong> of a clock-driven batch model (possibly ∞,
+  for a model trained once and never updated).</li>
+<li><strong>k — the retrain interval</strong> of a scheduled batch model.</li>
+<li><strong>w — the window</strong> of the rolling metric (e.g. w = 1000 samples).</li>
+<li><strong>W — the tolerance window:</strong> an alarm within W samples of a true drift counts as a
+  detection with delay; an alarm outside any window counts as a false positive. W is
+  chosen explicitly and justified, per <code>notes/04-evaluation.md</code>.</li>
+</ul>
+<p>The <strong>recovery time</strong> of a model is the number of samples from τ until its rolling
+performance is back to its pre-drift level.</p>
+<hr/>
+<h2 id="3-the-mechanism">3. The mechanism<a class="headerlink" href="#3-the-mechanism" title="Permanent link">¶</a></h2>
+<p>All models are equally good before τ; the difference is what happens after.</p>
+<ul>
+<li><strong>Frozen batch</strong> (train once, deploy, never update): error rises at τ and stays
+  elevated until an <em>external</em> decision to retrain. Recovery time is undefined — the
+  model has no mechanism that reacts to data.</li>
+<li><strong>Scheduled batch</strong> (refit every k samples, no detector): error rises at τ, but the
+  model only watches its clock. If the last retrain was at τ − 1, it stays wrong for
+  almost k more samples; on average it is wrong k/2 samples too long. Recovery time
+  is r_next − τ — luck of phase.</li>
+<li><strong>Streaming + drift detector</strong>: the detector watches the error stream, alarms at
+  τ + d, adaptation starts immediately, and rolling performance is back to baseline
+  at τ + d + a. Recovery time is d + a — bounded and data-driven.</li>
+</ul>
+<p>The damage a drift causes is the area under the excess-error curve:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Streaming damage       ≈ (d + a) × Δe
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>Scheduled-batch damage ≈ (r_next − τ) × Δe
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>Frozen-batch damage    = unbounded (never recovers on its own)
+</code></pre></div>
+<p>Streaming wins whenever d + a &lt; r_next − τ — the generic case, since d + a is
+typically tens to low hundreds of samples while r_next − τ spans the whole retrain
+interval. <strong>That factor, (r_next − τ) / (d + a), is the quantitative content of the
+project.</strong></p>
+<hr/>
+<h2 id="4-facts-it-is-based-on-with-sources">4. Facts it is based on (with sources)<a class="headerlink" href="#4-facts-it-is-based-on-with-sources" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fact</th>
+<th>Evidence</th>
+<th>Source (verified in the vault)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td>Test-then-train prequential evaluation is the accepted streaming protocol; every sample scores <em>before</em> it trains.</td>
+<td>Batch train/test splits leak future information on temporal data; each sample is used for testing, then training.</td>
+<td>Gama, Sebastião &amp; Rodrigues (2013), <em>Machine Learning</em> 90:317–346 — <code>notes/04-evaluation.md</code></td>
+</tr>
+<tr>
+<td>F2</td>
+<td>Drift is detectable online with bounded delay.</td>
+<td>ADWIN adaptively sizes a window and alarms on significant mean change; DDM tracks error-rate bounds (p ± s: warn at p + 2s, alarm at p + 3s).</td>
+<td>Bifet &amp; Gavaldà (2009), IDA; Gama et al. (2004), DDM — <code>notes/02-concept-drift.md</code></td>
+</tr>
+<tr>
+<td>F3</td>
+<td>Adaptive streaming learners <em>recover</em> after drift.</td>
+<td>ARF: adaptive operators + resampling for abrupt, gradual, recurring drift; HAT: ADWIN per tree node.</td>
+<td>Gomes et al. (2017), <em>Machine Learning</em> 106:1469–1495; Bifet &amp; Gavaldà (2009) — <code>papers/</code></td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Adaptive streaming beats static baselines on real drifting, imbalanced data — with numbers.</td>
+<td>ROSE: <strong>Kappa 63.65 vs next-best 57.85</strong>, 24 real imbalanced datasets, 30 ensembles compared.</td>
+<td>Cano &amp; Krawczyk (2022), <em>Machine Learning</em> 111:2561–2599 — <code>papers/cano-krawczyk-2022-rose.md</code></td>
+</tr>
+<tr>
+<td>F5</td>
+<td>Detector quality is a three-way trade-off (delay / false alarms / misses); no detector wins all three.</td>
+<td>KDD '26 framework: 14 detectors × 7 real datasets; defines F1-detection score and normalized detection time.</td>
+<td>Cerqueira et al. (2026), KDD '26, DOI 10.1145/3770855.3819070 — <code>papers/kdd2026-drift-benchmark.md</code></td>
+</tr>
+<tr>
+<td>F6</td>
+<td>Label delay/scarcity starves batch retraining; streaming keeps working.</td>
+<td>STUDD: best label efficiency among non-baseline methods on 19 streams, MDR ≈ 19%. A 10,000-sample label delay shifts detections by ~10,000 samples and pins prequential accuracy below 50%. Delayed labels raise user exposure ~50%, cut detection up to 75%.</td>
+<td>Cerqueira et al. (2023), <em>Machine Learning</em> 112:4351–4378; Gomes et al. (2022), ACM Comput. Surveys 55(4):75; Botacin &amp; Gomes (2024), <em>Computers &amp; Security</em> 147 — <code>papers/</code>, <code>research/02-delayed-labels.md</code></td>
+</tr>
+<tr>
+<td>F7</td>
+<td><strong>Counter-evidence:</strong> oracle-tuned, frequently retrained batch can beat streaming under delay + rare classes.</td>
+<td>No-delay benchmark: retrained XGBoost AUC-ROC <strong>92.81</strong> vs ARF <strong>91.02</strong>. Delayed-label fraud data: XGBoost AUCPR <strong>23.41</strong> vs ARF <strong>14.23</strong>. ARF ~<strong>2.2×</strong> slower.</td>
+<td>Amekoe et al. (2024), arXiv:2409.10111 — <code>streaming-vs-batch-metrics.md</code> §3</td>
+</tr>
+<tr>
+<td>F8</td>
+<td>Comparing many learners across many streams needs Friedman + Nemenyi; single runs are noise.</td>
+<td>≥10 seeds, mean ± SD, critical-difference diagrams; Wilcoxon signed-rank for pairs.</td>
+<td>Demšar (2006), <em>JMLR</em> 7:1–30 — <code>notes/04-evaluation.md</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>What follows from these facts.</strong> F2 + F3 give streaming a <em>bounded</em> reaction time
+d + a. F4 is literature precedent that adaptive models beat non-adaptive ones on
+exactly the kind of real data we plan to use. F6 gives the label-scarcity win. F7 is
+the fence: it defines where we must <em>not</em> claim victory, and it is why the Delay Tax
+(label delay) is the project's open problem rather than a solved one.</p>
+<hr/>
+<h2 id="5-expected-events-experiment-timeline">5. Expected events (experiment timeline)<a class="headerlink" href="#5-expected-events-experiment-timeline" title="Permanent link">¶</a></h2>
+<h3 id="5a-synthetic-streams-ground-truth-drift-sea-agrawal-hyperplane-randomrbf-stagger-led">5a. Synthetic streams (ground-truth drift: SEA, Agrawal, Hyperplane, RandomRBF, STAGGER, LED)<a class="headerlink" href="#5a-synthetic-streams-ground-truth-drift-sea-agrawal-hyperplane-randomrbf-stagger-led" title="Permanent link">¶</a></h3>
+<p>A single run (e.g. 100,000 samples, ≥10 seeds) is expected to produce this event
+sequence; each stage records specific variables:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Event</th>
+<th>What happens</th>
+<th>What we record</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Warm-up</td>
+<td>First 20–30% of the stream trains all models; no evaluation</td>
+<td>(excluded)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Steady state</td>
+<td>Rolling Kappa of adaptive models plateaus near its ceiling</td>
+<td>baseline level κ₀ (mean over the w samples before drift)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Drift onset at τ</td>
+<td>The generating concept changes; all models' rolling Kappa starts to dip</td>
+<td>τ is known by construction</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Detector alarm</td>
+<td>Streaming detector fires at τ + d; batch models are silent</td>
+<td>d; whether the alarm falls inside tolerance window W</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Adaptation</td>
+<td>Streaming model resets/adapts; rolling Kappa bottoms out, then climbs</td>
+<td>dip depth; recovery slope</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Recovery</td>
+<td>Rolling Kappa re-enters the κ₀ band and stays</td>
+<td>recovery time d + a</td>
+</tr>
+<tr>
+<td>7</td>
+<td>(batch) next retrain</td>
+<td>Scheduled batch refits at r_next, recovering only then; frozen never does</td>
+<td>r_next − τ</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Repeat</td>
+<td>Next drift at the next pre-set position</td>
+<td>per-drift rows in the summary table</td>
+</tr>
+</tbody>
+</table>
+<p>Expected detector behaviour on <em>abrupt</em> synthetic drift (literature-anchored, to be
+measured): ADWIN alarms within tens of samples, DDM within low hundreds. On
+<em>gradual</em> drift both slow down — and that slowdown is itself a result (F5's
+trade-off), not a bug.</p>
+<h3 id="5b-real-streams-elec2-phishing-covertype-airlines-creditcard">5b. Real streams (Elec2, Phishing, Covertype, Airlines, CreditCard)<a class="headerlink" href="#5b-real-streams-elec2-phishing-covertype-airlines-creditcard" title="Permanent link">¶</a></h3>
+<p>No ground-truth drift points exist, so the event model changes:</p>
+<ul>
+<li>Drift is <em>inferred</em> from rolling-metric dips and detector alarms; there is no known
+  τ to measure delay against.</li>
+<li>Comparison targets <strong>post-dip behaviour</strong>: dip depth, recovery slope, and the
+  fraction of the post-drift window each model spends below its own baseline.</li>
+<li>Because Elec2's Kappa+ is known to collapse (protocol caveat), the headline on
+  real data is rolling Cohen Kappa + AUC-PR, with Elec2 secondary.</li>
+</ul>
+<hr/>
+<h2 id="6-expected-results">6. Expected results<a class="headerlink" href="#6-expected-results" title="Permanent link">¶</a></h2>
+<blockquote>
+<p>Everything below is <strong>illustrative and pre-registered</strong> — plausible values in the
+ranges the literature (F1–F7) supports, to be confirmed or refuted by the Ch1 run.
+No number here is a measured result.</p>
+</blockquote>
+<h3 id="6a-the-picture-we-expect-rolling-kappa-over-time">6a. The picture we expect: rolling Kappa over time<a class="headerlink" href="#6a-the-picture-we-expect-rolling-kappa-over-time" title="Permanent link">¶</a></h3>
+<p>Schematic (illustrative, not to scale) of one synthetic stream with one drift at
+τ = 25,000, rolling window w = 1,000:</p>
+<p><img alt="Expected recovery shapes — streaming vs scheduled batch vs frozen" src="../figures/thesis-recovery-schematic.png"/></p>
+<p><em>Figure 1 — the three curves are the whole thesis in one picture: a shallow, short
+dip that self-heals (streaming, blue); a dip that heals only on the next retrain
+tick (scheduled batch, orange); a permanent step down (frozen, red). Shaded regions
+are the damage areas each model pays after the drift.</em></p>
+<h3 id="6b-illustrative-recovery-time-numbers-one-drift-synthetic-stream">6b. Illustrative recovery-time numbers (one drift, synthetic stream)<a class="headerlink" href="#6b-illustrative-recovery-time-numbers-one-drift-synthetic-stream" title="Permanent link">¶</a></h3>
+<p>Baseline rolling Kappa κ₀ ≈ 0.85; dip to ≈ 0.5; means over ≥10 seeds
+(<strong>illustrative, not measured</strong>):</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>d (delay)</th>
+<th>Recovery time</th>
+<th>Rolling Kappa at τ + 1000</th>
+<th>Damage area (samples × Δκ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HAT + ADWIN</td>
+<td>~40</td>
+<td>~250</td>
+<td>~0.83</td>
+<td>~50</td>
+</tr>
+<tr>
+<td>Leveraging Bagging + DDM</td>
+<td>~100</td>
+<td>~350</td>
+<td>~0.80</td>
+<td>~90</td>
+</tr>
+<tr>
+<td>Scheduled XGBoost (k = 5000)</td>
+<td>—</td>
+<td>~2,400 (phase-dependent)</td>
+<td>~0.62</td>
+<td>~900</td>
+</tr>
+<tr>
+<td>Frozen RF (warm-up 20%)</td>
+<td>—</td>
+<td>never</td>
+<td>~0.45</td>
+<td>unbounded</td>
+</tr>
+</tbody>
+</table>
+<p>The decisive column is <strong>damage area</strong>: streaming pays ~50–100, scheduled batch pays
+~an order of magnitude more, frozen pays forever. Note the scheduled model's
+recovery time is <em>not</em> a property of the model — rerun with different seed phases
+and it scatters uniformly over [0, k] (pure phase noise, which the ≥10-seed protocol
+exposes).</p>
+<h3 id="6c-detector-metrics-synthetic-ground-truth">6c. Detector metrics (synthetic, ground-truth)<a class="headerlink" href="#6c-detector-metrics-synthetic-ground-truth" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th>Expected delay on abrupt drift</th>
+<th>Expected on gradual drift</th>
+<th>Trade-off to watch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADWIN</td>
+<td>tens of samples</td>
+<td>hundreds–thousands</td>
+<td>fewer false alarms, slower on gradual</td>
+</tr>
+<tr>
+<td>DDM</td>
+<td>low hundreds</td>
+<td>weak (assumes improving error)</td>
+<td>fast on abrupt, false alarms on noise</td>
+</tr>
+<tr>
+<td>Page-Hinkley</td>
+<td>tens–hundreds</td>
+<td>moderate</td>
+<td>threshold-sensitive</td>
+</tr>
+</tbody>
+</table>
+<p>Expectation, not a bug: <strong>no detector wins delay, false alarms and misses
+simultaneously</strong> (F5). The Ch1 contribution is reporting the trade-off with real
+numbers and pricing it in <em>damage area</em> — not claiming a magic detector.</p>
+<h3 id="6d-resource-metrics-measured-structural-expectations">6d. Resource metrics (measured; structural expectations)<a class="headerlink" href="#6d-resource-metrics-measured-structural-expectations" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Streaming (expectation)</th>
+<th>Batch (expectation)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory</td>
+<td>fixed by model size; flat vs stream length</td>
+<td>frozen: fixed; scheduled: grows with stored window</td>
+</tr>
+<tr>
+<td>Passes over data</td>
+<td>1</td>
+<td>≥1 per refit (scheduled ≈ stream/k passes)</td>
+</tr>
+<tr>
+<td>Throughput</td>
+<td>bounded per-sample cost (ARF the expensive one)</td>
+<td>refit bursts, idle between</td>
+</tr>
+</tbody>
+</table>
+<p>Honest losses we expect to report: streaming per-sample cost can exceed batch
+amortised cost on stationary stretches (ARF ~2.2× per F7); scheduled batch may match
+streaming rolling accuracy <em>when no drift occurs</em>. The advantage is conditional on
+change — and we will say so.</p>
+<h3 id="6e-the-real-data-win-card-expected-direction-per-claim">6e. The real-data win card (expected direction per claim)<a class="headerlink" href="#6e-the-real-data-win-card-expected-direction-per-claim" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Claim we expect to defend</th>
+<th>Primary metric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phishing, Airlines</td>
+<td>streaming rolling Kappa ≥ frozen RF/XGBoost on post-drift windows</td>
+<td>rolling Kappa</td>
+</tr>
+<tr>
+<td>Covertype</td>
+<td>streaming ≥ frozen; scheduled phase noise visible</td>
+<td>rolling Kappa, damage area</td>
+</tr>
+<tr>
+<td>CreditCard fraud</td>
+<td>streaming AUC-PR ≥ frozen; tuned batch reported as upper bound</td>
+<td>AUC-PR (imbalanced; accuracy meaningless)</td>
+</tr>
+<tr>
+<td>Elec2</td>
+<td>secondary; rolling Kappa + AUC-PR only (Kappa+ collapse caveat)</td>
+<td>rolling Kappa</td>
+</tr>
+<tr>
+<td>All datasets</td>
+<td>Friedman + Nemenyi across datasets; Wilcoxon pairwise; effect sizes</td>
+<td>critical-difference diagram</td>
+</tr>
+</tbody>
+</table>
+<h3 id="6f-what-would-falsify-the-thesis">6f. What would falsify the thesis<a class="headerlink" href="#6f-what-would-falsify-the-thesis" title="Permanent link">¶</a></h3>
+<ol>
+<li>Streaming recovery time comparable to or worse than a sane retrain interval
+   (d + a ≥ r_next − τ on average) on synthetic drifts.</li>
+<li>Frozen batch's rolling Kappa <em>not</em> dropping at drift — i.e. no real drift, a
+   dataset problem rather than a model win.</li>
+<li>No significant difference after Friedman/Nemenyi/Wilcoxon (α = 0.05, ≥10 seeds).</li>
+<li>Streaming's resource cost so high that the reactivity win is not worth it
+   (measured and reported, not hidden).</li>
+<li>On the no-drift control stream, streaming <em>loses</em> to scheduled batch on rolling
+   accuracy — expected, but it must be shown and explained, not swept under the rug.</li>
+</ol>
+<hr/>
+<h2 id="7-protocol-and-statistics">7. Protocol and statistics<a class="headerlink" href="#7-protocol-and-statistics" title="Permanent link">¶</a></h2>
+<p>Full experimental protocol (models, datasets, seeds, baselines): see
+<a href="../streaming-vs-batch-metrics/"><code>streaming-vs-batch-metrics.md</code></a>. Statistical design
+per F8: ≥10 seeds on synthetic; bootstrap windows on real ordered streams; Friedman
++ Nemenyi across datasets; Wilcoxon signed-rank pairwise; effect sizes. One claim
+per metric, each with the dataset and number behind it — the win card (§6e) is the
+deliverable that gets written into Ch1.</p>
+<hr/>
+<h2 id="8-sources">8. Sources<a class="headerlink" href="#8-sources" title="Permanent link">¶</a></h2>
+<ul>
+<li>Gama, J., Sebastião, R., &amp; Rodrigues, P. P. (2013). On evaluating stream learning
+  algorithms. <em>Machine Learning</em> 90:317–346.</li>
+<li>Gama, J., Medas, P., Castillo, G., &amp; Rodrigues, P. (2004). Learning with drift
+  detection (DDM). SBIA '04.</li>
+<li>Bifet, A., &amp; Gavaldà, R. (2009). Learning from time-changing data with adaptive
+  windowing (HAT/ADWIN). IDA.</li>
+<li>Gomes, H. M., et al. (2017). Adaptive random forests for evolving data stream
+  classification (ARF). <em>Machine Learning</em> 106:1469–1495.</li>
+<li>Cano, A., &amp; Krawczyk, B. (2022). ROSE: robust online self-adjusting ensembles.
+  <em>Machine Learning</em> 111:2561–2599.</li>
+<li>Cerqueira, V., et al. (2026). A framework for evaluating and benchmarking concept
+  drift detection methods. KDD '26. DOI 10.1145/3770855.3819070.</li>
+<li>Cerqueira, V., Gomes, H. M., Bifet, A., &amp; Torgo, L. (2023). STUDD. <em>Machine
+  Learning</em> 112:4351–4378.</li>
+<li>Gomes, H. M., et al. (2022). A survey on semi-supervised learning for delayed
+  partially labelled data streams. <em>ACM Computing Surveys</em> 55(4):75.</li>
+<li>Botacin, M., &amp; Gomes, H. (2024). Towards more realistic evaluations: label delays
+  in malware detection pipelines. <em>Computers &amp; Security</em> 147.</li>
+<li>Amekoe, K. M., et al. (2024). Evaluating the efficacy of instance incremental vs.
+  batch learning in delayed label environments. arXiv:2409.10111.</li>
+<li>Demšar, J. (2006). Statistical comparisons of classifiers over multiple data
+  sets. <em>JMLR</em> 7:1–30.</li>
+</ul>
+<p>Per-paper notes live in
+<a href="../../Phase0%3AResearch/literature_review/"><code>Phase0:Research/literature_review/index.md</code></a>.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

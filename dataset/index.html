@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/dataset/" rel="canonical"/>
+<link href="../struct/" rel="prev"/>
+<link href="../ML/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Datasets - Major Project — Streaming ML</title>
+<link href="../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#datasets-what-the-project-actually-runs-on">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href=".." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Datasets
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-at-a-glance">
+<span class="md-ellipsis">
+      
+        1. At a glance
+      
+    </span>
+</a>
+<nav aria-label="1. At a glance" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-real-datasets">
+<span class="md-ellipsis">
+      
+        1.1 Real datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-synthetic-streams">
+<span class="md-ellipsis">
+      
+        1.2 Synthetic streams
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-shared-synthetic-protocol">
+<span class="md-ellipsis">
+      
+        2. The shared synthetic protocol
+      
+    </span>
+</a>
+<nav aria-label="2. The shared synthetic protocol" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-sea">
+<span class="md-ellipsis">
+      
+        2.1 SEA
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-hyperplane">
+<span class="md-ellipsis">
+      
+        2.2 Hyperplane
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-randomrbf">
+<span class="md-ellipsis">
+      
+        2.3 RandomRBF
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#24-agrawal">
+<span class="md-ellipsis">
+      
+        2.4 Agrawal
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#25-experiment-specific-differences">
+<span class="md-ellipsis">
+      
+        2.5 Experiment-specific differences
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-real-streams-in-e14-and-e17">
+<span class="md-ellipsis">
+      
+        3. The real streams in E14 and E17
+      
+    </span>
+</a>
+<nav aria-label="3. The real streams in E14 and E17" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-elec2-electricity-market">
+<span class="md-ellipsis">
+      
+        3.1 Elec2 — electricity market
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-phishing-website-classification">
+<span class="md-ellipsis">
+      
+        3.2 Phishing — website classification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-injection-mechanisms">
+<span class="md-ellipsis">
+      
+        3.3 Injection mechanisms
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-kdd26-benchmark-datasets">
+<span class="md-ellipsis">
+      
+        4. The KDD'26 benchmark datasets
+      
+    </span>
+</a>
+<nav aria-label="4. The KDD'26 benchmark datasets" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-shapes-and-class-balances">
+<span class="md-ellipsis">
+      
+        4.1 Shapes and class balances
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-what-is-in-each-dataset">
+<span class="md-ellipsis">
+      
+        4.2 What is in each dataset
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-the-four-injected-drift-types">
+<span class="md-ellipsis">
+      
+        4.3 The four injected drift types
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-protocol-summary">
+<span class="md-ellipsis">
+      
+        4.4 Protocol summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-the-data-does-not-contain">
+<span class="md-ellipsis">
+      
+        5. What the data does not contain
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-where-the-data-lives-and-how-to-rebuild-it">
+<span class="md-ellipsis">
+      
+        6. Where the data lives and how to rebuild it
+      
+    </span>
+</a>
+<nav aria-label="6. Where the data lives and how to rebuild it" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-paths">
+<span class="md-ellipsis">
+      
+        6.1 Paths
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-commands">
+<span class="md-ellipsis">
+      
+        6.2 Commands
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-sources">
+<span class="md-ellipsis">
+      
+        6.3 Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-at-a-glance">
+<span class="md-ellipsis">
+      
+        1. At a glance
+      
+    </span>
+</a>
+<nav aria-label="1. At a glance" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-real-datasets">
+<span class="md-ellipsis">
+      
+        1.1 Real datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-synthetic-streams">
+<span class="md-ellipsis">
+      
+        1.2 Synthetic streams
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-shared-synthetic-protocol">
+<span class="md-ellipsis">
+      
+        2. The shared synthetic protocol
+      
+    </span>
+</a>
+<nav aria-label="2. The shared synthetic protocol" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-sea">
+<span class="md-ellipsis">
+      
+        2.1 SEA
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-hyperplane">
+<span class="md-ellipsis">
+      
+        2.2 Hyperplane
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-randomrbf">
+<span class="md-ellipsis">
+      
+        2.3 RandomRBF
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#24-agrawal">
+<span class="md-ellipsis">
+      
+        2.4 Agrawal
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#25-experiment-specific-differences">
+<span class="md-ellipsis">
+      
+        2.5 Experiment-specific differences
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-real-streams-in-e14-and-e17">
+<span class="md-ellipsis">
+      
+        3. The real streams in E14 and E17
+      
+    </span>
+</a>
+<nav aria-label="3. The real streams in E14 and E17" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-elec2-electricity-market">
+<span class="md-ellipsis">
+      
+        3.1 Elec2 — electricity market
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-phishing-website-classification">
+<span class="md-ellipsis">
+      
+        3.2 Phishing — website classification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-injection-mechanisms">
+<span class="md-ellipsis">
+      
+        3.3 Injection mechanisms
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-kdd26-benchmark-datasets">
+<span class="md-ellipsis">
+      
+        4. The KDD'26 benchmark datasets
+      
+    </span>
+</a>
+<nav aria-label="4. The KDD'26 benchmark datasets" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-shapes-and-class-balances">
+<span class="md-ellipsis">
+      
+        4.1 Shapes and class balances
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-what-is-in-each-dataset">
+<span class="md-ellipsis">
+      
+        4.2 What is in each dataset
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-the-four-injected-drift-types">
+<span class="md-ellipsis">
+      
+        4.3 The four injected drift types
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-protocol-summary">
+<span class="md-ellipsis">
+      
+        4.4 Protocol summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-the-data-does-not-contain">
+<span class="md-ellipsis">
+      
+        5. What the data does not contain
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-where-the-data-lives-and-how-to-rebuild-it">
+<span class="md-ellipsis">
+      
+        6. Where the data lives and how to rebuild it
+      
+    </span>
+</a>
+<nav aria-label="6. Where the data lives and how to rebuild it" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-paths">
+<span class="md-ellipsis">
+      
+        6.1 Paths
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-commands">
+<span class="md-ellipsis">
+      
+        6.2 Commands
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-sources">
+<span class="md-ellipsis">
+      
+        6.3 Sources
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Datasets.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="datasets-what-the-project-actually-runs-on">Datasets — what the project actually runs on<a class="headerlink" href="#datasets-what-the-project-actually-runs-on" title="Permanent link">¶</a></h1>
+<p><strong>What this page is:</strong> a reference for every dataset used in the project — the
+synthetic generators, the River real streams, and the seven KDD'26 benchmark
+sets. Shapes, class balances, feature spaces, drift injection, and the caveats
+are all taken from the experiment configs and the cached artifacts under
+<code>experiments/data/kdd/</code> and <code>experiments/results/</code>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Synthetic configs</strong></td>
+<td><code>experiments/registry/e01_metric_v2.yaml</code>, <code>e02_no_drift.yaml</code>, <code>e03_ladder.yaml</code>, <code>e04_detectors.yaml</code></td>
+</tr>
+<tr>
+<td><strong>Real-stream configs</strong></td>
+<td><code>experiments/registry/e14_real_streams.yaml</code>, <code>e17_real_detector_map.yaml</code></td>
+</tr>
+<tr>
+<td><strong>Benchmark runner</strong></td>
+<td><code>experiments/kdd_bench.py</code>, <code>experiments/kdd_env/</code></td>
+</tr>
+<tr>
+<td><strong>Cached benchmark data</strong></td>
+<td><code>experiments/data/kdd/*.npz</code>, <code>*.csv</code>, <code>usp_ds.zip</code></td>
+</tr>
+<tr>
+<td><strong>Standalone Covtype copy</strong></td>
+<td><code>data/covtypeNorm.arff</code> (99 MB, untracked)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Important:</strong> every real-stream experiment here is <strong>semi-synthetic</strong>. The
+real rows are shuffled per seed to remove the original temporal order, and a
+drift is then <strong>injected at a known position</strong>. The project is measuring
+detector/model response to a known change, not natural drift in the wild.</p>
+</blockquote>
+<hr/>
+<h2 id="1-at-a-glance">1. At a glance<a class="headerlink" href="#1-at-a-glance" title="Permanent link">¶</a></h2>
+<h3 id="11-real-datasets">1.1 Real datasets<a class="headerlink" href="#11-real-datasets" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th style="text-align: right;">Rows</th>
+<th style="text-align: right;">Features</th>
+<th style="text-align: right;">Classes</th>
+<th>Used in</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elec2</strong></td>
+<td style="text-align: right;">45,312</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td>E17, E14</td>
+<td>River <code>Elec2</code>; electricity-market price movement</td>
+</tr>
+<tr>
+<td><strong>Phishing</strong></td>
+<td style="text-align: right;">1,250</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2</td>
+<td>E14</td>
+<td>River <code>Phishing</code>; UCI website-phishing features</td>
+</tr>
+<tr>
+<td><strong>Asfault</strong></td>
+<td style="text-align: right;">8,564</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">6</td>
+<td>KDD'26</td>
+<td>USP DS Repository; severe class imbalance</td>
+</tr>
+<tr>
+<td><strong>Covtype</strong></td>
+<td style="text-align: right;">581,012</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">7</td>
+<td>KDD'26</td>
+<td>CapyMOA <code>CovtypeNorm</code>; capped at 100k per trial</td>
+</tr>
+<tr>
+<td><strong>Electricity</strong></td>
+<td style="text-align: right;">45,311</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td>KDD'26</td>
+<td>CapyMOA <code>Electricity</code>; same schema as Elec2</td>
+</tr>
+<tr>
+<td><strong>GasSensorArray</strong></td>
+<td style="text-align: right;">13,910</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">6</td>
+<td>KDD'26</td>
+<td>USP DS Repository; high-dimensional</td>
+</tr>
+<tr>
+<td><strong>NOAA</strong></td>
+<td style="text-align: right;">18,159</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td>KDD'26</td>
+<td>USP DS Repository; weather records</td>
+</tr>
+<tr>
+<td><strong>Posture</strong></td>
+<td style="text-align: right;">164,858</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+<td>KDD'26</td>
+<td>USP DS Repository; capped at 100k per trial</td>
+</tr>
+<tr>
+<td><strong>Rialto</strong></td>
+<td style="text-align: right;">82,250</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">10</td>
+<td>KDD'26</td>
+<td>USP DS Repository; balanced 10-class</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-synthetic-streams">1.2 Synthetic streams<a class="headerlink" href="#12-synthetic-streams" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Generator</th>
+<th style="text-align: right;">Rows</th>
+<th style="text-align: right;">Features</th>
+<th style="text-align: right;">Classes</th>
+<th>Used in</th>
+<th>Concept change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SEA</strong></td>
+<td style="text-align: right;">60,000</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td>Exp-01, Exp-02, E01–E04</td>
+<td>Decision threshold on <code>x₀ + x₁</code></td>
+</tr>
+<tr>
+<td><strong>Hyperplane</strong></td>
+<td style="text-align: right;">60,000</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td>E02, E03, E04</td>
+<td>Random weight vector rotated</td>
+</tr>
+<tr>
+<td><strong>RandomRBF</strong></td>
+<td style="text-align: right;">60,000</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td>E04</td>
+<td>Centroid set swapped</td>
+</tr>
+<tr>
+<td><strong>Agrawal</strong></td>
+<td style="text-align: right;">60,000</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2</td>
+<td>E04</td>
+<td>Classification function switched</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Dataset scale — rows and feature counts" src="../figures/dataset-overview.png"/></p>
+<p><em>Rows are the available rows before the KDD per-trial 100k cap. Covtype and
+Posture are the two datasets that hit the cap.</em></p>
+<hr/>
+<h2 id="2-the-shared-synthetic-protocol">2. The shared synthetic protocol<a class="headerlink" href="#2-the-shared-synthetic-protocol" title="Permanent link">¶</a></h2>
+<p>All controlled streams use the same skeleton unless a config overrides it.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Length</td>
+<td><strong>60,000</strong> samples</td>
+</tr>
+<tr>
+<td>Warm-up</td>
+<td><strong>12,000</strong> samples (20%)</td>
+</tr>
+<tr>
+<td>Drift position</td>
+<td><strong>τ = 30,000</strong></td>
+</tr>
+<tr>
+<td>Label noise</td>
+<td><strong>10%</strong> (including the no-drift control)</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Prequential: predict → score → learn, every sample</td>
+</tr>
+<tr>
+<td>Drift shapes</td>
+<td>abrupt, gradual, incremental, recurring</td>
+</tr>
+<tr>
+<td>Gradual width</td>
+<td><strong>2,000</strong> samples</td>
+</tr>
+<tr>
+<td>Incremental width</td>
+<td><strong>10,000</strong> samples, 10 steps</td>
+</tr>
+<tr>
+<td>Recurring period</td>
+<td><strong>8,000</strong> samples, 2 episodes</td>
+</tr>
+<tr>
+<td>Detection windows <code>δ_max</code></td>
+<td>abrupt 1,000 · gradual 2,000 · incremental 4,000 · recurring 2,000</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>5 (<code>0–4</code>) for the completed slices; E01 uses 11 (<code>42, 0–9</code>); E03's full plan is 11 (<code>0–10</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How the change is generated.</strong> The feature process is drawn once per stream.
+Each sample is labelled by a mixture of concept A and concept B with a weight
+<code>p(t)</code>:</p>
+<ul>
+<li><strong>Abrupt:</strong> <code>p(t) = 0</code> before τ, <code>1</code> after.</li>
+<li><strong>Gradual:</strong> <code>p(t)</code> ramps linearly from 0 to 1 over the width.</li>
+<li><strong>Incremental:</strong> the same ramp, snapped into 10 discrete steps.</li>
+<li><strong>Recurring:</strong> alternating blocks of concept A and B after τ.</li>
+</ul>
+<p>This mixing design avoids the River generator RNG-replay confound found during
+Exp-02: the feature vectors are not replayed under a new label rule, so the
+frozen model cannot memorise its test chunk.</p>
+<p><img alt="Drift schedules used by the synthetic streams" src="../figures/dataset-drift-shapes.png"/></p>
+<h3 id="21-sea">2.1 SEA<a class="headerlink" href="#21-sea" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Features:</strong> 3 continuous features, <code>x₀, x₁, x₂ ~ U(0, 10)</code>.</li>
+<li><strong>Label rule:</strong> <code>y = 1[x₀ + x₁ &gt; threshold]</code>.</li>
+<li><strong>Concepts:</strong> thresholds <code>8.0, 9.0, 7.0, 9.5</code> for concept variants <code>0–3</code>.</li>
+<li><strong>Used by:</strong> Exp-01/02 and E01/E03 with an abrupt change <code>8.0 → 9.0</code> at τ;
+  E02 is the stationary control; E04 uses all four shapes.</li>
+<li><strong>Why:</strong> the smallest possible drift testbed — two features actually matter,
+  the decision boundary is exact, and the drift is visible in a rolling metric.</li>
+</ul>
+<h3 id="22-hyperplane">2.2 Hyperplane<a class="headerlink" href="#22-hyperplane" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Features:</strong> 10 continuous features, <code>xᵢ ~ U(0, 1)</code>.</li>
+<li><strong>Label rule:</strong> two random weight vectors <code>w_A, w_B</code>; the active weight vector
+  is mixed with <code>p(t)</code>, and <code>y = 1[Σ wᵢxᵢ ≥ 0.5 · Σ wᵢ]</code>.</li>
+<li><strong>Used by:</strong> E02 (stationary control), E03 (abrupt, position jittered), E04.</li>
+<li><strong>Why:</strong> a high-dimensional linear boundary that changes direction rather than
+  threshold — a different failure mode from SEA.</li>
+</ul>
+<h3 id="23-randomrbf">2.3 RandomRBF<a class="headerlink" href="#23-randomrbf" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Features:</strong> 10 continuous features.</li>
+<li><strong>Concepts:</strong> two independently drawn RBF worlds, each with 20 centroids and
+  2 classes; a sample is a centroid plus a Gaussian offset.</li>
+<li><strong>Drift:</strong> the active centroid set is switched with <code>p(t)</code>.</li>
+<li><strong>Used by:</strong> E04.</li>
+<li><strong>Why:</strong> locally clustered classes with overlapping Gaussians — harder for a
+  tree to separate than SEA/Hyperplane.</li>
+</ul>
+<h3 id="24-agrawal">2.4 Agrawal<a class="headerlink" href="#24-agrawal" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Features:</strong> 9 mixed numeric/categorical features (salary, commission, age,
+  elevel, car, …) from River's <code>synth.Agrawal</code>.</li>
+<li><strong>Concept:</strong> one of 10 classification functions; the function is switched with
+  <code>p(t)</code>.</li>
+<li><strong>Used by:</strong> E04.</li>
+<li><strong>Why:</strong> a non-linear, rule-based generator with categorical structure.</li>
+</ul>
+<h3 id="25-experiment-specific-differences">2.5 Experiment-specific differences<a class="headerlink" href="#25-experiment-specific-differences" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Streams</th>
+<th>Difference from the skeleton</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exp-01 / Exp-02</td>
+<td>SEA abrupt only</td>
+<td>Seed 42 + 0–9; legacy metric</td>
+</tr>
+<tr>
+<td>E01</td>
+<td>SEA abrupt only</td>
+<td>11 seeds; clean three-model panel</td>
+</tr>
+<tr>
+<td>E02</td>
+<td>SEA + Hyperplane, <strong>stationary</strong></td>
+<td>No drift; every alarm is a false alarm</td>
+</tr>
+<tr>
+<td>E03</td>
+<td>SEA + Hyperplane, abrupt</td>
+<td>Drift onset jittered by <strong>±7,000</strong> samples per seed to vary the retrain phase</td>
+</tr>
+<tr>
+<td>E04</td>
+<td>SEA, Hyperplane, RandomRBF, Agrawal × 4 shapes</td>
+<td>4 generators × 4 shapes × 2 hosts × raw/EWMA, 5 seeds</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="3-the-real-streams-in-e14-and-e17">3. The real streams in E14 and E17<a class="headerlink" href="#3-the-real-streams-in-e14-and-e17" title="Permanent link">¶</a></h2>
+<p>Both experiments use River datasets, shuffle the rows per seed, then inject a
+known drift. This is the semi-synthetic protocol of the KDD'26 benchmark.</p>
+<h3 id="31-elec2-electricity-market">3.1 Elec2 — electricity market<a class="headerlink" href="#31-elec2-electricity-market" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>River <code>Elec2</code> (remote dataset)</td>
+</tr>
+<tr>
+<td>Rows</td>
+<td><strong>45,312</strong></td>
+</tr>
+<tr>
+<td>Features</td>
+<td><strong>8</strong>: <code>date</code>, <code>day</code>, <code>period</code>, <code>nswprice</code>, <code>nswdemand</code>, <code>vicprice</code>, <code>vicdemand</code>, <code>transfer</code></td>
+</tr>
+<tr>
+<td>Target</td>
+<td>Binary class: electricity price moves up/down</td>
+</tr>
+<tr>
+<td>Class balance</td>
+<td><strong>26,075 / 19,236</strong> in the KDD export (45,311 rows; one row fewer than River's 45,312)</td>
+</tr>
+<tr>
+<td>Used by</td>
+<td><strong>E17</strong> (detectors), <strong>E14</strong> (models)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>E17 configuration.</strong> 45,312 rows; warm-up 9,062; drift at <strong>τ = 22,656</strong>;
+label swap <code>0 → 1</code>; five seeds <code>0–4</code>; four shapes:</p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th style="text-align: right;">Width</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrupt</td>
+<td style="text-align: right;">0</td>
+<td>One-step label swap</td>
+</tr>
+<tr>
+<td>Gradual</td>
+<td style="text-align: right;">2,000</td>
+<td>Swap probability ramps over 2,000 rows</td>
+</tr>
+<tr>
+<td>Incremental</td>
+<td style="text-align: right;">10,000</td>
+<td>10 discrete swap steps</td>
+</tr>
+<tr>
+<td>Recurring</td>
+<td style="text-align: right;">8,000 period, 2 episodes</td>
+<td>Concept A/B alternate after τ</td>
+</tr>
+</tbody>
+</table>
+<p><strong>E14 configuration.</strong> 45,312 rows; warm-up 9,062; drift at <strong>τ = 30,000</strong>;
+abrupt; five seeds; two mechanisms: <code>label_swap</code> (<code>0 → 1</code>) and
+<code>feature_permutation</code> (all feature columns permuted).</p>
+<p><strong>Caveat.</strong> Shuffling removes the original time order, so <code>date</code> and <code>day</code> stay
+in the feature vector as numbers but no longer carry temporal meaning. This is a
+known property of the semi-synthetic protocol, not a modelling mistake.</p>
+<h3 id="32-phishing-website-classification">3.2 Phishing — website classification<a class="headerlink" href="#32-phishing-website-classification" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>River <code>Phishing</code> (bundled file; UCI Website Phishing)</td>
+</tr>
+<tr>
+<td>Rows</td>
+<td><strong>1,250</strong></td>
+</tr>
+<tr>
+<td>Features</td>
+<td><strong>9</strong>: <code>empty_server_form_handler</code>, <code>popup_window</code>, <code>https</code>, <code>request_from_other_domain</code>, <code>anchor_from_other_domain</code>, <code>is_popular</code>, <code>long_url</code>, <code>age_of_domain</code>, <code>ip_in_url</code></td>
+</tr>
+<tr>
+<td>Target</td>
+<td><code>is_phishing</code> (binary)</td>
+</tr>
+<tr>
+<td>Class balance</td>
+<td><strong>702 non-phishing / 548 phishing</strong></td>
+</tr>
+<tr>
+<td>Used by</td>
+<td><strong>E14</strong> only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>E14 configuration.</strong> 1,250 rows; warm-up 250; drift at <strong>τ = 625</strong>; abrupt;
+five seeds; <code>label_swap</code> and <code>feature_permutation</code>.</p>
+<p><strong>Caveat.</strong> Phishing is very small (1,250 rows) and contributes only one drift
+episode per run. It is a second real dataset for external validity, not a
+stand-alone benchmark; E14's aggregate is dominated by Elec2's 45k rows.</p>
+<h3 id="33-injection-mechanisms">3.3 Injection mechanisms<a class="headerlink" href="#33-injection-mechanisms" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>What happens after τ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label_swap</code></td>
+<td>Every label equal to the source class is changed to the target class (with the shape's probability <code>p(t)</code>)</td>
+</tr>
+<tr>
+<td><code>feature_permutation</code></td>
+<td>All feature columns are permuted; labels are untouched</td>
+</tr>
+<tr>
+<td><code>class_prior</code></td>
+<td>A chosen class is dropped with probability 0.75 (KDD only)</td>
+</tr>
+<tr>
+<td><code>feature_filtering</code></td>
+<td>Rows above the pre-onset median of a chosen feature are dropped (KDD only)</td>
+</tr>
+</tbody>
+</table>
+<p>The first two are used in E14/E17; all four are used in the KDD'26
+reproduction. Because the change is injected, the true drift position and the
+end of the transition are known exactly.</p>
+<hr/>
+<h2 id="4-the-kdd26-benchmark-datasets">4. The KDD'26 benchmark datasets<a class="headerlink" href="#4-the-kdd26-benchmark-datasets" title="Permanent link">¶</a></h2>
+<p>The KDD'26 reproduction uses seven real datasets. Five come from the USP DS
+Repository archive; Covtype and Electricity are exported from CapyMOA. Every
+trial shuffles the rows, caps the stream at <strong>100,000 rows</strong>, draws a drift onset
+uniformly from <strong>50–80%</strong> of the stream, and injects one of four drift types.</p>
+<h3 id="41-shapes-and-class-balances">4.1 Shapes and class balances<a class="headerlink" href="#41-shapes-and-class-balances" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th style="text-align: right;">Rows</th>
+<th style="text-align: right;">Features</th>
+<th style="text-align: right;">Classes</th>
+<th>Class counts (label-encoded)</th>
+<th style="text-align: right;"><code>δ_max</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Asfault</strong></td>
+<td style="text-align: right;">8,564</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">6</td>
+<td><code>[2335, 1002, 4761, 273, 1, 192]</code></td>
+<td style="text-align: right;">500</td>
+</tr>
+<tr>
+<td><strong>Covtype</strong></td>
+<td style="text-align: right;">581,012</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">7</td>
+<td><code>[211840, 283301, 35754, 2747, 9493, 17367, 20510]</code></td>
+<td style="text-align: right;">2,500</td>
+</tr>
+<tr>
+<td><strong>Electricity</strong></td>
+<td style="text-align: right;">45,311</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td><code>[26075, 19236]</code></td>
+<td style="text-align: right;">2,500</td>
+</tr>
+<tr>
+<td><strong>GasSensorArray</strong></td>
+<td style="text-align: right;">13,910</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">6</td>
+<td><code>[2565, 2926, 1641, 1936, 3009, 1833]</code></td>
+<td style="text-align: right;">1,500</td>
+</tr>
+<tr>
+<td><strong>NOAA</strong></td>
+<td style="text-align: right;">18,159</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td><code>[12461, 5698]</code></td>
+<td style="text-align: right;">1,500</td>
+</tr>
+<tr>
+<td><strong>Posture</strong></td>
+<td style="text-align: right;">164,858</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+<td><code>[2973, 54480, 6168, 5210, 27244, 1706, 11779, 18359, 1381, 2848, 32710]</code></td>
+<td style="text-align: right;">2,500</td>
+</tr>
+<tr>
+<td><strong>Rialto</strong></td>
+<td style="text-align: right;">82,250</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">10</td>
+<td><code>[8225, 8225, 8225, 8225, 8225, 8225, 8225, 8225, 8225, 8225]</code></td>
+<td style="text-align: right;">2,500</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="KDD'26 class balance" src="../figures/dataset-class-balance.png"/></p>
+<p><em>Shares are computed on the full cached data, before the per-trial 100k cap.
+The encoded labels are arbitrary; the colours are only to show balance.</em></p>
+<p><strong>Effective rows per trial.</strong> Asfault, Electricity, GasSensorArray, NOAA and
+Rialto are used in full. <strong>Covtype</strong> is truncated from 581,012 to <strong>100,000</strong>
+and <strong>Posture</strong> from 164,858 to <strong>100,000</strong>. A 50-trial run therefore sees many
+different 100k slices of those two datasets, not the full records.</p>
+<h3 id="42-what-is-in-each-dataset">4.2 What is in each dataset<a class="headerlink" href="#42-what-is-in-each-dataset" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Feature composition</th>
+<th>Things to know</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Asfault</strong></td>
+<td>64 numeric features; original column names are not preserved by the CSV loader (<code>F1…F64</code>)</td>
+<td>Class 4 has <strong>1 example</strong>; class 2 dominates (4,761 of 8,564). Any per-class metric is unstable.</td>
+</tr>
+<tr>
+<td><strong>Covtype</strong></td>
+<td>54 features: 10 numeric terrain features, 4 binary wilderness-area flags, 40 binary soil-type flags</td>
+<td>7 forest-cover classes; the standard UCI Covertype schema, normalized.</td>
+</tr>
+<tr>
+<td><strong>Electricity</strong></td>
+<td>8 features, same schema as Elec2 (<code>date, day, period, nswprice, nswdemand, vicprice, vicdemand, transfer</code>)</td>
+<td>Binary; 45,311 rows in the CapyMOA export vs 45,312 in River.</td>
+</tr>
+<tr>
+<td><strong>GasSensorArray</strong></td>
+<td>128 numeric sensor features</td>
+<td>6 gas classes; high-dimensional and correlated; 13,910 rows.</td>
+</tr>
+<tr>
+<td><strong>NOAA</strong></td>
+<td>8 numeric weather features</td>
+<td>Binary; 18,159 rows; the smallest feature set after Posture.</td>
+</tr>
+<tr>
+<td><strong>Posture</strong></td>
+<td><strong>3 features</strong></td>
+<td><strong>11 classes</strong>; 164,858 rows but only 3 features, so the problem is intrinsically hard and the cap to 100k matters.</td>
+</tr>
+<tr>
+<td><strong>Rialto</strong></td>
+<td>27 numeric features</td>
+<td>10 perfectly balanced classes (8,225 each); 82,250 rows.</td>
+</tr>
+</tbody>
+</table>
+<p>The original column names for Asfault, GasSensorArray, NOAA, Posture and Rialto
+are replaced with <code>F1…Fn</code> by <code>experiments/kdd_bench.py</code>; the cached <code>.npz</code> files
+therefore store positional feature names, not semantic ones. The shape and class
+counts above are read directly from those <code>.npz</code> files.</p>
+<h3 id="43-the-four-injected-drift-types">4.3 The four injected drift types<a class="headerlink" href="#43-the-four-injected-drift-types" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Drift type</th>
+<th>Mechanism</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>class_prior</code></td>
+<td>After onset, each row of the selected class is dropped with probability <strong>0.75</strong></td>
+<td>The class distribution shifts; the stream gets shorter</td>
+</tr>
+<tr>
+<td><code>label_swap</code></td>
+<td>Every row of the selected class is relabelled to another class</td>
+<td><code>P(y|X)</code> changes; <code>P(X)</code> is unchanged</td>
+</tr>
+<tr>
+<td><code>feature_permutation</code></td>
+<td>All feature columns are permuted</td>
+<td>The feature→label relationship is destroyed</td>
+</tr>
+<tr>
+<td><code>feature_filtering</code></td>
+<td>Rows whose chosen feature exceeds its <strong>pre-onset median</strong> are dropped</td>
+<td>The conditional feature distribution changes; the stream gets shorter</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Transitions.</strong> An abrupt drift applies the mechanism at the onset. A gradual
+drift applies it with probability <code>p(t)</code> that ramps from 0 to 1 over
+<code>width = δ_max</code>. The onset is drawn uniformly from the middle 50–80% of the
+stream, so the drift never falls in the first half or the last fifth.</p>
+<h3 id="44-protocol-summary">4.4 Protocol summary<a class="headerlink" href="#44-protocol-summary" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datasets</td>
+<td>7 (Asfault, Covtype, Electricity, GasSensorArray, NOAA, Posture, Rialto)</td>
+</tr>
+<tr>
+<td>Drift types</td>
+<td>4 (<code>class_prior</code>, <code>label_swap</code>, <code>feature_permutation</code>, <code>feature_filtering</code>)</td>
+</tr>
+<tr>
+<td>Transitions</td>
+<td>2 (abrupt, gradual)</td>
+</tr>
+<tr>
+<td>Trials</td>
+<td><strong>50 per dataset × drift type × transition</strong></td>
+</tr>
+<tr>
+<td>Row cap</td>
+<td><strong>100,000</strong> per trial</td>
+</tr>
+<tr>
+<td>Shuffle</td>
+<td>Every trial independently</td>
+</tr>
+<tr>
+<td>Headline detectors</td>
+<td>ADWIN, DDM, HDDM-A, HDDM-W, <strong>SEED</strong>, <strong>STEPD</strong></td>
+</tr>
+<tr>
+<td>Configured detectors</td>
+<td>13, including ABCD and ABCD(X)</td>
+</tr>
+<tr>
+<td>Stop rule</td>
+<td><code>δ_max</code> after the drift end</td>
+</tr>
+<tr>
+<td>Result rows</td>
+<td>16,800 (2,800 tasks × 6 detectors)</td>
+</tr>
+</tbody>
+</table>
+<p>The 50-trial run completed 2,800 tasks with <strong>0 failures</strong> in 13m33s on 14
+workers. The ABCD/ABCD(X) arm is <strong>cited from the paper, not reproduced</strong>; it is
+the expensive part of the matrix and overheats the laptop CPU. The full ranking
+is in <a href="../Reports/E17-real-detector-map/">E17 §7</a> and the global
+<a href="../Reports/Results/">Results</a> page.</p>
+<hr/>
+<h2 id="5-what-the-data-does-not-contain">5. What the data does <strong>not</strong> contain<a class="headerlink" href="#5-what-the-data-does-not-contain" title="Permanent link">¶</a></h2>
+<p>These are deliberate limitations, not oversights.</p>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No natural temporal drift</strong> in E14/E17</td>
+<td>Real rows are shuffled and drift is injected; the results measure detector/model response to a known change, not natural drift in Elec2/Phishing</td>
+</tr>
+<tr>
+<td><strong>No natural-drift benchmark yet</strong></td>
+<td>E14 has two real datasets (Elec2, Phishing); Covertype, Airlines and CreditCard are not in the model comparison</td>
+</tr>
+<tr>
+<td><strong>No label delay</strong></td>
+<td>Labels arrive immediately in every dataset above; the Delay Tax experiments (E15) have not run</td>
+</tr>
+<tr>
+<td><strong>No missing/partial/selective labels</strong></td>
+<td>The Delay Tax regimes are future work</td>
+</tr>
+<tr>
+<td><strong>No train/test split</strong></td>
+<td>Evaluation is prequential with a warm-up; there is no held-out test set</td>
+</tr>
+<tr>
+<td><strong>No per-class stratification</strong> in E14/E17</td>
+<td>Rows are shuffled per seed, so class balance varies slightly by seed</td>
+</tr>
+<tr>
+<td><strong>KDD uses at most 100k rows</strong></td>
+<td>Covtype loses ~83% of its rows per trial; Posture loses ~39%</td>
+</tr>
+<tr>
+<td><strong>KDD labels are encoded</strong></td>
+<td>Class indices are arbitrary; do not attach semantic meaning without the source table</td>
+</tr>
+<tr>
+<td><strong>Synthetic streams are controlled</strong></td>
+<td>SEA has 3 features and 2 classes; a win there is existence evidence, not a field-wide claim</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="6-where-the-data-lives-and-how-to-rebuild-it">6. Where the data lives and how to rebuild it<a class="headerlink" href="#6-where-the-data-lives-and-how-to-rebuild-it" title="Permanent link">¶</a></h2>
+<h3 id="61-paths">6.1 Paths<a class="headerlink" href="#61-paths" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiments/data/kdd/*.npz</code></td>
+<td>Cached numeric arrays + feature names used by the KDD runner</td>
+</tr>
+<tr>
+<td><code>experiments/data/kdd/*.csv</code></td>
+<td>Original CSVs for the five USP datasets and Electricity</td>
+</tr>
+<tr>
+<td><code>experiments/data/kdd/usp_ds.zip</code></td>
+<td>600 MB USP DS Repository archive (do not commit)</td>
+</tr>
+<tr>
+<td><code>data/covtypeNorm.arff</code></td>
+<td>99 MB normalized Covtype ARFF (do not commit)</td>
+</tr>
+<tr>
+<td><code>experiments/results/e17/</code></td>
+<td>Elec2 detector-map artifact</td>
+</tr>
+<tr>
+<td><code>experiments/results/e14/</code></td>
+<td>Elec2 + Phishing model-comparison artifact</td>
+</tr>
+<tr>
+<td><code>experiments/results/kdd_bench_full/</code></td>
+<td>50-trial benchmark artifact</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>.npz</code> caches are the canonical numeric form. The standalone
+<code>data/covtypeNorm.arff</code> is a reference copy, not the KDD runner's input — the
+runner exports Covtype from CapyMOA into <code>experiments/data/kdd/Covtype.npz</code>.
+Both the <code>.npz</code> caches and the ARFF are <strong>untracked</strong> and should stay that way:
+the repository should not carry the 600 MB zip or the 99 MB ARFF.</p>
+<h3 id="62-commands">6.2 Commands<a class="headerlink" href="#62-commands" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1"># synthetic experiments</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e01
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e02
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e03<span class="w"> </span>--resume
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e04
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="c1"># real River streams</span>
+<a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e14<span class="w"> </span>--seeds<span class="w"> </span><span class="m">0</span>-4<span class="w"> </span>--device<span class="w"> </span>cuda
+<a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>experiments.run<span class="w"> </span>--exp<span class="w"> </span>e17<span class="w"> </span>--seeds<span class="w"> </span><span class="m">0</span>-4
+<a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a>
+<a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="c1"># KDD'26 benchmark</span>
+<a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a>uv<span class="w"> </span>sync<span class="w"> </span>--project<span class="w"> </span>experiments/kdd_env
+<a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a>./experiments/kdd.sh<span class="w"> </span>prepare<span class="w"> </span>--download-usp
+<a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a>./experiments/kdd.sh<span class="w"> </span>check
+<a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a>./experiments/kdd.sh<span class="w"> </span>run<span class="w"> </span>--datasets<span class="w"> </span>all<span class="w"> </span>--trials<span class="w"> </span><span class="m">50</span><span class="w"> </span>--workers<span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="se">\</span>
+<a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span>--signal<span class="w"> </span>correct<span class="w"> </span>--gradual-anchor<span class="w"> </span>code<span class="w"> </span><span class="se">\</span>
+<a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">    </span>--detectors<span class="w"> </span>ADWIN,DDM,HDDMAverage,HDDMWeighted,SEED,STEPD<span class="w"> </span><span class="se">\</span>
+<a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">    </span>--out<span class="w"> </span>experiments/results/kdd_bench_full
+<a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a>
+<a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="c1"># figures in this page</span>
+<a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>experiments/scripts/make_dataset_figures.py
+</code></pre></div>
+<h3 id="63-sources">6.3 Sources<a class="headerlink" href="#63-sources" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>River</strong> — <code>Elec2</code> and <code>Phishing</code> datasets (<code>river.datasets</code>).</li>
+<li><strong>CapyMOA</strong> — <code>CovtypeNorm</code> and <code>Electricity</code> exports used by the KDD runner.</li>
+<li><strong>USP DS Repository</strong> — the Google Drive archive referenced in
+  <code>experiments/kdd_bench.py</code>; supplies Asfault, GasSensorArray, NOAA, Posture
+  and Rialto.</li>
+<li><strong>UCI / original dataset pages</strong> — the provenance behind River's Phishing and
+  the Covertype schema; use the source pages for semantic feature names and
+  class meanings.</li>
+</ul>
+<hr/>
+<p><em>Shapes, row counts and class balances on this page come from the cached
+<code>experiments/data/kdd/*.npz</code> arrays and the River dataset metadata; the drift
+settings come from <code>experiments/registry/*.yaml</code> and <code>experiments/kdd_bench.py</code>.
+Re-run <code>make_dataset_figures.py</code> after refreshing a cache.</em></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

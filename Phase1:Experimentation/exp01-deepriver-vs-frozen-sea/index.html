@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/" rel="canonical"/>
+<link href="../../Phase0%3AResearch/idea/scope/" rel="prev"/>
+<link href="../exp02-seed-sweep-sea/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Exp-01: DeepRiver vs frozen batch - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#exp-01-deepriver-rolling-deep-classifier-vs-frozen-batch-on-sea">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Exp-01: DeepRiver vs frozen batch
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-aim">
+<span class="md-ellipsis">
+      
+        1. Aim
+      
+    </span>
+</a>
+<nav aria-label="1. Aim" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hypotheses-pre-registered">
+<span class="md-ellipsis">
+      
+        Hypotheses (pre-registered)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-libraries">
+<span class="md-ellipsis">
+      
+        2. Libraries
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-method">
+<span class="md-ellipsis">
+      
+        3. Method
+      
+    </span>
+</a>
+<nav aria-label="3. Method" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3a-stream-sea-one-abrupt-drift">
+<span class="md-ellipsis">
+      
+        3a. Stream (SEA, one abrupt drift)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3b-models">
+<span class="md-ellipsis">
+      
+        3b. Models
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3c-evaluation-protocol">
+<span class="md-ellipsis">
+      
+        3c. Evaluation protocol
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-calculations">
+<span class="md-ellipsis">
+      
+        4. Calculations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-results">
+<span class="md-ellipsis">
+      
+        5. Results
+      
+    </span>
+</a>
+<nav aria-label="5. Results" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-full-run-metrics-post-warm-up-cumulative-n-48000">
+<span class="md-ellipsis">
+      
+        5a. Full-run metrics (post-warm-up, cumulative, n = 48,000)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-drift-window-metrics-30000">
+<span class="md-ellipsis">
+      
+        5b. Drift-window metrics (τ = 30,000)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5c-headline-verdict">
+<span class="md-ellipsis">
+      
+        5c. Headline verdict
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-conclusions">
+<span class="md-ellipsis">
+      
+        6. Conclusions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-cross-references">
+<span class="md-ellipsis">
+      
+        7. Cross-references
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-aim">
+<span class="md-ellipsis">
+      
+        1. Aim
+      
+    </span>
+</a>
+<nav aria-label="1. Aim" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hypotheses-pre-registered">
+<span class="md-ellipsis">
+      
+        Hypotheses (pre-registered)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-libraries">
+<span class="md-ellipsis">
+      
+        2. Libraries
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-method">
+<span class="md-ellipsis">
+      
+        3. Method
+      
+    </span>
+</a>
+<nav aria-label="3. Method" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3a-stream-sea-one-abrupt-drift">
+<span class="md-ellipsis">
+      
+        3a. Stream (SEA, one abrupt drift)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3b-models">
+<span class="md-ellipsis">
+      
+        3b. Models
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3c-evaluation-protocol">
+<span class="md-ellipsis">
+      
+        3c. Evaluation protocol
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-calculations">
+<span class="md-ellipsis">
+      
+        4. Calculations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-results">
+<span class="md-ellipsis">
+      
+        5. Results
+      
+    </span>
+</a>
+<nav aria-label="5. Results" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-full-run-metrics-post-warm-up-cumulative-n-48000">
+<span class="md-ellipsis">
+      
+        5a. Full-run metrics (post-warm-up, cumulative, n = 48,000)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-drift-window-metrics-30000">
+<span class="md-ellipsis">
+      
+        5b. Drift-window metrics (τ = 30,000)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5c-headline-verdict">
+<span class="md-ellipsis">
+      
+        5c. Headline verdict
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-conclusions">
+<span class="md-ellipsis">
+      
+        6. Conclusions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-cross-references">
+<span class="md-ellipsis">
+      
+        7. Cross-references
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Exp-01: DeepRiver vs frozen batch.pdf" href="../../Phase1:Experimentation/exp01-deepriver-vs-frozen-sea/index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="exp-01-deepriver-rolling-deep-classifier-vs-frozen-batch-on-sea">Exp-01 — DeepRiver rolling deep classifier vs frozen batch on SEA<a class="headerlink" href="#exp-01-deepriver-rolling-deep-classifier-vs-frozen-batch-on-sea" title="Permanent link">¶</a></h1>
+<p><strong>Series:</strong> Ch1 / thesis pilot ("streaming vs non-streaming on real metrics"), first
+atomic experiment.</p>
+<p><strong>Aim → libs → method → calculations → results → conclusions</strong> as requested; §5–6
+were pre-registered placeholders and are now filled from the first run
+(<code>experiments/exp01/results.json</code>).</p>
+<p><strong>Status:</strong> ✅ Run on 2026-09-09 (seed 42, RTX 3050 Laptop GPU). Code:
+<code>experiments/scripts/exp01_deepriver_vs_frozen_sea.py</code>; data artifact:
+<code>experiments/exp01/results.json</code>; figure: <code>figures/exp01-rolling-kappa-deepriver-vs-frozen.png</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Metric correction (E01, 2026-11-12)</p>
+<p>The damage-area numbers on this page use the legacy τ→recovery integral, which
+truncated the streaming arm. The corrected 11-seed result is <code>damage_ref</code>
+<strong>74.8 vs 515.0</strong> samples·κ (<strong>≈6.9×</strong>) and <code>damage_full</code> <strong>321.4 vs 3,472.9</strong>
+(<strong>≈10.8×</strong>). The legacy 294×/24× are retired. See
+<a href="../../Reports/E01-metric-v2/">E01 — Metric v2 correction</a>.</p>
+</div>
+<p><strong>Formatting note:</strong> math is written in Unicode (τ, κ₀, Δκ, ≈, ≥) so it renders
+identically in Obsidian, GitHub, and the mkdocs site — no LaTeX pipeline required.</p>
+<hr/>
+<h2 id="1-aim">1. Aim<a class="headerlink" href="#1-aim" title="Permanent link">¶</a></h2>
+<p>First empirical check of the thesis (see <a href="../thesis/"><code>thesis.md</code></a> §1) using a
+<strong>deep streaming learner</strong>:</p>
+<blockquote>
+<p>Can a DeepRiver rolling classifier — a bounded-memory model that retrains on a
+recent window of data — beat a <strong>frozen</strong> batch model (trained once, never
+updated) on a drifting stream, when measured prequentially?</p>
+</blockquote>
+<p>This is deliberately the <em>weakest</em> form of the claim: no scheduled-retrain batch, no
+delay, no oracle tuning, no statistics. If DeepRiver cannot show the expected
+recovery behaviour here, the bigger experiments are pointless. Small and atomic by
+design: <strong>one synthetic stream, one injected drift, two models, three metrics.</strong></p>
+<h3 id="hypotheses-pre-registered">Hypotheses (pre-registered)<a class="headerlink" href="#hypotheses-pre-registered" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>H1 — Recovery:</strong> after the drift at τ, DeepRiver's rolling Kappa re-enters its
+  pre-drift band within a bounded number of samples; the frozen RF's does not recover
+  before the stream ends.</li>
+<li><strong>H2 — Steady state (expected loss):</strong> before τ, frozen RF (trained on the whole
+  warm-up) has higher Kappa than the online net. This is expected and <em>not</em> the
+  claim — it is the honest control half of the picture.</li>
+<li><strong>Falsification:</strong> if DeepRiver does not recover within a generous window
+  (pre-registered: rolling Kappa back to ≥ 0.95 · κ₀ within 5,000 samples of τ), the
+  pilot is inconclusive and the result is recorded as such rather than tuned away
+  silently.</li>
+</ul>
+<hr/>
+<h2 id="2-libraries">2. Libraries<a class="headerlink" href="#2-libraries" title="Permanent link">¶</a></h2>
+<p>Focus: <strong>DeepRiver</strong> (deep learning on data streams, River + PyTorch).</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Role</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deep-river</code> 0.3.4</td>
+<td>streaming deep models (<code>RollingClassifier</code>)</td>
+<td>the subject of the experiment</td>
+</tr>
+<tr>
+<td><code>river</code> 0.25.0</td>
+<td>metrics (<code>Accuracy</code>, <code>CohenKappa</code>, <code>Rolling</code>), prequential loop</td>
+<td>pinned by deep-river (<code>&lt;0.26</code>); see <code>notes/03-river-library.md</code></td>
+</tr>
+<tr>
+<td><code>torch</code> 2.5.1</td>
+<td>neural net backend</td>
+<td>CUDA build; run on the RTX 3050 (Laptop) GPU</td>
+</tr>
+<tr>
+<td><code>scikit-learn</code> 1.9.0</td>
+<td>frozen batch baseline (<code>RandomForestClassifier</code>)</td>
+<td>the opponent</td>
+</tr>
+<tr>
+<td><code>numpy</code></td>
+<td>stream generation, numerics</td>
+<td></td>
+</tr>
+<tr>
+<td><code>pytest</code></td>
+<td>not used by us</td>
+<td>required at import time by deep-river 0.3.4 (its <code>utils.estimator_checks</code> imports it) — packaging bug, so it's a project dep</td>
+</tr>
+</tbody>
+</table>
+<p>Environment: repo-root uv project, <strong>Python 3.12</strong> (deep-river's torch <code>&lt;2.6</code> has no
+cp313 wheels, so the repo pins <code>&gt;=3.12,&lt;3.13</code>). Run:
+<code>uv run experiments/scripts/exp01_deepriver_vs_frozen_sea.py</code> — the script
+auto-selects CUDA if present (<code>--device cuda|cpu</code> to force). Exact versions in
+<code>pyproject.toml</code> / <code>uv.lock</code>.</p>
+<hr/>
+<h2 id="3-method">3. Method<a class="headerlink" href="#3-method" title="Permanent link">¶</a></h2>
+<h3 id="3a-stream-sea-one-abrupt-drift">3a. Stream (SEA, one abrupt drift)<a class="headerlink" href="#3a-stream-sea-one-abrupt-drift" title="Permanent link">¶</a></h3>
+<ul>
+<li>Generator: SEA concepts — 3 numerical features drawn once, continuously, from
+  U(0, 10)³; only features 0+1 matter (<code>x₀ + x₁</code> vs a threshold); binary labels.</li>
+<li>Length: <strong>60,000 samples</strong>. Label rule: <code>x₀ + x₁ &gt; 8</code> (SEA concept 0) for
+  t &lt; 30,000, then <code>x₀ + x₁ &gt; 9</code> (SEA concept 1) → <strong>abrupt drift at τ = 30,000</strong>.</li>
+<li><code>noise = 0.1</code> (10% label noise, so the problem is non-trivial); balanced classes
+  by construction; fixed seed 42 (single seed for Exp-01; the ≥10-seed sweep is a
+  later, separate experiment).</li>
+<li>Implementation note: river 0.25's <code>synth.SEA</code> reseeds its RNG per generator, so
+  concatenating two variants <em>replays identical feature vectors</em> under the new
+  label rule (train-set memorisation confound). The script therefore draws one
+  uninterrupted feature stream and switches only the label rule at τ — identical
+  semantics to the intended SEA abrupt drift.</li>
+</ul>
+<h3 id="3b-models">3b. Models<a class="headerlink" href="#3b-models" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Model</th>
+<th>Warm-up</th>
+<th>Update rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Streaming</td>
+<td>DeepRiver <code>RollingClassifier</code> over a small <strong>RNN head</strong> (RNN 3 → 16 hidden → Linear → 2 logits; Adam, lr 1e-3, cross-entropy; one optimiser step per sample)</td>
+<td>learns from sample 1 onwards</td>
+<td>per sample: predict → score → <code>learn_one</code> on a <strong>rolling window of 500</strong> (bounded memory; old samples fall out → drift adaptivity)</td>
+</tr>
+<tr>
+<td>Frozen batch</td>
+<td>sklearn <code>RandomForestClassifier(n_estimators=100)</code></td>
+<td>fit once on first <strong>12,000 samples (20%)</strong></td>
+<td><strong>never</strong> updated after warm-up</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Architecture note:</strong> the spec'd "MLP 2 → 16 → 2" cannot be expressed in
+  DeepRiver's <code>RollingClassifier</code> — its feature-incremental layer handling requires
+  the module's first layer to take <code>n_features</code> units, and it feeds the net a
+  temporal window. The RNN head is the architecture DeepRiver documents for
+  rolling models; capacity (16 hidden) and lr are unchanged.</li>
+<li>DeepRiver 0.3.4 bug worked around in the script: <code>_learn</code> runs the forward
+  before <code>module.train()</code>, so a predict-first (eval-mode) cuDNN RNN backward
+  crashes; the wrapper forces train mode before <code>learn_one</code>.</li>
+<li>Window size and learning rate are the two tuning knobs; pre-registered defaults
+  (window_size = 500, lr = 1e-3) may be swept in a follow-up, <em>not</em> silently
+  fitted to make H1 pass.</li>
+</ul>
+<h3 id="3c-evaluation-protocol">3c. Evaluation protocol<a class="headerlink" href="#3c-evaluation-protocol" title="Permanent link">¶</a></h3>
+<p>Standard prequential (test-then-train) loop over the <strong>post-warm-up</strong> region
+(t ∈ [12,000, 60,000)) for both models, on identical samples:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>for x, y in stream[12k:60k]:
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>    y_pred = model.predict_one(x)     # frozen RF: predict only, no learning
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    metric.update(y, y_pred)
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    if model is streaming:
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>        model.learn_one(x, y)         # DeepRiver: windowed update
+</code></pre></div>
+<p>Metrics recorded <strong>per sample</strong>: accuracy, Cohen Kappa, rolling Cohen Kappa
+(w = 1,000). Runtime (seconds) and peak process RSS measured around the whole loop.</p>
+<hr/>
+<h2 id="4-calculations">4. Calculations<a class="headerlink" href="#4-calculations" title="Permanent link">¶</a></h2>
+<p>Let κ(t) be rolling Cohen Kappa at sample t (window w = 1,000).</p>
+<ul>
+<li><strong>Pre-drift baseline:</strong> κ₀ = mean of κ(t) over the 1,000 samples immediately
+  before τ (i.e. t ∈ [29,000, 30,000)).</li>
+<li><strong>Dip depth:</strong> Δκ = κ₀ − min κ(t) over t ∈ [τ, τ + 5,000).</li>
+<li><strong>Recovery time:</strong> the smallest r such that κ(t) ≥ 0.95 · κ₀ for 500 consecutive
+  samples within [τ, τ + 5,000]; reported as samples from τ. Frozen model: "never"
+  if the stream ends before the band is re-entered.</li>
+<li><strong>Damage area</strong> (the thesis's money metric, thesis.md §3):
+  <code>area = Σ (κ₀ − κ(t))</code> summed over t = τ … t_recover, in units of samples × Kappa;
+  frozen area measured to stream end when it never recovers.</li>
+<li><strong>Full-run metrics:</strong> prequential accuracy and Cohen Kappa over the whole
+  post-warm-up region (cumulative).</li>
+<li><strong>Cost:</strong> wall-clock seconds, samples/second, and memory (max RSS − baseline RSS).</li>
+</ul>
+<hr/>
+<h2 id="5-results">5. Results<a class="headerlink" href="#5-results" title="Permanent link">¶</a></h2>
+<p>Measured, seed 42, first run. Full per-sample series and metrics:
+<code>experiments/exp01/results.json</code>. Pre-registered expectations are in <em>italics</em>
+after each table; deviations are stated, not tuned away.</p>
+<h3 id="5a-full-run-metrics-post-warm-up-cumulative-n-48000">5a. Full-run metrics (post-warm-up, cumulative, n = 48,000)<a class="headerlink" href="#5a-full-run-metrics-post-warm-up-cumulative-n-48000" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Cohen Kappa</th>
+<th>Runtime (s)</th>
+<th>Samples/s</th>
+<th>Peak RSS (MB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DeepRiver rolling</td>
+<td><strong>0.885</strong></td>
+<td><strong>0.757</strong></td>
+<td>99.1 (CUDA)</td>
+<td>484</td>
+<td>1074</td>
+</tr>
+<tr>
+<td>Frozen RF</td>
+<td>0.856</td>
+<td>0.689</td>
+<td>0.17 (fit only)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><em>Expectation was frozen RF winning cumulative accuracy/Kappa (H2).</em> <strong>Deviated:</strong>
+DeepRiver wins both — its pre-drift steady state is <em>not</em> below the frozen RF
+(κ_dr ≈ 0.755 vs κ_fr ≈ 0.759), and it keeps that level after the drift while the
+frozen model drops. The per-metric win is therefore even cleaner than
+pre-registered. Runtime is for the DeepRiver loop on the RTX 3050 (CUDA); the
+same 48k loop takes ~1,089 s (44 samples/s) on CPU, so GPU is effectively
+required at this window size. RSS is peak <em>process</em> RSS (both models + CUDA
+context in one process), not a per-model delta.</p>
+<p><img alt="Rolling Cohen Kappa over the stream — DeepRiver dips and recovers, frozen RF dips and stays down" src="../figures/exp01-rolling-kappa-deepriver-vs-frozen.png"/></p>
+<p><em>Figure 1 — rolling Cohen Kappa (w = 1,000), drift at τ = 30,000 marked. The
+blue (DeepRiver) dip is shallow and self-healing; the red (frozen RF) dip is
+deeper and never heals before the stream ends.</em></p>
+<h3 id="5b-drift-window-metrics-30000">5b. Drift-window metrics (τ = 30,000)<a class="headerlink" href="#5b-drift-window-metrics-30000" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>κ₀</th>
+<th>Min κ</th>
+<th>Dip depth Δκ</th>
+<th>Recovery time (samples from τ)</th>
+<th>Damage area (samples·κ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DeepRiver rolling</td>
+<td>0.755</td>
+<td>0.703</td>
+<td>0.052</td>
+<td><strong>835</strong> (bounded)</td>
+<td>31</td>
+</tr>
+<tr>
+<td>Frozen RF</td>
+<td>0.759</td>
+<td>0.592</td>
+<td>0.167</td>
+<td><strong>never</strong> (≥ 5,000)</td>
+<td>3,307</td>
+</tr>
+</tbody>
+</table>
+<p><em>Expectation (H1): DeepRiver dips then recovers within a few thousand samples;
+frozen RF dips and stays depressed.</em> <strong>Confirmed</strong> — DeepRiver is back inside its
+pre-drift band (≥ 0.95 · κ₀ for 500 consecutive samples) 835 samples after τ,
+within the pre-registered 5,000-sample budget; the frozen RF never re-enters the
+band in the window and is still depressed at stream end. Damage area differs by
+two orders of magnitude (31 vs 3,307 samples·κ) — the recovery-time and
+damage-area columns are the win card, as pre-registered.</p>
+<h3 id="5c-headline-verdict">5c. Headline verdict<a class="headerlink" href="#5c-headline-verdict" title="Permanent link">¶</a></h3>
+<ul>
+<li>H1 (bounded recovery): <strong>pass</strong> — DeepRiver re-enters its pre-drift band 835
+  samples after τ; frozen RF does not recover before the stream ends.</li>
+<li>H2 (batch wins steady state): <strong>refuted</strong> — DeepRiver matches frozen RF
+  pre-drift (κ 0.755 vs 0.759) and wins cumulative Kappa 0.757 vs 0.689. The
+  honest-control half of the pre-registration did not materialise; the streaming
+  model is not penalised in steady state on this problem.</li>
+</ul>
+<hr/>
+<h2 id="6-conclusions">6. Conclusions<a class="headerlink" href="#6-conclusions" title="Permanent link">¶</a></h2>
+<p>Written after the run (seed 42, single replicate — see caveats below).</p>
+<ul>
+<li><strong>First DeepRiver-backed data point for thesis.md §6b:</strong> a streaming deep
+  learner (RollingClassifier, window 500) shows <strong>bounded recovery</strong> (835 samples)
+  on an abrupt drift where a frozen batch model never recovers within the stream.
+  The win is per-metric (recovery time 835 vs never, damage area 31 vs 3,307
+  samples·κ), and — beyond the pre-registration — DeepRiver also wins cumulative
+  accuracy/Kappa because its steady state matches the frozen RF pre-drift instead
+  of trailing it.</li>
+<li><strong>Interpretation against the literature</strong> (<code>literature_review/index.md</code> §1):
+  consistent with Read 2012 / Chen 2019 in that there is no universal winner —
+  context matters — and with Dasari 2026's "the learner matters more than the
+  trigger": the rolling window's continuous refit was what recovered, no detector
+  needed. The deep net <em>did not</em> pay a steady-state tax on this simple problem,
+  which is the part most likely to change on harder streams.</li>
+<li><strong>Falsification path honoured:</strong> the pre-registered recovery budget was
+  0.95 · κ₀ within 5,000 samples; H1 passed at 835. The result was <em>not</em> tuned —
+  window (500), lr (1e-3) and architecture (16 hidden) are the pre-registered
+  defaults; the two model changes from spec (single continuous stream; RNN head)
+  were forced by river/DeepRiver mechanics and are documented in §3a–3b.</li>
+<li><strong>Caveats, recorded honestly:</strong></li>
+<li>Single seed, single replicate — the ≥10-seed sweep (with the confidence
+    interval on recovery time) is the follow-up; this pilot is existence
+    evidence, not statistics.</li>
+<li>Cost is real: 484 samples/s on an RTX 3050 (1,089 s / 44 samples/s on CPU)
+    for a 2.3k-parameter net — per-sample windowed refits are the slow path, and
+    the cost column stands even though it is unfavourable. At this scale the GPU
+    is not optional.</li>
+<li>Peak RSS 1,074 MB includes the CUDA context; the pure model footprint is far
+    smaller. A CPU-only measurement belongs to the cost-focused experiment.</li>
+<li><strong>Next knobs, as separate atomic experiments:</strong> seed sweep; harder drift
+  (SEA concept 3 threshold 9.5, or a real stream); window-size/lr sweep; DeepRiver
+  per-sample <code>Classifier</code> vs this rolling one (the windowed-refit vs per-sample-SGD
+  question the literature flags); a scheduled-retrain batch baseline.</li>
+</ul>
+<hr/>
+<h2 id="7-cross-references">7. Cross-references<a class="headerlink" href="#7-cross-references" title="Permanent link">¶</a></h2>
+<ul>
+<li>Thesis + expected-result sketches: <a href="../thesis/"><code>thesis.md</code></a> (§6a–6c, §6f falsifiers).</li>
+<li>Ch1 protocol (models/datasets/statistics): <a href="../streaming-vs-batch-metrics/"><code>streaming-vs-batch-metrics.md</code></a>.</li>
+<li>Literature (direct comparisons, scope-defining evidence): <a href="../../Phase0%3AResearch/literature_review/"><code>Phase0:Research/literature_review/index.md</code></a> §1 subgroup.</li>
+<li>Scope guard note: the old <code>notes/08-scope.md</code> excludes deep learning — this
+  experiment series is a deliberate, teacher-relevant extension of it.</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

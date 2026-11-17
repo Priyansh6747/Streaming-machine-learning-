@@ -1,0 +1,2657 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Phase0%3AResearch/literature_review/" rel="canonical"/>
+<link href="../notes/08-scope/" rel="prev"/>
+<link href="gap-analysis/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Index - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#literature-review-index-the-delay-tax">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Index
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-1-ch1-detector-baselines-prequential-evaluation-rivermoa-tooling">
+<span class="md-ellipsis">
+      
+        Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling
+      
+    </span>
+</a>
+<nav aria-label="Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#streaming-vs-batch-retraining-policy-comparisons-ch1-thesis-evidence-added-sep-2026">
+<span class="md-ellipsis">
+      
+        Streaming vs batch / retraining-policy comparisons (Ch1 thesis evidence — added Sep 2026)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-retrain-an-empirical-study-of-retraining-policies-for-streaming-ml-under-concept-drift-budget-and-latency-constraints">
+<span class="md-ellipsis">
+      
+        When to Retrain: An Empirical Study of Retraining Policies for Streaming ML Under Concept Drift, Budget, and Latency Constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#online-versus-batch-retraining-in-one-step-ahead-urban-water-demand-forecasting-under-concept-drift">
+<span class="md-ellipsis">
+      
+        Online versus batch retraining in one-step-ahead urban water demand forecasting under concept drift
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#digital-twin-based-anomaly-detection-under-concept-drift-a-comparison-between-iterative-batch-learning-and-incremental-learning-approaches">
+<span class="md-ellipsis">
+      
+        Digital twin-based anomaly detection under concept drift: A comparison between iterative batch learning and incremental learning approaches
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#an-experimental-comparison-of-batch-and-online-machine-learning-algorithms">
+<span class="md-ellipsis">
+      
+        An Experimental Comparison of Batch and Online Machine Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#all-versus-one-an-empirical-comparison-on-retrained-and-incremental-machine-learning-for-modeling-performance-of-adaptable-software">
+<span class="md-ellipsis">
+      
+        All Versus One: An Empirical Comparison on Retrained and Incremental Machine Learning for Modeling Performance of Adaptable Software
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#batch-incremental-versus-instance-incremental-learning-in-dynamic-and-evolving-data">
+<span class="md-ellipsis">
+      
+        Batch-Incremental versus Instance-Incremental Learning in Dynamic and Evolving Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-framework-for-evaluating-and-benchmarking-concept-drift-detection-methods">
+<span class="md-ellipsis">
+      
+        A Framework for Evaluating and Benchmarking Concept Drift Detection Methods
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#practical-machine-learning-for-streaming-data-kdd24-tutorial">
+<span class="md-ellipsis">
+      
+        Practical Machine Learning for Streaming Data (KDD'24 tutorial)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deepriver-a-deep-learning-library-for-data-streams">
+<span class="md-ellipsis">
+      
+        DeepRiver: A Deep Learning Library for Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#river-machine-learning-for-streaming-data-in-python-jmlr-2021">
+<span class="md-ellipsis">
+      
+        River: Machine Learning for Streaming Data in Python (JMLR 2021)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adaptive-learning-from-evolving-data-streams-hat">
+<span class="md-ellipsis">
+      
+        Adaptive Learning from Evolving Data Streams (HAT)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#on-evaluating-stream-learning-algorithms">
+<span class="md-ellipsis">
+      
+        On Evaluating Stream Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-comparative-study-on-concept-drift-detectors">
+<span class="md-ellipsis">
+      
+        A Comparative Study on Concept Drift Detectors
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-from-time-changing-data-with-adaptive-windowing-adwin">
+<span class="md-ellipsis">
+      
+        Learning from Time-Changing Data with Adaptive Windowing (ADWIN)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-with-drift-detection-ddm">
+<span class="md-ellipsis">
+      
+        Learning with Drift Detection (DDM)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#early-drift-detection-method-eddm-baena-garcia-et-al-2006-iwkdds">
+<span class="md-ellipsis">
+      
+        Early Drift Detection Method (EDDM) (Baena-García et al., 2006, IWKDDS)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mining-high-speed-data-streams-vfdt-hoeffding-tree">
+<span class="md-ellipsis">
+      
+        Mining High-Speed Data Streams (VFDT / Hoeffding Tree)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mining-time-changing-data-streams-cvfdt">
+<span class="md-ellipsis">
+      
+        Mining Time-Changing Data Streams (CVFDT)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-in-the-presence-of-concept-drift-and-hidden-contexts">
+<span class="md-ellipsis">
+      
+        Learning in the Presence of Concept Drift and Hidden Contexts
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-2-ch2-systems-operational-cost-of-continual-learning">
+<span class="md-ellipsis">
+      
+        Section 2 — Ch2: Systems / operational cost of continual learning
+      
+    </span>
+</a>
+<nav aria-label="Section 2 — Ch2: Systems / operational cost of continual learning" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-high-throughput-architecture-for-anomaly-detection-in-streaming-data-using-machine-learning-algorithms">
+<span class="md-ellipsis">
+      
+        A High-Throughput Architecture for Anomaly Detection in Streaming Data Using Machine Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimizing-machine-learning-inference-serving-systems-a-survey">
+<span class="md-ellipsis">
+      
+        Optimizing Machine Learning Inference Serving Systems: A Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#machine-learning-in-security-a-stream-of-problems">
+<span class="md-ellipsis">
+      
+        Machine Learning (In) Security: A Stream of Problems
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tesseract-eliminating-experimental-bias-in-malware-classification-across-space-and-time">
+<span class="md-ellipsis">
+      
+        TESSERACT: Eliminating Experimental Bias in Malware Classification Across Space and Time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#challenges-in-benchmarking-stream-learning-algorithms-with-real-world-data">
+<span class="md-ellipsis">
+      
+        Challenges in Benchmarking Stream Learning Algorithms with Real-world Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#moa-a-real-time-analytics-open-source-framework">
+<span class="md-ellipsis">
+      
+        MOA: A Real-Time Analytics Open Source Framework
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-3-ch3-delayed-partial-selective-labels-drift-detection-the-core-gap">
+<span class="md-ellipsis">
+      
+        Section 3 — Ch3: Delayed / partial / selective labels + drift detection (the core gap)
+      
+    </span>
+</a>
+<nav aria-label="Section 3 — Ch3: Delayed / partial / selective labels + drift detection (the core gap)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concept-drift-detection-in-delayed-and-partially-labeled-data-streams-an-experimental-survey">
+<span class="md-ellipsis">
+      
+        Concept Drift Detection in Delayed and Partially Labeled Data Streams: An Experimental Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#towards-more-realistic-evaluations-the-impact-of-label-delays-in-malware-detection-pipelines">
+<span class="md-ellipsis">
+      
+        Towards More Realistic Evaluations: The Impact of Label Delays in Malware Detection Pipelines
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-survey-on-semi-supervised-learning-for-delayed-partially-labelled-data-streams">
+<span class="md-ellipsis">
+      
+        A Survey on Semi-supervised Learning for Delayed Partially Labelled Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection">
+<span class="md-ellipsis">
+      
+        STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rose-robust-online-self-adjusting-ensemble-for-continual-learning-on-imbalanced-drifting-data-streams">
+<span class="md-ellipsis">
+      
+        ROSE: Robust Online Self-Adjusting Ensemble for Continual Learning on Imbalanced Drifting Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-based-active-learning-with-verification-latency-in-non-stationary-environments">
+<span class="md-ellipsis">
+      
+        Stream-Based Active Learning with Verification Latency in Non-stationary Environments
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams">
+<span class="md-ellipsis">
+      
+        Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delayed-labelling-evaluation-for-data-streams">
+<span class="md-ellipsis">
+      
+        Delayed Labelling Evaluation for Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#credit-card-fraud-detection-and-concept-drift-adaptation-with-delayed-supervised-information">
+<span class="md-ellipsis">
+      
+        Credit Card Fraud Detection and Concept-Drift Adaptation with Delayed Supervised Information
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#online-learning-under-delayed-feedback">
+<span class="md-ellipsis">
+      
+        Online Learning under Delayed Feedback
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#change-with-delayed-labeling-when-is-it-detectable">
+<span class="md-ellipsis">
+      
+        Change with Delayed Labeling: When is it Detectable?
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-predictive-and-user-centric-approach-to-machine-learning-in-data-streaming-scenarios">
+<span class="md-ellipsis">
+      
+        A Predictive and User-Centric Approach to Machine Learning in Data Streaming Scenarios
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-based-active-learning-for-sliding-windows-under-the-influence-of-verification-latency">
+<span class="md-ellipsis">
+      
+        Stream-based Active Learning for Sliding Windows under the Influence of Verification Latency
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-4-ch3-hybrid-label-free-confirmation-methods">
+<span class="md-ellipsis">
+      
+        Section 4 — Ch3: Hybrid / label-free + confirmation methods
+      
+    </span>
+</a>
+<nav aria-label="Section 4 — Ch3: Hybrid / label-free + confirmation methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection_1">
+<span class="md-ellipsis">
+      
+        STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams_1">
+<span class="md-ellipsis">
+      
+        Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unsupervised-concept-drift-detectors-a-survey">
+<span class="md-ellipsis">
+      
+        Unsupervised Concept Drift Detectors: A Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#automatic-model-monitoring-for-data-streams">
+<span class="md-ellipsis">
+      
+        Automatic Model Monitoring for Data Streams
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#foundational-quick-reference-no-per-paper-note">
+<span class="md-ellipsis">
+      
+        Foundational quick-reference (no per-paper note)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-to-use-this-index">
+<span class="md-ellipsis">
+      
+        How to use this index
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-1-ch1-detector-baselines-prequential-evaluation-rivermoa-tooling">
+<span class="md-ellipsis">
+      
+        Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling
+      
+    </span>
+</a>
+<nav aria-label="Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#streaming-vs-batch-retraining-policy-comparisons-ch1-thesis-evidence-added-sep-2026">
+<span class="md-ellipsis">
+      
+        Streaming vs batch / retraining-policy comparisons (Ch1 thesis evidence — added Sep 2026)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-retrain-an-empirical-study-of-retraining-policies-for-streaming-ml-under-concept-drift-budget-and-latency-constraints">
+<span class="md-ellipsis">
+      
+        When to Retrain: An Empirical Study of Retraining Policies for Streaming ML Under Concept Drift, Budget, and Latency Constraints
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#online-versus-batch-retraining-in-one-step-ahead-urban-water-demand-forecasting-under-concept-drift">
+<span class="md-ellipsis">
+      
+        Online versus batch retraining in one-step-ahead urban water demand forecasting under concept drift
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#digital-twin-based-anomaly-detection-under-concept-drift-a-comparison-between-iterative-batch-learning-and-incremental-learning-approaches">
+<span class="md-ellipsis">
+      
+        Digital twin-based anomaly detection under concept drift: A comparison between iterative batch learning and incremental learning approaches
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#an-experimental-comparison-of-batch-and-online-machine-learning-algorithms">
+<span class="md-ellipsis">
+      
+        An Experimental Comparison of Batch and Online Machine Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#all-versus-one-an-empirical-comparison-on-retrained-and-incremental-machine-learning-for-modeling-performance-of-adaptable-software">
+<span class="md-ellipsis">
+      
+        All Versus One: An Empirical Comparison on Retrained and Incremental Machine Learning for Modeling Performance of Adaptable Software
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#batch-incremental-versus-instance-incremental-learning-in-dynamic-and-evolving-data">
+<span class="md-ellipsis">
+      
+        Batch-Incremental versus Instance-Incremental Learning in Dynamic and Evolving Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-framework-for-evaluating-and-benchmarking-concept-drift-detection-methods">
+<span class="md-ellipsis">
+      
+        A Framework for Evaluating and Benchmarking Concept Drift Detection Methods
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#practical-machine-learning-for-streaming-data-kdd24-tutorial">
+<span class="md-ellipsis">
+      
+        Practical Machine Learning for Streaming Data (KDD'24 tutorial)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#deepriver-a-deep-learning-library-for-data-streams">
+<span class="md-ellipsis">
+      
+        DeepRiver: A Deep Learning Library for Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#river-machine-learning-for-streaming-data-in-python-jmlr-2021">
+<span class="md-ellipsis">
+      
+        River: Machine Learning for Streaming Data in Python (JMLR 2021)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adaptive-learning-from-evolving-data-streams-hat">
+<span class="md-ellipsis">
+      
+        Adaptive Learning from Evolving Data Streams (HAT)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#on-evaluating-stream-learning-algorithms">
+<span class="md-ellipsis">
+      
+        On Evaluating Stream Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-comparative-study-on-concept-drift-detectors">
+<span class="md-ellipsis">
+      
+        A Comparative Study on Concept Drift Detectors
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-from-time-changing-data-with-adaptive-windowing-adwin">
+<span class="md-ellipsis">
+      
+        Learning from Time-Changing Data with Adaptive Windowing (ADWIN)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-with-drift-detection-ddm">
+<span class="md-ellipsis">
+      
+        Learning with Drift Detection (DDM)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#early-drift-detection-method-eddm-baena-garcia-et-al-2006-iwkdds">
+<span class="md-ellipsis">
+      
+        Early Drift Detection Method (EDDM) (Baena-García et al., 2006, IWKDDS)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mining-high-speed-data-streams-vfdt-hoeffding-tree">
+<span class="md-ellipsis">
+      
+        Mining High-Speed Data Streams (VFDT / Hoeffding Tree)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mining-time-changing-data-streams-cvfdt">
+<span class="md-ellipsis">
+      
+        Mining Time-Changing Data Streams (CVFDT)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#learning-in-the-presence-of-concept-drift-and-hidden-contexts">
+<span class="md-ellipsis">
+      
+        Learning in the Presence of Concept Drift and Hidden Contexts
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-2-ch2-systems-operational-cost-of-continual-learning">
+<span class="md-ellipsis">
+      
+        Section 2 — Ch2: Systems / operational cost of continual learning
+      
+    </span>
+</a>
+<nav aria-label="Section 2 — Ch2: Systems / operational cost of continual learning" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-high-throughput-architecture-for-anomaly-detection-in-streaming-data-using-machine-learning-algorithms">
+<span class="md-ellipsis">
+      
+        A High-Throughput Architecture for Anomaly Detection in Streaming Data Using Machine Learning Algorithms
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optimizing-machine-learning-inference-serving-systems-a-survey">
+<span class="md-ellipsis">
+      
+        Optimizing Machine Learning Inference Serving Systems: A Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#machine-learning-in-security-a-stream-of-problems">
+<span class="md-ellipsis">
+      
+        Machine Learning (In) Security: A Stream of Problems
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#tesseract-eliminating-experimental-bias-in-malware-classification-across-space-and-time">
+<span class="md-ellipsis">
+      
+        TESSERACT: Eliminating Experimental Bias in Malware Classification Across Space and Time
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#challenges-in-benchmarking-stream-learning-algorithms-with-real-world-data">
+<span class="md-ellipsis">
+      
+        Challenges in Benchmarking Stream Learning Algorithms with Real-world Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#moa-a-real-time-analytics-open-source-framework">
+<span class="md-ellipsis">
+      
+        MOA: A Real-Time Analytics Open Source Framework
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-3-ch3-delayed-partial-selective-labels-drift-detection-the-core-gap">
+<span class="md-ellipsis">
+      
+        Section 3 — Ch3: Delayed / partial / selective labels + drift detection (the core gap)
+      
+    </span>
+</a>
+<nav aria-label="Section 3 — Ch3: Delayed / partial / selective labels + drift detection (the core gap)" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#concept-drift-detection-in-delayed-and-partially-labeled-data-streams-an-experimental-survey">
+<span class="md-ellipsis">
+      
+        Concept Drift Detection in Delayed and Partially Labeled Data Streams: An Experimental Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#towards-more-realistic-evaluations-the-impact-of-label-delays-in-malware-detection-pipelines">
+<span class="md-ellipsis">
+      
+        Towards More Realistic Evaluations: The Impact of Label Delays in Malware Detection Pipelines
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-survey-on-semi-supervised-learning-for-delayed-partially-labelled-data-streams">
+<span class="md-ellipsis">
+      
+        A Survey on Semi-supervised Learning for Delayed Partially Labelled Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection">
+<span class="md-ellipsis">
+      
+        STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rose-robust-online-self-adjusting-ensemble-for-continual-learning-on-imbalanced-drifting-data-streams">
+<span class="md-ellipsis">
+      
+        ROSE: Robust Online Self-Adjusting Ensemble for Continual Learning on Imbalanced Drifting Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-based-active-learning-with-verification-latency-in-non-stationary-environments">
+<span class="md-ellipsis">
+      
+        Stream-Based Active Learning with Verification Latency in Non-stationary Environments
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams">
+<span class="md-ellipsis">
+      
+        Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#delayed-labelling-evaluation-for-data-streams">
+<span class="md-ellipsis">
+      
+        Delayed Labelling Evaluation for Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#credit-card-fraud-detection-and-concept-drift-adaptation-with-delayed-supervised-information">
+<span class="md-ellipsis">
+      
+        Credit Card Fraud Detection and Concept-Drift Adaptation with Delayed Supervised Information
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#online-learning-under-delayed-feedback">
+<span class="md-ellipsis">
+      
+        Online Learning under Delayed Feedback
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#change-with-delayed-labeling-when-is-it-detectable">
+<span class="md-ellipsis">
+      
+        Change with Delayed Labeling: When is it Detectable?
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-predictive-and-user-centric-approach-to-machine-learning-in-data-streaming-scenarios">
+<span class="md-ellipsis">
+      
+        A Predictive and User-Centric Approach to Machine Learning in Data Streaming Scenarios
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#stream-based-active-learning-for-sliding-windows-under-the-influence-of-verification-latency">
+<span class="md-ellipsis">
+      
+        Stream-based Active Learning for Sliding Windows under the Influence of Verification Latency
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#section-4-ch3-hybrid-label-free-confirmation-methods">
+<span class="md-ellipsis">
+      
+        Section 4 — Ch3: Hybrid / label-free + confirmation methods
+      
+    </span>
+</a>
+<nav aria-label="Section 4 — Ch3: Hybrid / label-free + confirmation methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection_1">
+<span class="md-ellipsis">
+      
+        STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams_1">
+<span class="md-ellipsis">
+      
+        Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#unsupervised-concept-drift-detectors-a-survey">
+<span class="md-ellipsis">
+      
+        Unsupervised Concept Drift Detectors: A Survey
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#automatic-model-monitoring-for-data-streams">
+<span class="md-ellipsis">
+      
+        Automatic Model Monitoring for Data Streams
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#foundational-quick-reference-no-per-paper-note">
+<span class="md-ellipsis">
+      
+        Foundational quick-reference (no per-paper note)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-to-use-this-index">
+<span class="md-ellipsis">
+      
+        How to use this index
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Index.pdf" href="../../Phase0:Research/literature_review/index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="literature-review-index-the-delay-tax">Literature Review Index — The Delay Tax<a class="headerlink" href="#literature-review-index-the-delay-tax" title="Permanent link">¶</a></h1>
+<p>Systematic catalog for the "Delay Tax" project (streaming ML drift detection under
+delayed/partial/selective labels). Sorted newest-first within each section.</p>
+<p><strong>Verified</strong> = ✅ (URL resolves, authors/venue/year cross-checked) or ⚠️ (unverified — flagged why).</p>
+<hr/>
+<h2 id="section-1-ch1-detector-baselines-prequential-evaluation-rivermoa-tooling">Section 1 — Ch1: Detector baselines, prequential evaluation, River/MOA tooling<a class="headerlink" href="#section-1-ch1-detector-baselines-prequential-evaluation-rivermoa-tooling" title="Permanent link">¶</a></h2>
+<h3 id="streaming-vs-batch-retraining-policy-comparisons-ch1-thesis-evidence-added-sep-2026">Streaming vs batch / retraining-policy comparisons (Ch1 thesis evidence — added Sep 2026)<a class="headerlink" href="#streaming-vs-batch-retraining-policy-comparisons-ch1-thesis-evidence-added-sep-2026" title="Permanent link">¶</a></h3>
+<p>Direct answer to "has anyone beaten non-streaming models with streaming ones, or compared them on real metrics?" — yes, repeatedly; the honest summary is <em>context-dependent, no universal winner, streaming wins where it has a structural mechanism (per-sample updates), not by detector alone.</em></p>
+<h3 id="when-to-retrain-an-empirical-study-of-retraining-policies-for-streaming-ml-under-concept-drift-budget-and-latency-constraints"><a href="https://arxiv.org/abs/2608.19488">When to Retrain: An Empirical Study of Retraining Policies for Streaming ML Under Concept Drift, Budget, and Latency Constraints</a><a class="headerlink" href="#when-to-retrain-an-empirical-study-of-retraining-policies-for-streaming-ml-under-concept-drift-budget-and-latency-constraints" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Sawan Dasari</li>
+<li><strong>Year / Venue:</strong> 2026, arXiv:2608.19488 (cs.LG); code public</li>
+<li><strong>Chapter relevance:</strong> Ch1 (primary — retraining-policy evidence for the thesis), Ch2 (secondary — latency/budget system model)</li>
+<li><strong>Core claim:</strong> Under explicit budgets and training-plus-deployment latency, the retraining <em>policy</em> (periodic vs error-threshold vs ADWIN-triggered vs none) matters far less than whether the model learns incrementally per sample; without incremental updates, simple periodic retraining beats both reactive policies on abrupt and gradual drift, reactive policies winning only under recurring drift.</li>
+<li><strong>Key numbers:</strong> 3,933 runs; 54 paired comparisons; without incremental updates policy choice separates post-drift accuracy by 15–55 pp; latency–budget queueing interaction silently halves effective budgets; immediate labels, linear learner.</li>
+<li><strong>Method / dataset:</strong> Simulator with stale-model-serves-during-latency; 3 drift regimes × 3 budgets × ≤5 latency levels × 3 datasets × 2 learning modes.</li>
+<li><strong>Gap vs. our lemmas:</strong> Scope-defining for Ch1: our claim must be about <em>streaming learners</em> (bounded recovery via per-sample updates), not drift detectors as batch-refit triggers. Immediate labels only — Delay Tax (Ch3) untouched. <strong>Deep note:</strong> <code>papers/dasari-2026-when-to-retrain.md</code>.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="online-versus-batch-retraining-in-one-step-ahead-urban-water-demand-forecasting-under-concept-drift"><a href="https://doi.org/10.2166/ws.2026.134">Online versus batch retraining in one-step-ahead urban water demand forecasting under concept drift</a><a class="headerlink" href="#online-versus-batch-retraining-in-one-step-ahead-urban-water-demand-forecasting-under-concept-drift" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Lukas Hans, Dietlind Zühlke</li>
+<li><strong>Year / Venue:</strong> 2026, Water Supply 26(4):255–268</li>
+<li><strong>Chapter relevance:</strong> Ch1 (primary — deployment-faithful online-vs-batch-retraining evidence), Ch2 (secondary — runtime/latency in ops)</li>
+<li><strong>Core claim:</strong> Deployment-faithful prequential evaluation of incremental updating vs weekly batch retraining (rolling + expanding windows) on 6 years of hourly demand; an online averaging ensemble of three incremental learners achieves the lowest MAE/RMSE and mitigates high-error episodes; several expanding-window batch models are statistically indistinguishable in the milder-drift area, but the online ensemble is consistently faster (seconds vs minutes/hours) and keeps accuracy where batch baselines degrade.</li>
+<li><strong>Key numbers:</strong> Graphical abstract: avg MAE 391.2, runtime 27.6 s; Diebold–Mariano tests; two drift areas (variance/level drift vs distributional/shape drift).</li>
+<li><strong>Method / dataset:</strong> German utility, 6 years hourly consumption + meteorology; MAE/RMSE, DM tests, end-to-end runtime; online ensemble vs weekly batch retrain.</li>
+<li><strong>Gap vs. our lemmas:</strong> Applied confirmation that online wins under stronger drift and on cost — but regression forecasting, not classification/detector metrics; no recovery-time or damage-area measurement (our Ch1 metrics).</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="digital-twin-based-anomaly-detection-under-concept-drift-a-comparison-between-iterative-batch-learning-and-incremental-learning-approaches"><a href="https://doi.org/10.1016/j.eswa.2025.130062">Digital twin-based anomaly detection under concept drift: A comparison between iterative batch learning and incremental learning approaches</a><a class="headerlink" href="#digital-twin-based-anomaly-detection-under-concept-drift-a-comparison-between-iterative-batch-learning-and-incremental-learning-approaches" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Farah Abdoune, Maroua Nouiri, Olivier Cardin</li>
+<li><strong>Year / Venue:</strong> 2026, Expert Systems with Applications 299:130062</li>
+<li><strong>Chapter relevance:</strong> Ch1 (secondary — applied batch-vs-incremental comparison), Ch2 (secondary — digital-twin/ops context)</li>
+<li><strong>Core claim:</strong> Within a manufacturing digital-twin anomaly-detection framework, compares (i) a statistical threshold baseline, (ii) iterative batch learning (Isolation Forests periodically retrained with operator feedback), and (iii) incremental learning (Half-Space Trees updating in real time) under concept drift.</li>
+<li><strong>Key numbers:</strong> Headline numbers not yet extracted (full text not in vault).</li>
+<li><strong>Method / dataset:</strong> Manufacturing digital twin; threshold baseline vs periodic-batch iForest vs incremental HST.</li>
+<li><strong>Gap vs. our lemmas:</strong> Same paradigm axis as Ch1 but anomaly detection in a DT setting; supports the "drift favours incremental" applied story; no detector-level or delayed-label metrics.</li>
+<li><strong>Verified:</strong> ✅ (Crossref + publisher record)</li>
+</ul>
+<h3 id="an-experimental-comparison-of-batch-and-online-machine-learning-algorithms"><a href="https://doi.org/10.1007/978-981-99-7007-0_9">An Experimental Comparison of Batch and Online Machine Learning Algorithms</a><a class="headerlink" href="#an-experimental-comparison-of-batch-and-online-machine-learning-algorithms" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Thomas Bartz-Beielstein, Lukas Hans</li>
+<li><strong>Year / Venue:</strong> 2024, chapter 9 in <em>Online Machine Learning</em> (Springer, MLFA series), pp. 105–124</li>
+<li><strong>Chapter relevance:</strong> Ch1 (secondary — methodology of BML-vs-OML experiments), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Book-chapter experimental studies comparing batch and online ML: study 1 predicts bike-sharing demand; study 2 compares on very large datasets in the presence of drift.</li>
+<li><strong>Key numbers:</strong> n/a at abstract level (chapter).</li>
+<li><strong>Method / dataset:</strong> Bike-sharing demand regression; large drifting datasets.</li>
+<li><strong>Gap vs. our lemmas:</strong> Same-lab companion to the Water Supply 2026 study (Hans co-author); classification/metric framing and recovery-time measurement still ours.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="all-versus-one-an-empirical-comparison-on-retrained-and-incremental-machine-learning-for-modeling-performance-of-adaptable-software"><a href="https://dl.acm.org/doi/10.1109/SEAMS.2019.00029">All Versus One: An Empirical Comparison on Retrained and Incremental Machine Learning for Modeling Performance of Adaptable Software</a><a class="headerlink" href="#all-versus-one-an-empirical-comparison-on-retrained-and-incremental-machine-learning-for-modeling-performance-of-adaptable-software" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Tao Chen</li>
+<li><strong>Year / Venue:</strong> 2019, SEAMS (14th Intl Symposium on Software Engineering for Adaptive and Self-Managing Systems)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (secondary — "retrained is not always more accurate" evidence), Ch2 (secondary — software/cloud domain)</li>
+<li><strong>Core claim:</strong> First large study comparing full-retrain ("all data, discard old model") vs truly incremental ("tune on each new sample") versions of the <em>same</em> algorithms; refutes the general belief that retrained ⇒ better accuracy: incremental wins on highly fluctuated data (and MLP), retrained wins on stable data (and SVM); incremental is always faster (15% to 3 orders of magnitude) and can dominate on both axes for 3 of 5 performance indicators.</li>
+<li><strong>Key numbers:</strong> 8 learning algorithms (LR/DT/SVM/MLP + bagging/boosting), 5 performance indicators, 3 real adaptable software systems, 1,360 conditions, 10 runs; Wilcoxon + effect sizes.</li>
+<li><strong>Method / dataset:</strong> WEKA/MOA implementations; S-RUBiS, ASOS, C-VARD; MAE + mean training time; drift counted via ADWIN, extent via mRSD.</li>
+<li><strong>Gap vs. our lemmas:</strong> Regression performance modeling (software domain), not classification streams; no detectors/recovery metrics; complements Read 2012 and reinforces our per-metric/per-context claim structure.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="batch-incremental-versus-instance-incremental-learning-in-dynamic-and-evolving-data"><a href="https://doi.org/10.1007/978-3-642-34156-4_29">Batch-Incremental versus Instance-Incremental Learning in Dynamic and Evolving Data</a><a class="headerlink" href="#batch-incremental-versus-instance-incremental-learning-in-dynamic-and-evolving-data" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Jesse Read, Albert Bifet, Bernhard Pfahringer, Geoff Holmes</li>
+<li><strong>Year / Venue:</strong> 2012, IDA (LNCS 7619), pp. 313–323</li>
+<li><strong>Chapter relevance:</strong> Ch1 (primary — the canonical instance- vs batch-incremental comparison)</li>
+<li><strong>Core claim:</strong> First in-depth comparison of instance-incremental (learn per example) vs batch-incremental (gather batches, retrain) classifiers under drift; papers in both camps typically cite no evidence for the choice — this supplies it, revealing respective advantages/disadvantages with no universal winner.</li>
+<li><strong>Key numbers:</strong> 104 citations (Springer, Sep 2026); headline empirical numbers to be extracted on full read.</li>
+<li><strong>Method / dataset:</strong> MOA; multiple algorithms of each paradigm, drift adaptation focus.</li>
+<li><strong>Gap vs. our lemmas:</strong> Establishes context-dependence (hence our per-metric win card), not reactivity metrics; immediate labels only. <strong>Deep note:</strong> <code>papers/read-2012-batch-vs-instance.md</code>.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="a-framework-for-evaluating-and-benchmarking-concept-drift-detection-methods"><a href="https://dl.acm.org/doi/10.1145/3770855.3819070">A Framework for Evaluating and Benchmarking Concept Drift Detection Methods</a><a class="headerlink" href="#a-framework-for-evaluating-and-benchmarking-concept-drift-detection-methods" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Vitor Cerqueira, Heitor Murilo Gomes, Marco Heyden, Bernhard Pfahringer, Albert Bifet</li>
+<li><strong>Year / Venue:</strong> 2026, KDD '26 (Proceedings of the 32nd ACM SIGKDD, V.2), pp. 8671–8682</li>
+<li><strong>Chapter relevance:</strong> Ch1 (primary), Ch2 (secondary — reproducible benchmark infra)</li>
+<li><strong>Core claim:</strong> Evaluation of drift detectors is inconsistent (oversimplified synthetic generators, incompatible metrics, hidden hyperparameter choice); proposes a Monte-Carlo drift-injection framework on real data, timing-aware metrics (F1-detection score, normalized detection time), and a leave-one-dataset-out hyperparameter protocol.</li>
+<li><strong>Key numbers:</strong> Benchmarks 14 detectors on 7 real datasets × 4 drift types (class prior, label swap, feature permutation, feature filtering) × abrupt/gradual; KDD'26 acceptance rate 21%; open access, code public.</li>
+<li><strong>Method / dataset:</strong> Drift injected into real streams via Monte Carlo trials.</li>
+<li><strong>Gap vs. our lemmas:</strong> Immediate-label setting; no delayed/partial labels. Confirms our Ch1 methodology gap (no accepted protocol) and is the strongest candidate baseline harness to reproduce for the Phase-0 "reproduce a published baseline" task.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="practical-machine-learning-for-streaming-data-kdd24-tutorial"><a href="https://dl.acm.org/doi/10.1145/3637528.3671442">Practical Machine Learning for Streaming Data (KDD'24 tutorial)</a><a class="headerlink" href="#practical-machine-learning-for-streaming-data-kdd24-tutorial" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Heitor Murilo Gomes, Albert Bifet</li>
+<li><strong>Year / Venue:</strong> 2024, KDD '24 (tutorial abstract, 2 pp.)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (tooling), Ch3 (secondary — delayed/partial label section)</li>
+<li><strong>Core claim:</strong> Tutorial bridging stream-ML research and practice via CapyMOA (Python API over MOA); includes drift detection/evaluation and a section on partially and delayed labeled streams using cluster-and-label and incremental self-training.</li>
+<li><strong>Key numbers:</strong> n/a (tutorial).</li>
+<li><strong>Method / dataset:</strong> CapyMOA/MOA tooling; ADWIN, STUDD, Hoeffding Trees, SGBT, SOKNL, CluStream, StreamKM++, Half-Space Trees, Online Isolation Forest.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — tooling reference; confirms CapyMOA as a practical alternative/supplement to River.</li>
+<li><strong>Verified:</strong> ✅ (ACM DL page + full text in Material/)</li>
+</ul>
+<h3 id="deepriver-a-deep-learning-library-for-data-streams"><a href="https://doi.org/10.21105/joss.07226">DeepRiver: A Deep Learning Library for Data Streams</a><a class="headerlink" href="#deepriver-a-deep-learning-library-for-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Cedric Kulbach, Lucas Cazzonelli, Hoang-Anh Ngo, Max Halford, Saulo Martiello Mastelini</li>
+<li><strong>Year / Venue:</strong> 2025, Journal of Open Source Software 10(105):7226</li>
+<li><strong>Chapter relevance:</strong> Ch1 (tooling, secondary), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> DeepRiver adds deep learning (PyTorch) to River's API for online/streaming scenarios: class-incremental learning, stream-specific optimizers, anomaly detection (autoencoders).</li>
+<li><strong>Key numbers:</strong> n/a (software paper).</li>
+<li><strong>Method / dataset:</strong> River + PyTorch; Autoencoder, RollingClassifier, etc.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — out of our scope (we exclude deep learning), but useful to know River's ecosystem.</li>
+<li><strong>Verified:</strong> ✅ (JOSS page + full text in Material/)</li>
+</ul>
+<h3 id="river-machine-learning-for-streaming-data-in-python-jmlr-2021"><a href="https://arxiv.org/abs/2012.04740">River: Machine Learning for Streaming Data in Python (JMLR 2021)</a><a class="headerlink" href="#river-machine-learning-for-streaming-data-in-python-jmlr-2021" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Jacob Montiel, Max Halford, Saulo Martiello Mastelini, Geoffrey Bolmier, Raphael Sourty, Robin Vaysse, Adil Zouitine, Heitor M. Gomes, Jesse Read, TaleL Abdessalem, Albert Bifet</li>
+<li><strong>Year / Venue:</strong> 2021, JMLR 22(110):1–8</li>
+<li><strong>Chapter relevance:</strong> Ch1 (primary — our chosen tool), Ch2 (secondary — deployment APIs)</li>
+<li><strong>Core claim:</strong> River is a Python library for online/streaming ML (merge of creme + scikit-multiflow) providing incremental models, drift detectors, prequential metrics, and synthetic generators in a unified dict-based API.</li>
+<li><strong>Key numbers:</strong> n/a (tooling paper); implements ADWIN, DDM, EDDM, Page-Hinkley, KSWIN, HDDM, Hoeffding trees, ARF, SRP, prequential metrics.</li>
+<li><strong>Method / dataset:</strong> Library.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — the instrument, not the subject. Needed to pin the River version for the Phase-0 baseline reproduction.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="adaptive-learning-from-evolving-data-streams-hat"><a href="https://link.springer.com/chapter/10.1007/978-3-642-03915-7_22">Adaptive Learning from Evolving Data Streams (HAT)</a><a class="headerlink" href="#adaptive-learning-from-evolving-data-streams-hat" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Albert Bifet, Ricard Gavaldà</li>
+<li><strong>Year / Venue:</strong> 2009, IDA (Springer)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (adaptive model baseline)</li>
+<li><strong>Core claim:</strong> Introduces Hoeffding Adaptive Tree (HAT), which uses ADWIN at tree nodes to detect and adapt to drift; a core adaptive baseline.</li>
+<li><strong>Key numbers:</strong> Reports superior adaptability on synthetic and real datasets (Adult, Poker-Hand); HAT-INC, HAT-EWMA, HAT-ADWIN variants.</li>
+<li><strong>Method / dataset:</strong> Incremental decision trees with ADWIN per node.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; a Ch1 baseline model.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="on-evaluating-stream-learning-algorithms"><a href="https://link.springer.com/article/10.1007/s10994-012-9334-7">On Evaluating Stream Learning Algorithms</a><a class="headerlink" href="#on-evaluating-stream-learning-algorithms" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> João Gama, Raquel Sebastião, Pedro Pereira Rodrigues</li>
+<li><strong>Year / Venue:</strong> 2013, Machine Learning 90(3):317–346</li>
+<li><strong>Chapter relevance:</strong> Ch1 (prequential evaluation protocol)</li>
+<li><strong>Core claim:</strong> Prequential (test-then-train) evaluation with forgetting mechanisms is the correct protocol for ordered streams; random splits leak temporal information.</li>
+<li><strong>Key numbers:</strong> n/a (methodology).</li>
+<li><strong>Method / dataset:</strong> Formalizes prequential evaluation and sliding-window/fading-factor variants.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — foundational evaluation protocol for Ch1; breaks under delayed labels (our Ch3 motivation).</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="a-comparative-study-on-concept-drift-detectors"><a href="https://doi.org/10.1016/j.eswa.2014.07.019">A Comparative Study on Concept Drift Detectors</a><a class="headerlink" href="#a-comparative-study-on-concept-drift-detectors" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Paulo M. Gonçalves Jr, Silas G. T. de Carvalho Santos, Roberto S. M. Barros, Davi C. L. Vieira</li>
+<li><strong>Year / Venue:</strong> 2014, Expert Systems with Applications 41(18):8144–8156</li>
+<li><strong>Chapter relevance:</strong> Ch1 (detector comparison baseline)</li>
+<li><strong>Core claim:</strong> Systematic comparison of DDM, EDDM, Page-Hinkley, STEPD, DoF, ADWIN, Paired Learners, ECDD under abrupt/gradual drift, noise, and irrelevant attributes; no detector dominates.</li>
+<li><strong>Key numbers:</strong> n/a reported in abstract; the canonical "no single detector wins" empirical reference.</li>
+<li><strong>Method / dataset:</strong> Synthetic (SEA) and real streams; detector configs matter.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; reusable as Ch1 comparator and to justify our sweep design.</li>
+<li><strong>Verified:</strong> ⚠️ (DOI cross-checked in KDD'26 reference list; full-text not re-fetched)</li>
+</ul>
+<h3 id="learning-from-time-changing-data-with-adaptive-windowing-adwin"><a href="https://doi.org/10.1137/1.9781611972771.42">Learning from Time-Changing Data with Adaptive Windowing (ADWIN)</a><a class="headerlink" href="#learning-from-time-changing-data-with-adaptive-windowing-adwin" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Albert Bifet, Ricard Gavaldà</li>
+<li><strong>Year / Venue:</strong> 2007, SIAM SDM (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (detector baseline, foundational)</li>
+<li><strong>Core claim:</strong> ADWIN maintains an adaptive window and shrinks it when two subwindows differ significantly; provides false-positive guarantees.</li>
+<li><strong>Key numbers:</strong> n/a (foundational).</li>
+<li><strong>Method / dataset:</strong> Adaptive windowing / change detection on error or feature streams.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; the canonical detector for Ch1 and the natural subject of our Lemma 2 (power loss) experiment.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="learning-with-drift-detection-ddm"><a href="https://doi.org/10.1007/978-3-540-28645-5_29">Learning with Drift Detection (DDM)</a><a class="headerlink" href="#learning-with-drift-detection-ddm" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> João Gama, Pedro Medas, Gladys Castillo, Pedro Rodrigues</li>
+<li><strong>Year / Venue:</strong> 2004, SBIA (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (detector baseline, foundational)</li>
+<li><strong>Core claim:</strong> DDM tracks error rate and its std, warns/alarms when error significantly exceeds its minimum; cheap, standard supervised detector.</li>
+<li><strong>Key numbers:</strong> n/a (foundational).</li>
+<li><strong>Method / dataset:</strong> Statistical process control on error stream.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; subject of our Lemma 3 (batch-arrival false-alarm inflation) experiment.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="early-drift-detection-method-eddm-baena-garcia-et-al-2006-iwkdds"><a href="https://dl.acm.org/doi/10.1145/347090.347107">Early Drift Detection Method (EDDM)</a> (Baena-García et al., 2006, IWKDDS)<a class="headerlink" href="#early-drift-detection-method-eddm-baena-garcia-et-al-2006-iwkdds" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Manuel Baena-García, José del Campo-Ávila, Raúl Fidalgo, Albert Bifet, Ricard Gavaldà, Rafael Morales-Bueno</li>
+<li><strong>Year / Venue:</strong> 2006, 4th Intl Workshop on Knowledge Discovery from Data Streams (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (detector baseline, foundational)</li>
+<li><strong>Core claim:</strong> EDDM monitors distance between errors to improve detection of gradual drift.</li>
+<li><strong>Key numbers:</strong> n/a (foundational).</li>
+<li><strong>Method / dataset:</strong> Error-distance monitoring.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels.</li>
+<li><strong>Verified:</strong> ⚠️ (citation cross-checked in KDD'26 and STUDD reference lists; not separately fetched)</li>
+</ul>
+<h3 id="mining-high-speed-data-streams-vfdt-hoeffding-tree"><a href="https://dl.acm.org/doi/10.1145/347090.347107">Mining High-Speed Data Streams (VFDT / Hoeffding Tree)</a><a class="headerlink" href="#mining-high-speed-data-streams-vfdt-hoeffding-tree" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Pedro Domingos, Geoff Hulten</li>
+<li><strong>Year / Venue:</strong> 2000, KDD (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (static model baseline, foundational)</li>
+<li><strong>Core claim:</strong> Hoeffding Tree learns a decision tree in one pass with constant memory per leaf using the Hoeffding bound; the canonical static stream classifier.</li>
+<li><strong>Key numbers:</strong> Reported constant-time-per-example and high throughput; 1,598 citations on ACM DL.</li>
+<li><strong>Method / dataset:</strong> VFDT on synthetic/large data.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; Ch1 static baseline.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="mining-time-changing-data-streams-cvfdt"><a href="https://dl.acm.org/doi/10.1145/502512.502529">Mining Time-Changing Data Streams (CVFDT)</a><a class="headerlink" href="#mining-time-changing-data-streams-cvfdt" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Geoff Hulten, Laurie Spencer, Pedro Domingos</li>
+<li><strong>Year / Venue:</strong> 2001, KDD (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (static/adaptive model baseline, foundational)</li>
+<li><strong>Core claim:</strong> Extends VFDT with a sliding window and alternate subtrees so the tree stays current under drift while still exploiting old data; the original demonstration that an <em>adaptive</em> stream learner tracks evolving concepts better than trees rebuilt periodically on recent data — the ancestor of our frozen-vs-adaptive claim.</li>
+<li><strong>Key numbers:</strong> Constant (amortised) time per example; experiments on synthetic + real evolving streams (e.g., network/data-stream settings).</li>
+<li><strong>Method / dataset:</strong> Hoeffding-tree variant with windowed statistics + alternate-subtree replacement.</li>
+<li><strong>Gap vs. our lemmas:</strong> Immediate labels; recovery-time/recovery-metrics framing not present — but it is the correct historical citation for "adaptive beats periodically-rebuilt batch," alongside VFDT (2000).</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="learning-in-the-presence-of-concept-drift-and-hidden-contexts"><a href="https://doi.org/10.1007/bf00116900">Learning in the Presence of Concept Drift and Hidden Contexts</a><a class="headerlink" href="#learning-in-the-presence-of-concept-drift-and-hidden-contexts" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Gerhard Widmer, Miroslav Kubat</li>
+<li><strong>Year / Venue:</strong> 1996, Machine Learning 23(1):69–101 (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch1 (concept drift foundations)</li>
+<li><strong>Core claim:</strong> Early formal treatment of concept drift and hidden contexts; introduced the notion of context-dependent concepts.</li>
+<li><strong>Key numbers:</strong> n/a (foundational).</li>
+<li><strong>Method / dataset:</strong> FLORA2 algorithm on synthetic streams.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — immediate labels; contextualizes Ch1.</li>
+<li><strong>Verified:</strong> ⚠️ (citation cross-checked in multiple reference lists; not separately fetched)</li>
+</ul>
+<hr/>
+<h2 id="section-2-ch2-systems-operational-cost-of-continual-learning">Section 2 — Ch2: Systems / operational cost of continual learning<a class="headerlink" href="#section-2-ch2-systems-operational-cost-of-continual-learning" title="Permanent link">¶</a></h2>
+<h3 id="a-high-throughput-architecture-for-anomaly-detection-in-streaming-data-using-machine-learning-algorithms"><a href="https://link.springer.com/article/10.1007/s41870-023-01585-0">A High-Throughput Architecture for Anomaly Detection in Streaming Data Using Machine Learning Algorithms</a><a class="headerlink" href="#a-high-throughput-architecture-for-anomaly-detection-in-streaming-data-using-machine-learning-algorithms" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Chellammal Surianarayanan, Saranya Kunasekaran, Pethuru Raj Chelliah</li>
+<li><strong>Year / Venue:</strong> 2023 (published online 04 Nov 2023; issue 2024), International Journal of Information Technology 16:493–506</li>
+<li><strong>Chapter relevance:</strong> Ch2 (primary — streaming architecture, Kafka, throughput)</li>
+<li><strong>Core claim:</strong> Proposes a high-throughput Kafka publish-subscribe architecture for continuous ML anomaly detection, with two alternating subscribers to hide ML computation time.</li>
+<li><strong>Key numbers:</strong> Single-node: avg accuracy 96.7%, computation 37.5 ms; distributed: avg accuracy 98.6%, computation 38.5 ms; Random Forest with threshold-based point anomaly detection.</li>
+<li><strong>Method / dataset:</strong> Apache Kafka pub/sub, RF; single-node vs distributed configs.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — no delayed labels; a concrete reference for our Ch2 event-source/backpressure design (Redis Streams vs Kafka decision).</li>
+<li><strong>Verified:</strong> ✅ (Springer full text fetched)</li>
+</ul>
+<h3 id="optimizing-machine-learning-inference-serving-systems-a-survey"><a href="https://www.semanticscholar.org/paper/Optimizing-Machine-Learning-Inference-Serving-A-Ebadi-Keller/b418ad9a70c626133b9b0b8d8b566739f54cff85">Optimizing Machine Learning Inference Serving Systems: A Survey</a><a class="headerlink" href="#optimizing-machine-learning-inference-serving-systems-a-survey" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> (survey) Ebadi &amp; Keller (per Semantic Scholar)</li>
+<li><strong>Year / Venue:</strong> 2025 (recent; last-3-years survey)</li>
+<li><strong>Chapter relevance:</strong> Ch2 (serving latency/throughput optimization)</li>
+<li><strong>Core claim:</strong> Surveys techniques for resource optimization and latency reduction in ML inference serving.</li>
+<li><strong>Key numbers:</strong> n/a (survey).</li>
+<li><strong>Method / dataset:</strong> Survey of serving systems literature.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — no delayed labels; informs Ch2's latency/throughput framing, not Ch3.</li>
+<li><strong>Verified:</strong> ⚠️ (Semantic Scholar abstract page; full author list not independently cross-checked)</li>
+</ul>
+<h3 id="machine-learning-in-security-a-stream-of-problems"><a href="https://marcusbotacin.github.io/files/2023-ceschin-insecurity.pdf">Machine Learning (In) Security: A Stream of Problems</a><a class="headerlink" href="#machine-learning-in-security-a-stream-of-problems" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> F. Ceschin, H. M. Gomes, M. Botacin, A. Bifet, B. Pfahringer, L. S. Oliveira, A. Grégio</li>
+<li><strong>Year / Venue:</strong> 2023, Expert Systems with Applications 212:118590</li>
+<li><strong>Chapter relevance:</strong> Ch2 (primary), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Argues malware detection must be modeled as an evolving data stream; surveys pipeline realism gaps (drift, delayed labels, imbalance).</li>
+<li><strong>Key numbers:</strong> n/a (survey/positioning); frames the delayed-label production story.</li>
+<li><strong>Method / dataset:</strong> Survey of stream-ML-for-security pitfalls.</li>
+<li><strong>Gap vs. our lemmas:</strong> none directly — but a strong production-motivation citation for Ch2 and Ch3.</li>
+<li><strong>Verified:</strong> ⚠️ (PDF link from author site; year/venue cross-checked in Botacin &amp; Gomes references)</li>
+</ul>
+<h3 id="tesseract-eliminating-experimental-bias-in-malware-classification-across-space-and-time"><a href="https://www.usenix.org/conference/usenixsecurity19/presentation/pendlebury">TESSERACT: Eliminating Experimental Bias in Malware Classification Across Space and Time</a><a class="headerlink" href="#tesseract-eliminating-experimental-bias-in-malware-classification-across-space-and-time" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Feargus Pendlebury, Fabio Pierazzi, Roberto Jordaney, Johannes Kinder, Lorenzo Cavallaro</li>
+<li><strong>Year / Venue:</strong> 2019, USENIX Security (foundational for realistic evaluation)</li>
+<li><strong>Chapter relevance:</strong> Ch2 (evaluation bias), Ch3 (delayed-label motivation)</li>
+<li><strong>Core claim:</strong> Temporal (and spatial) bias in malware ML evaluation inflates results; proposes temporal-aware evaluation and the AUT (area under time) metric.</li>
+<li><strong>Key numbers:</strong> Reports evaluation bias reduction with time-aware splits (details in paper).</li>
+<li><strong>Method / dataset:</strong> Android malware (DREBIN) with temporal splits; AUT metric.</li>
+<li><strong>Gap vs. our lemmas:</strong> none — no delayed labels, but AUT is a temporal metric Ch2/Ch3 should contrast with the exposure metric of Botacin &amp; Gomes.</li>
+<li><strong>Verified:</strong> ⚠️ (USENIX page; content cross-checked via Botacin &amp; Gomes reference list)</li>
+</ul>
+<h3 id="challenges-in-benchmarking-stream-learning-algorithms-with-real-world-data"><a href="https://link.springer.com/article/10.1007/s10618-020-00698-5">Challenges in Benchmarking Stream Learning Algorithms with Real-world Data</a><a class="headerlink" href="#challenges-in-benchmarking-stream-learning-algorithms-with-real-world-data" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Vinícius M. A. Souza, Denis M. dos Reis, André G. Maletzke, Gustavo E. A. P. A. Batista</li>
+<li><strong>Year / Venue:</strong> 2020, Data Mining and Knowledge Discovery 34:1805–1858</li>
+<li><strong>Chapter relevance:</strong> Ch2 (benchmarking pitfalls), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Real-world stream benchmarks have undocumented preprocessing and ordering issues that confound results; proposes a benchmark repository and methodological fixes.</li>
+<li><strong>Key numbers:</strong> n/a (methodology).</li>
+<li><strong>Method / dataset:</strong> Stream repository (the one used by STUDD).</li>
+<li><strong>Gap vs. our lemmas:</strong> none — but reinforces our Elec2/Kappa+ caution for Ch1.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="moa-a-real-time-analytics-open-source-framework"><a href="https://link.springer.com/chapter/10.1007/978-3-642-24958-7_58">MOA: A Real-Time Analytics Open Source Framework</a><a class="headerlink" href="#moa-a-real-time-analytics-open-source-framework" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Albert Bifet, Geoff Holmes, Bernhard Pfahringer, Jesse Read, Philipp Kranen, Hardy Kremer, Timm Jansen, Thomas Seidl</li>
+<li><strong>Year / Venue:</strong> 2011, ECML-PKDD (tooling)</li>
+<li><strong>Chapter relevance:</strong> Ch2 (infrastructure/tooling contrast), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> MOA is the reference Java framework for stream mining; relevant as the ecosystem River/CapyMOA interoperate with.</li>
+<li><strong>Key numbers:</strong> n/a (tooling).</li>
+<li><strong>Method / dataset:</strong> Framework.</li>
+<li><strong>Gap vs. our lemmas:</strong> none.</li>
+<li><strong>Verified:</strong> ⚠️ (Springer chapter page; cross-checked in Grzenda references)</li>
+</ul>
+<hr/>
+<h2 id="section-3-ch3-delayed-partial-selective-labels-drift-detection-the-core-gap">Section 3 — Ch3: Delayed / partial / selective labels + drift detection (the core gap)<a class="headerlink" href="#section-3-ch3-delayed-partial-selective-labels-drift-detection-the-core-gap" title="Permanent link">¶</a></h2>
+<h3 id="concept-drift-detection-in-delayed-and-partially-labeled-data-streams-an-experimental-survey"><a href="https://www.sciencedirect.com/science/article/pii/S1051200426004434">Concept Drift Detection in Delayed and Partially Labeled Data Streams: An Experimental Survey</a><a class="headerlink" href="#concept-drift-detection-in-delayed-and-partially-labeled-data-streams-an-experimental-survey" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Brenno de Mello Alencar, Guilherme Weigert Cassales, Heitor Murilo Gomes, Cássio V. S. Prazeres, Tatiane Rios, Albert Bifet, Ricardo Araújo Rios</li>
+<li><strong>Year / Venue:</strong> 2026, Digital Signal Processing 182:106325</li>
+<li><strong>Chapter relevance:</strong> Ch3 (primary — the closest existing survey)</li>
+<li><strong>Core claim:</strong> First recent experimental survey organizing drift detectors under delayed and partially labeled streams; provides a taxonomy of detectors and evaluation approaches under label scarcity.</li>
+<li><strong>Key numbers:</strong> DSP 182, article 106325 (verified via dblp).</li>
+<li><strong>Method / dataset:</strong> Experimental survey of detectors under delayed/partial labels.</li>
+<li><strong>Gap vs. our lemmas:</strong> Directly adjacent to the whole of Ch3. It likely partially covers our Lemma 2 (label-scarcity degradation) empirically; the gap is the formal reaction-floor/identifiability treatment and the hybrid confirmation protocol. <strong>Potential partial scoop — must read in full before finalizing Ch3 novelty claims.</strong></li>
+<li><strong>Verified:</strong> ✅ (dblp + ScienceDirect + Semantic Scholar)</li>
+</ul>
+<h3 id="towards-more-realistic-evaluations-the-impact-of-label-delays-in-malware-detection-pipelines"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0167404824004279">Towards More Realistic Evaluations: The Impact of Label Delays in Malware Detection Pipelines</a><a class="headerlink" href="#towards-more-realistic-evaluations-the-impact-of-label-delays-in-malware-detection-pipelines" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Marcus Botacin, Heitor Gomes</li>
+<li><strong>Year / Venue:</strong> 2024, Computers &amp; Security (COSE), vol. 147 (per ScienceDirect pii)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (primary — direct empirical measurement of label-delay cost), Ch2 (secondary — queue/pipeline modeling)</li>
+<li><strong>Core claim:</strong> Models malware detection as delayed+partially-labeled evolving stream; quantifies how label delay (from analysis-queue limits) degrades drift-based retraining, proposes the exposure metric, and shows pseudo-labels mitigate delay.</li>
+<li><strong>Key numbers:</strong> Delayed labels increase user exposure ~50% (up to 75% detection decrease); 81 epochs delay → exposure +50% vs immediate (DDM), 61 epochs (EDDM); pseudo-labels reduce loss to ~30% of original; 10% queue ≈ 100+ epochs delay; 10 executions averaged; DREBIN 250×500 samples, Androzoo replication.</li>
+<li><strong>Method / dataset:</strong> DREBIN + Androzoo, RF, DDM/EDDM, epoch-based drift detection, exposure metric, pseudo-label (secondary classifier) mitigation.</li>
+<li><strong>Gap vs. our lemmas:</strong> Empirically confirms the reaction-floor phenomenon (Lemma 1) and the value of a label-free/early signal (hybrid), but does not derive the formal bounds or the statistical power/identifiability lemmas; its pseudo-label approach is the closest existing thing to our hybrid's Stage-1. <strong>Must-cite; do not let Ch3 claim the exposure-style quantification as novel without contrasting.</strong></li>
+<li><strong>Verified:</strong> ✅ (PDF fetched + ScienceDirect record; COSE 2024 confirmed via GitHub repo)</li>
+</ul>
+<h3 id="a-survey-on-semi-supervised-learning-for-delayed-partially-labelled-data-streams"><a href="https://dl.acm.org/doi/10.1145/3523055">A Survey on Semi-supervised Learning for Delayed Partially Labelled Data Streams</a><a class="headerlink" href="#a-survey-on-semi-supervised-learning-for-delayed-partially-labelled-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Heitor Murilo Gomes, Maciej Grzenda, Rodrigo Mello, Jesse Read, Minh Huong Le Nguyen, Albert Bifet</li>
+<li><strong>Year / Venue:</strong> 2022 (published online 21 Nov 2022; issue 2023), ACM Computing Surveys 55(4), Article 75</li>
+<li><strong>Chapter relevance:</strong> Ch3 (primary — anchor survey), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Formalizes "delayed partially labelled data streams" (immediate/delayed/infinite labels × supervised/semi-supervised); surveys SSL methods, learning guarantees, and evaluation practice; proposes a unified problem setting.</li>
+<li><strong>Key numbers:</strong> 63 citations / 6,779 downloads (ACM DL, Aug 2026). Included a small experiment: with ADWIN + SRP on AGRAWAL (100k instances, 3 drifts), a 10,000-instance label delay shifts detections by ~10,000 instances and causes prolonged prequential accuracy below 50%.</li>
+<li><strong>Method / dataset:</strong> Survey + illustrative delayed-label AGRAWAL experiment.</li>
+<li><strong>Gap vs. our lemmas:</strong> Confirms the reaction-floor phenomenon empirically (Lemma 1) but does not prove it or bound power loss (Lemma 2) or batch-arrival inflation (Lemma 3). Identifiability (Lemma 4) is discussed via Žliobaitė. <strong>The reference to cite as "closest prior work."</strong></li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="studd-a-studentteacher-method-for-unsupervised-concept-drift-detection"><a href="https://link.springer.com/article/10.1007/s10994-022-06188-7">STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection</a><a class="headerlink" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Vitor Cerqueira, Heitor Murilo Gomes, Albert Bifet, Luis Torgo</li>
+<li><strong>Year / Venue:</strong> 2022 (online 21 Jun 2022; issue 2023), Machine Learning 112:4351–4378</li>
+<li><strong>Chapter relevance:</strong> Ch3 (label-free baseline for hybrid Stage-1), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Student model mimics teacher; drift is detected by monitoring the student's mimicking loss (label-free) — a strong candidate for the label-free early-warning stage of our hybrid.</li>
+<li><strong>Key numbers:</strong> 19 benchmark streams (truncated to 150k each); MDR ~19% (3/16), FAR/MTD/MTFA reported; label efficiency best among non-baselines; Bayesian sign test ROPE 5%.</li>
+<li><strong>Method / dataset:</strong> Student-teacher with Page-Hinkley; comparison vs supervised (SS/DSS/WS/DWS) and unsupervised (OS/OF/FF) variants.</li>
+<li><strong>Gap vs. our lemmas:</strong> Unsupervised only — explicitly notes it cannot catch real (posterior) drift without labels, which is exactly our Lemma 4 and motivates the hybrid. <strong>Direct Stage-1 baseline for Ch3.</strong></li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="rose-robust-online-self-adjusting-ensemble-for-continual-learning-on-imbalanced-drifting-data-streams"><a href="https://doi.org/10.1007/s10994-022-06168-x">ROSE: Robust Online Self-Adjusting Ensemble for Continual Learning on Imbalanced Drifting Data Streams</a><a class="headerlink" href="#rose-robust-online-self-adjusting-ensemble-for-continual-learning-on-imbalanced-drifting-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Alberto Cano, Bartosz Krawczyk</li>
+<li><strong>Year / Venue:</strong> 2022, Machine Learning 111:2561–2599</li>
+<li><strong>Chapter relevance:</strong> Ch3 (secondary — adaptation method under drift+imbalance), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Online ensemble with variable-size random feature subspaces, ADWIN-per-subspace drift detection + background ensemble, per-class sliding windows, and self-adjusting λ bagging for imbalance.</li>
+<li><strong>Key numbers:</strong> 30 ensembles compared; 24 imbalanced real datasets; 36 imbalanced generators; 12 drifting-imbalance generators; Kappa avg 63.65 vs next-best 57.85 (static IR); Wilcoxon/Bayesian significance; 384 GB RAM Xeon runs.</li>
+<li><strong>Method / dataset:</strong> MOA; HoeffdingTree base; prequential Kappa/AUC; Friedman ranks.</li>
+<li><strong>Gap vs. our lemmas:</strong> Immediate labels; contributes the background-ensemble + drift-detector adaptation pattern relevant to Ch2/Ch3 but not delayed-label detection.</li>
+<li><strong>Verified:</strong> ✅ (full text in Material/)</li>
+</ul>
+<h3 id="stream-based-active-learning-with-verification-latency-in-non-stationary-environments"><a href="https://arxiv.org/abs/2204.06822">Stream-Based Active Learning with Verification Latency in Non-stationary Environments</a><a class="headerlink" href="#stream-based-active-learning-with-verification-latency-in-non-stationary-environments" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Rodrigo Mello, Heitor Murilo Gomes, Albert Bifet, Bernhard Pfahringer</li>
+<li><strong>Year / Venue:</strong> 2022 (arXiv:2204.06822; IJCNN 2022)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (selective labeling / active learning under latency), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Proposes PRopagate: estimates query utility under unknown label delay and predicts requested-but-unavailable labels; drift-dependent labeling budget.</li>
+<li><strong>Key numbers:</strong> Reports improvements over active-learning baselines under constant and variable latency (from abstract; per-paper details to be read).</li>
+<li><strong>Method / dataset:</strong> Stream active learning with verification latency.</li>
+<li><strong>Gap vs. our lemmas:</strong> Addresses label acquisition under latency rather than detector isolation; the "only flagged cases labeled" endogenous-bias scenario connects to our selective-labeling regime. <strong>Partially overlaps our selective-labeling chapter.</strong></li>
+<li><strong>Verified:</strong> ✅ (arXiv abstract page resolves)</li>
+</ul>
+<h3 id="statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams"><a href="https://doi.org/10.1007/s44443-026-01091-w">Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams</a><a class="headerlink" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Friday I. Agu, Robert Andok, Jaromír Klarák, Jean Rosemond Dora</li>
+<li><strong>Year / Venue:</strong> 2026, Journal of King Saud University — Computer and Information Sciences 38:673</li>
+<li><strong>Chapter relevance:</strong> Ch3 (secondary — hybrid statistical detector + pseudo-label adaptation), Ch2 (secondary — edge/runtime profiling)</li>
+<li><strong>Core claim:</strong> A Gamma–Weibull log-likelihood-ratio CUSUM detector (ARL₀-calibrated) gates lightweight LSTM/CNN adaptation; post-drift buffer, pseudo-labeling + clustering labels, no human labels.</li>
+<li><strong>Key numbers:</strong> Detection delay 6 samples (abrupt), 80 (gradual), 35 (mixed), zero false alarms (noise-free); ADWIN delay 1.1±1.2 but ~1270 false alarms; PHT 125.2±106 delay, 0 FA; DDM 425.9±401 delay, 625 FA; LSTM macro-F1 0.977→0.981, CNN 0.457→0.576; full pipeline 1.43 s CPU; monitoring &lt;150 ms; memory &lt;50 KB.</li>
+<li><strong>Method / dataset:</strong> Simulated Gamma→Weibull streams (T=10k, MC=30); IoT-23 (benign n=451; malware n=14,784; capture 33-1 and 1-1).</li>
+<li><strong>Gap vs. our lemmas:</strong> Uses a parametric distribution model (not error-stream detectors) and pseudo-labels (not delayed ground truth); does not treat the four lemmas, but its gatekeeper adaptation is a good contrast for our hybrid architecture. <strong>Include as a 2026 "adjacent hybrid" citation.</strong></li>
+<li><strong>Verified:</strong> ✅ (full text in Material/)</li>
+</ul>
+<h3 id="delayed-labelling-evaluation-for-data-streams"><a href="https://link.springer.com/article/10.1007/s10618-019-00654-y">Delayed Labelling Evaluation for Data Streams</a><a class="headerlink" href="#delayed-labelling-evaluation-for-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Maciej Grzenda, Heitor Murilo Gomes, Albert Bifet</li>
+<li><strong>Year / Venue:</strong> 2020, Data Mining and Knowledge Discovery 34:1237–1266</li>
+<li><strong>Chapter relevance:</strong> Ch3 (evaluation protocol under delay), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Introduces continuous re-evaluation: buffer predictions, re-poll the evolving model before the delayed label arrives, and score binned predictions (initial / periodic / test-then-train). The standard evaluation answer for delayed-label streams.</li>
+<li><strong>Key numbers:</strong> Hyperplane (delay 100), LED (delay 1000), AGRAWAL (delay 1000, 4 gradual drifts), Airlines (natural latency up to 13h), Electricity (~1–2 day latency), Forest cover (delay 1000); K=10 re-polls, B=50 bins recommended. Open-source MOA implementation.</li>
+<li><strong>Method / dataset:</strong> MOA; HT/HAT/ARF/kNN/NB/NC/MC; binned performance λ(T,b).</li>
+<li><strong>Gap vs. our lemmas:</strong> Evaluation methodology, not detector analysis; it shows models can refine predictions while labels are pending — directly relevant to our hybrid's confirmation stage and to how we evaluate the delayed-label regimes. <strong>Use their evaluation protocol in Ch3.</strong></li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="credit-card-fraud-detection-and-concept-drift-adaptation-with-delayed-supervised-information"><a href="https://www.semanticscholar.org/paper/Credit-card-fraud-detection-and-concept-drift-with-Pozzolo-Boracchi/b769ec8f3be051b7c5f9a0ba5f85a38594950df9">Credit Card Fraud Detection and Concept-Drift Adaptation with Delayed Supervised Information</a><a class="headerlink" href="#credit-card-fraud-detection-and-concept-drift-adaptation-with-delayed-supervised-information" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Andrea Dal Pozzolo, Giacomo Boracchi, Olivier Caelen, Cesare Alippi, Gianluca Bontempi</li>
+<li><strong>Year / Venue:</strong> 2015, IEEE IJCNN</li>
+<li><strong>Chapter relevance:</strong> Ch3 (delayed labels in fraud — production story), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> In credit-card fraud, immediate investigator feedback and delayed chargeback labels carry different information; training separate models on each and aggregating outputs beats treating them identically.</li>
+<li><strong>Key numbers:</strong> Reports improved performance by separating immediate vs delayed supervision (per abstract; details in paper).</li>
+<li><strong>Method / dataset:</strong> Fraud detection with delayed supervised information.</li>
+<li><strong>Gap vs. our lemmas:</strong> An application-specific adaptation strategy, not a general detector benchmark; supports our premise that delayed labels break standard practice, and echoes the two-signal structure of our hybrid. <strong>Empirical anchor for the fraud dataset story.</strong></li>
+<li><strong>Verified:</strong> ⚠️ (Semantic Scholar hit a bot-wall on fetch; citation cross-checked in Gomes survey reference list)</li>
+</ul>
+<h3 id="online-learning-under-delayed-feedback"><a href="https://proceedings.mlr.press/v28/joulani13.html">Online Learning under Delayed Feedback</a><a class="headerlink" href="#online-learning-under-delayed-feedback" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Pooria Joulani, András György, Csaba Szepesvári</li>
+<li><strong>Year / Venue:</strong> 2013, ICML (PMLR 28(3):1453–1461)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (theory — delayed-feedback regret), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Delay increases regret multiplicatively in adversarial online learning and additively in stochastic settings; gives black-box meta-algorithms to handle delay.</li>
+<li><strong>Key numbers:</strong> n/a (theoretical).</li>
+<li><strong>Method / dataset:</strong> Regret bounds for full-information and bandit feedback under delay.</li>
+<li><strong>Gap vs. our lemmas:</strong> This is the regret-theoretic cousin of our delay tax, but for learning (not detection); our Lemma 1 (reaction floor) is the detection-side analogue. <strong>Cite for the theoretical framing of "delay costs."</strong></li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="change-with-delayed-labeling-when-is-it-detectable"><a href="https://dl.acm.org/doi/10.1109/ICDMW.2010.49">Change with Delayed Labeling: When is it Detectable?</a><a class="headerlink" href="#change-with-delayed-labeling-when-is-it-detectable" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Indrė Žliobaitė</li>
+<li><strong>Year / Venue:</strong> 2010, IEEE ICDM Workshops (foundational)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (identifiability — Lemma 4), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Characterizes which drift types are detectable without new labels; pure posterior drift (P(Y|X) changes, P(X) fixed) is not detectable from inputs — the formal basis of our identifiability ceiling.</li>
+<li><strong>Key numbers:</strong> n/a (theoretical/analytical; two drift types empirically evaluated).</li>
+<li><strong>Method / dataset:</strong> Analytical observability conditions + experiments.</li>
+<li><strong>Gap vs. our lemmas:</strong> Directly establishes Lemma 4's identifiability ceiling; does not propose the hybrid confirmation architecture. <strong>The theoretical root of our hybrid's justification.</strong></li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="a-predictive-and-user-centric-approach-to-machine-learning-in-data-streaming-scenarios"><a href="https://doi.org/10.1016/j.neucom.2021.05.049">A Predictive and User-Centric Approach to Machine Learning in Data Streaming Scenarios</a><a class="headerlink" href="#a-predictive-and-user-centric-approach-to-machine-learning-in-data-streaming-scenarios" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Davide Carneiro, Miguel Guimarães, Fábio Silva, Paulo Novais</li>
+<li><strong>Year / Venue:</strong> 2021 (preprint May 2021), Neurocomputing (per Material filename)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (secondary — retraining decision support), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Meta-learning approach that predicts whether retraining a model on new data will improve performance, to avoid wasteful retraining in streaming scenarios; pairs it with an explainable interface for human-in-the-loop validation.</li>
+<li><strong>Key numbers:</strong> Meta-model trained on 673 meta-instances from 47 datasets; 10-fold CV RMSE 0.000355, r² 0.98, MAE 0.007; streaming meta-model updated every 2000 instances; 53 datasets total.</li>
+<li><strong>Method / dataset:</strong> pymfe meta-features (57), Random Forest meta-model; regression (binary classification transformed to 0/1); tax fraud case study.</li>
+<li><strong>Gap vs. our lemmas:</strong> Addresses "when to retrain" via predicted performance rather than drift detection; relevant to Ch2's adaptation-cost framing and Ch3's selective-adaptation angle, but not delayed-label detection per se.</li>
+<li><strong>Verified:</strong> ⚠️ (full text in Material/; DOI inferred from filename — verify before citing)</li>
+</ul>
+<h3 id="stream-based-active-learning-for-sliding-windows-under-the-influence-of-verification-latency"><a href="https://dl.acm.org/doi/10.1007/s10994-021-06099-z">Stream-based Active Learning for Sliding Windows under the Influence of Verification Latency</a><a class="headerlink" href="#stream-based-active-learning-for-sliding-windows-under-the-influence-of-verification-latency" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Rodrigo Mello, Heitor Murilo Gomes, Albert Bifet, Bernhard Pfahringer</li>
+<li><strong>Year / Venue:</strong> 2021, Machine Learning (online 2021)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (verification latency in active learning), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Forgetting and Simulating: simulates the learner's future state when a queried label arrives, improving utility estimates under latency.</li>
+<li><strong>Key numbers:</strong> Reports improvements under constant and variable latency (per abstract).</li>
+<li><strong>Method / dataset:</strong> Stream active learning with sliding windows.</li>
+<li><strong>Gap vs. our lemmas:</strong> Adjacent — label acquisition under latency, not detector isolation; complements the selective-labeling regime.</li>
+<li><strong>Verified:</strong> ⚠️ (DOI cross-checked in Gomes survey reference list; not separately fetched)</li>
+</ul>
+<hr/>
+<h2 id="section-4-ch3-hybrid-label-free-confirmation-methods">Section 4 — Ch3: Hybrid / label-free + confirmation methods<a class="headerlink" href="#section-4-ch3-hybrid-label-free-confirmation-methods" title="Permanent link">¶</a></h2>
+<h3 id="studd-a-studentteacher-method-for-unsupervised-concept-drift-detection_1"><a href="https://link.springer.com/article/10.1007/s10994-022-06188-7">STUDD: A Student–Teacher Method for Unsupervised Concept Drift Detection</a><a class="headerlink" href="#studd-a-studentteacher-method-for-unsupervised-concept-drift-detection_1" title="Permanent link">¶</a></h3>
+<ul>
+<li>(listed in Section 3; here for hybrid relevance) — label-free early warning baseline.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams_1"><a href="https://doi.org/10.1007/s44443-026-01091-w">Statistical Drift Detection with Parametric Gamma–Weibull and Adaptive Deep Learning for Malware Detection in IoT Data Streams</a><a class="headerlink" href="#statistical-drift-detection-with-parametric-gammaweibull-and-adaptive-deep-learning-for-malware-detection-in-iot-data-streams_1" title="Permanent link">¶</a></h3>
+<ul>
+<li>(listed in Section 3; here for hybrid relevance) — detector-gated pseudo-label adaptation, 2026.</li>
+<li><strong>Verified:</strong> ✅</li>
+</ul>
+<h3 id="unsupervised-concept-drift-detectors-a-survey"><a href="https://link.springer.com/chapter/10.1007/978-3-031-20738-9_121">Unsupervised Concept Drift Detectors: A Survey</a><a class="headerlink" href="#unsupervised-concept-drift-detectors-a-survey" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> (Shen, Ming, Li, Gao, Zhang — per Gomes survey; verify full list)</li>
+<li><strong>Year / Venue:</strong> 2023, Springer (survey chapter)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (label-free detector families), Ch1 (secondary)</li>
+<li><strong>Core claim:</strong> Surveys unsupervised (label-free) drift detectors, classifying them separately from supervised error-based methods.</li>
+<li><strong>Key numbers:</strong> n/a (survey).</li>
+<li><strong>Method / dataset:</strong> Survey.</li>
+<li><strong>Gap vs. our lemmas:</strong> Catalogues the Stage-1 label-free options for our hybrid; does not treat delayed supervised confirmation.</li>
+<li><strong>Verified:</strong> ⚠️ (citation cross-checked in research notes; not separately fetched)</li>
+</ul>
+<h3 id="automatic-model-monitoring-for-data-streams"><a href="https://arxiv.org/abs/1908.04240">Automatic Model Monitoring for Data Streams</a><a class="headerlink" href="#automatic-model-monitoring-for-data-streams" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Authors:</strong> Fábio Pinto, Marco O. P. Sampaio, Pedro Bizarro</li>
+<li><strong>Year / Venue:</strong> 2019, arXiv:1908.04240 (Feedzai)</li>
+<li><strong>Chapter relevance:</strong> Ch3 (hybrid-style monitoring), Ch2 (secondary)</li>
+<li><strong>Core claim:</strong> Window-based monitoring with Jensen–Shannon divergence for drift; explains alarms via an auxiliary classifier.</li>
+<li><strong>Key numbers:</strong> n/a (from abstract).</li>
+<li><strong>Method / dataset:</strong> Windowed JSD drift detection + explanation model.</li>
+<li><strong>Gap vs. our lemmas:</strong> Unsupervised monitoring (no delayed confirmation); useful as a label-free Stage-1 candidate.</li>
+<li><strong>Verified:</strong> ⚠️ (arXiv abstract page; cross-checked in STUDD references)</li>
+</ul>
+<hr/>
+<h2 id="foundational-quick-reference-no-per-paper-note">Foundational quick-reference (no per-paper note)<a class="headerlink" href="#foundational-quick-reference-no-per-paper-note" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Paper</th>
+<th>Year</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page, <em>Continuous Inspection Schemes</em>, Biometrika</td>
+<td>1954</td>
+<td>Root of Page-Hinkley / quickest detection (Lemma 1 framing)</td>
+</tr>
+<tr>
+<td>Lorden, <em>Procedures for Reacting to a Change in Distribution</em>, Ann. Math. Statist.</td>
+<td>1971</td>
+<td>Minimax quickest detection (detection-delay vs false-alarm trade-off)</td>
+</tr>
+<tr>
+<td>Kuncheva &amp; Sánchez, <em>Nearest Neighbour Classifiers for Streaming Data with Delayed Labelling</em>, IEEE ICDM</td>
+<td>2008</td>
+<td>Early delayed-label classification work</td>
+</tr>
+<tr>
+<td>Masud et al., <em>Classification and Novel Class Detection...</em>, IEEE TKDE</td>
+<td>2011</td>
+<td>Delayed labels + concept evolution</td>
+</tr>
+<tr>
+<td>Ditzler, Roveri, Alippi, Polikar, <em>Learning in Nonstationary Environments: A Survey</em>, IEEE CIM</td>
+<td>2015</td>
+<td>Nonstationary learning survey</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="how-to-use-this-index">How to use this index<a class="headerlink" href="#how-to-use-this-index" title="Permanent link">¶</a></h2>
+<ul>
+<li><code>papers/&lt;slug&gt;.md</code> contains deep notes for the load-bearing papers (Ch3 anchors + closest prior work + the KDD'26 benchmark).</li>
+<li><code>gap-analysis.md</code> maps every entry to the four lemmas and flags scoop risk.</li>
+<li>⚠️ entries need a final verification pass before going into the report bibliography.</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

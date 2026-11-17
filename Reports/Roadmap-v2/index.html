@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Reports/Roadmap-v2/" rel="canonical"/>
+<link href="../../Plans/df-h-ultimate-goal/" rel="prev"/>
+<link href="../../Phase0%3AResearch/notes/01-streaming-learning/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Roadmap v2 — summary - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#roadmap-v2-df-h-the-deep-hybrid-detector">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Roadmap v2 — summary
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-why-the-goal-changed">
+<span class="md-ellipsis">
+      
+        1. Why the goal changed
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-what-df-h-is">
+<span class="md-ellipsis">
+      
+        2. What DF-H is
+      
+    </span>
+</a>
+<nav aria-label="2. What DF-H is" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fusion-rules">
+<span class="md-ellipsis">
+      
+        Fusion rules
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-success-criteria">
+<span class="md-ellipsis">
+      
+        3. Success criteria
+      
+    </span>
+</a>
+<nav aria-label="3. Success criteria" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-immediate-label-benchmark-kdd26">
+<span class="md-ellipsis">
+      
+        3.1 Immediate-label benchmark (KDD'26)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-delayed-label-benchmark-the-novel-contribution">
+<span class="md-ellipsis">
+      
+        3.2 Delayed-label benchmark (the novel contribution)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-roadmap">
+<span class="md-ellipsis">
+      
+        4. The roadmap
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-is-cut-or-deferred">
+<span class="md-ellipsis">
+      
+        5. What is cut or deferred
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        6. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-what-this-changes-in-the-project-story">
+<span class="md-ellipsis">
+      
+        7. What this changes in the project story
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-definition-of-done">
+<span class="md-ellipsis">
+      
+        8. Definition of done
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-why-the-goal-changed">
+<span class="md-ellipsis">
+      
+        1. Why the goal changed
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-what-df-h-is">
+<span class="md-ellipsis">
+      
+        2. What DF-H is
+      
+    </span>
+</a>
+<nav aria-label="2. What DF-H is" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fusion-rules">
+<span class="md-ellipsis">
+      
+        Fusion rules
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-success-criteria">
+<span class="md-ellipsis">
+      
+        3. Success criteria
+      
+    </span>
+</a>
+<nav aria-label="3. Success criteria" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-immediate-label-benchmark-kdd26">
+<span class="md-ellipsis">
+      
+        3.1 Immediate-label benchmark (KDD'26)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-delayed-label-benchmark-the-novel-contribution">
+<span class="md-ellipsis">
+      
+        3.2 Delayed-label benchmark (the novel contribution)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-roadmap">
+<span class="md-ellipsis">
+      
+        4. The roadmap
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-is-cut-or-deferred">
+<span class="md-ellipsis">
+      
+        5. What is cut or deferred
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        6. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-what-this-changes-in-the-project-story">
+<span class="md-ellipsis">
+      
+        7. What this changes in the project story
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-definition-of-done">
+<span class="md-ellipsis">
+      
+        8. Definition of done
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Roadmap v2 — summary.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="roadmap-v2-df-h-the-deep-hybrid-detector">Roadmap v2 — DF-H, the deep hybrid detector<a class="headerlink" href="#roadmap-v2-df-h-the-deep-hybrid-detector" title="Permanent link">¶</a></h1>
+<p><strong>Approved:</strong> 2026-11-14 · <strong>Supersedes:</strong> the breadth-first E05–E15 detector
+plan. Existing results (E01–E17, KDD'26) stay; the detector track is now
+centred on one artefact.</p>
+<blockquote>
+<p><strong>The goal in one sentence:</strong> build <strong>DF-H</strong>, a detector that combines a
+<strong>label-free deep monitor</strong> with <strong>supervised confirmation</strong>, and make it
+beat the KDD'26 detector benchmark on its own protocol <em>and</em> win the
+delayed-label setting where error-only detectors are provably floor-bound.</p>
+<p><strong>Status update (2026-11-14):</strong> the E18 signal gate and the E19 v1 pilot both
+ran and <strong>failed their pre-registered gates</strong>. E18's best deep AUC was 0.616
+vs the error rate's 0.598; E19's DF-H ranked <strong>3rd</strong> (7.09) behind STEPD and
+SEED, with FAR below ADWIN but no primary feature-cell win. The full E20
+matrix is not justified by the pilot-first rule. The feature monitor retains a
+real early-warning advantage on feature drift, and the Delay Tax benchmark
+(E21) is now the headline: the fixed-delay Lemma-1 synthesis shows Stage 1
+warning at <strong>70–513</strong> samples vs <strong>2,120–3,269</strong> for the error-only panel at
+<code>L = 2,000</code>. The full regime matrix and Lemmas 2–3 are scaffolded but not run.
+<strong>E22</strong> adds the focused capability check on the data in the repo: DF-H is
+<strong>3rd overall (7.34)</strong>, ahead of HDDM-W, ADWIN, HDDM-A and PageHinkley, and
+behind only SEED/STEPD; it owns feature permutation with a 0.04 FAR. See
+<a href="../E18-deep-signals/">E18</a>, <a href="../E19-hybrid-detector/">E19</a>,
+<a href="../E21-delay-detector/">E21</a> and <a href="../E22-detector-shootout/">E22</a>.</p>
+</blockquote>
+<hr/>
+<h2 id="1-why-the-goal-changed">1. Why the goal changed<a class="headerlink" href="#1-why-the-goal-changed" title="Permanent link">¶</a></h2>
+<p>The last two months of evidence point to the same conclusion: <strong>no scalar
+detector wins everywhere</strong>, and the missing information is in the features, not
+in another error-stream vote.</p>
+<table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>What it says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>E04</strong> — synthetic detector map</td>
+<td>HDDM-A is the best default on the static host for all four shapes, but recurring drift is only <strong>F1 0.500</strong>.</td>
+</tr>
+<tr>
+<td><strong>E17</strong> — real Elec2</td>
+<td>The default is <strong>host-conditional</strong>: HDDM-A wins all four on the static HT, but ADWIN wins abrupt <strong>1.000 vs 0.400</strong> and recurring <strong>0.770 vs 0.593</strong> on the adaptive HAT. Best-host mean: ADWIN <strong>0.935</strong> vs HDDM-A <strong>0.910</strong>.</td>
+</tr>
+<tr>
+<td><strong>KDD'26 reproduction</strong></td>
+<td>SEED/STEPD rank <strong>2.12</strong> (mean F1 <strong>0.300/0.303</strong>); HDDM-W <strong>3.56</strong>; HDDM-A <strong>3.87</strong>. The absolute ceiling is low — better signals matter.</td>
+</tr>
+<tr>
+<td><strong>E02</strong> — no-drift control</td>
+<td>Naive combinations are dangerous: EWMA makes ADWIN <strong>0.548/1k</strong> and KSWIN <strong>7.667/1k</strong> against a <strong>0.1</strong> target.</td>
+</tr>
+<tr>
+<td><strong>ABCD(X)</strong> (cited)</td>
+<td>Feature-space detection is the strongest arm on feature permutation: rank <strong>1.0 abrupt / 3.3 gradual</strong>.</td>
+</tr>
+<tr>
+<td><strong>DriftFormer</strong></td>
+<td>Already computes a masked-feature SSL loss and runs an internal ADWIN; <code>forward()</code> returns four head logits and the <code>cls_out</code> embedding. The detector is instrumentation + fusion, not a new model.</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="KDD'26 ranking — the benchmark to beat" src="../figures/post-midterm-kdd-ranking.png"/></p>
+<p><em>The target: SEED/STEPD at 2.12. DF-H does not need to win every cell; it needs
+to be top-2 overall and own the cells where feature information matters.</em></p>
+<p><img alt="E17 — the detector default is host-conditional" src="../figures/post-midterm-e17-detector-map.png"/></p>
+<p><em>No scalar detector is universal. A feature monitor adds a different view, not
+another vote on the same error stream.</em></p>
+<hr/>
+<h2 id="2-what-df-h-is">2. What DF-H is<a class="headerlink" href="#2-what-df-h-is" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    S["Stream x_t"] --&gt; S1["Stage 1 — deep monitor&lt;br/&gt;SSL loss · embedding shift&lt;br/&gt;head disagreement · entropy"]
+    S --&gt; H["Host learner&lt;br/&gt;Hoeffding Tree / ARF"]
+    H --&gt; S2["Stage 2 — error-stream detectors&lt;br/&gt;SEED · STEPD · ADWIN · HDDM-A"]
+    S1 --&gt;|"warning"| F["Fusion&lt;br/&gt;calibrated, pre-registered"]
+    S2 --&gt;|"confirmation"| F
+    F --&gt; A["Reported alarm&lt;br/&gt;T_warn + T_confirm"]</code></pre>
+<p><em>Stage 1 watches the input stream without labels; Stage 2 confirms with the
+host's mistakes. The reported result has two times: warning and confirmation.</em></p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Input</th>
+<th>Signals / detectors</th>
+<th>Labels needed?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stage 1 — deep monitor</strong></td>
+<td>Raw features, frozen DriftFormer encoder</td>
+<td>SSL loss, embedding shift, head disagreement, entropy, internal ADWIN, feature-KS control</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Stage 2 — confirmation</strong></td>
+<td>Host mistake stream</td>
+<td>SEED, STEPD, ADWIN, HDDM-A on the raw channel</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Fusion</strong></td>
+<td>Both stages</td>
+<td><code>S1</code>, <code>S2</code>, <code>OR</code>, <code>AND</code>, <code>2of3</code>, <code>2of3_nodeep</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stage 1 is the new information.</strong> It sees <code>P(X)</code> change directly, which is why
+it should win feature permutation/filtering and recurring change. <strong>Stage 2 keeps
+the cells where SEED/STEPD are strong</strong>, especially label swap and class-prior
+drift, where <code>P(X)</code> is unchanged and a label-free monitor has no power (Lemma 4).</p>
+<h3 id="fusion-rules">Fusion rules<a class="headerlink" href="#fusion-rules" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Rule</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S1</code></td>
+<td>Stage 1 only</td>
+<td>Label-free ceiling; delay benchmark</td>
+</tr>
+<tr>
+<td><code>S2</code></td>
+<td>Best fixed scalar detector</td>
+<td>The strong baseline</td>
+</tr>
+<tr>
+<td><code>OR</code></td>
+<td>Stage 1 or Stage 2</td>
+<td>Earliest alarm; highest FAR risk</td>
+</tr>
+<tr>
+<td><code>AND</code></td>
+<td>Stage 1 and Stage 2 within <code>W_confirm</code></td>
+<td>Precision-first</td>
+</tr>
+<tr>
+<td><code>2of3</code></td>
+<td>Stage 1 + SEED + ADWIN</td>
+<td>The candidate</td>
+</tr>
+<tr>
+<td><code>2of3_nodeep</code></td>
+<td>SEED + ADWIN + HDDM-A</td>
+<td>Control: does deep add anything?</td>
+</tr>
+</tbody>
+</table>
+<p>The final rule is pre-registered and calibrated to <strong>FAR ≤ 0.1/1k</strong> on E02 and
+the pre-drift 20% of each stream. No EWMA. No test-trial tuning.</p>
+<hr/>
+<h2 id="3-success-criteria">3. Success criteria<a class="headerlink" href="#3-success-criteria" title="Permanent link">¶</a></h2>
+<h3 id="31-immediate-label-benchmark-kdd26">3.1 Immediate-label benchmark (KDD'26)<a class="headerlink" href="#31-immediate-label-benchmark-kdd26" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overall average rank</td>
+<td><strong>top-2</strong> (SEED/STEPD are at 2.12)</td>
+</tr>
+<tr>
+<td>Weak cells</td>
+<td><strong>best on at least two</strong> of <code>feature_permutation</code>, <code>feature_filtering</code>, <code>recurring</code></td>
+</tr>
+<tr>
+<td>False alarms</td>
+<td><strong>FAR no worse than ADWIN</strong></td>
+</tr>
+<tr>
+<td>Per-dataset robustness</td>
+<td><strong>no dataset rank worse than 4</strong></td>
+</tr>
+<tr>
+<td>Stretch</td>
+<td><strong>#1 overall</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-delayed-label-benchmark-the-novel-contribution">3.2 Delayed-label benchmark (the novel contribution)<a class="headerlink" href="#32-delayed-label-benchmark-the-novel-contribution" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed delay <code>L</code></td>
+<td>warning time grows by <strong>≤ L + c</strong>; confirmation is floor-bound</td>
+</tr>
+<tr>
+<td>Partial labels</td>
+<td>higher recall than the best error-only detector at <code>p = 0.5</code> and <code>0.1</code></td>
+</tr>
+<tr>
+<td>Selective labels</td>
+<td>warn earlier on unlabelled drift; confirm when labels arrive</td>
+</tr>
+<tr>
+<td>Lemmas</td>
+<td>Lemma 1 (floor), Lemma 2 (<code>1/√p</code>), Lemma 3 (batch FAR) measured</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Negative result is acceptable.</strong> If DF-H does not beat the baselines, the
+delay-tax measurement and the lemmas still stand. This is the scope's existing
+fallback, not a new risk.</p>
+<hr/>
+<h2 id="4-the-roadmap">4. The roadmap<a class="headerlink" href="#4-the-roadmap" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Experiment</th>
+<th>What it does</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>Housekeeping</td>
+<td>Finish E03 (20/22 units), document E14, render E17 figures, commit in logical units</td>
+<td>clean tree to start</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>E18 scaffold</td>
+<td><code>signal_snapshot()</code> on DriftFormer; <code>DeepSignalMonitor</code>; <code>signals.npz</code>; pure-NumPy KDD trial builder</td>
+<td>smoke runs finite/deterministic</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td><strong>E18 — signal gate</strong></td>
+<td>Extract signals on SEA, Hyperplane, Elec2, and an 80-trial KDD pilot (2 datasets × 4 types × 2 transitions × 5 trials)</td>
+<td>at least one deep signal <strong>AUC ≥ 0.75</strong> on held-out data and <strong>≥ 0.10 above</strong> the error-rate baseline</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><strong>E19 — DF-H v1</strong></td>
+<td>Rule-based fusion on synthetic + E17 + the KDD pilot</td>
+<td>top-2 on the pilot; best on ≥1 feature cell; FAR ≤ ADWIN</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>E20 — DF-H v2</strong></td>
+<td>Learned fusion, leave-one-dataset-out; full 7 × 4 × 2 × 50 KDD</td>
+<td>top-2 overall; best on ≥2 weak cells; FAR ≤ ADWIN; no dataset rank &gt; 4</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><strong>E21 — Delay Tax detector benchmark</strong></td>
+<td>Fixed/stochastic/partial/selective/batch regimes; DF-H vs scalar detectors; lemmas 1–3</td>
+<td>warning ≤ L + c; confirmation matches the best error-only + L; recall gain under partial/selective</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>Write-up</td>
+<td>Final report around the detector; minimal system/demo</td>
+<td>one-command reproduction</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pilot-first compute.</strong> No full 50-trial deep signal run until the 80-trial
+pilot passes. The encoder is frozen per dataset; signals are precomputed in the
+main environment and loaded by the KDD runner, so <code>kdd_env</code> never needs torch.</p>
+<hr/>
+<h2 id="5-what-is-cut-or-deferred">5. What is cut or deferred<a class="headerlink" href="#5-what-is-cut-or-deferred" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>E03</strong></td>
+<td>Finish, no expansion</td>
+</tr>
+<tr>
+<td><strong>E05 severity</strong></td>
+<td>Defer</td>
+</tr>
+<tr>
+<td><strong>E06 delay shift</strong></td>
+<td>Keep — Lemma-1 pilot</td>
+</tr>
+<tr>
+<td><strong>E07 block gate</strong></td>
+<td>Keep — DriftFormer prerequisite</td>
+</tr>
+<tr>
+<td><strong>E08 DriftFormer vs panel</strong></td>
+<td>Cut to one host-quality check</td>
+</tr>
+<tr>
+<td><strong>E09 pretrain transfer</strong></td>
+<td>Defer</td>
+</tr>
+<tr>
+<td><strong>E10–E12</strong></td>
+<td>Defer; keep only signal and encoder-size ablations</td>
+</tr>
+<tr>
+<td><strong>E13 calibration</strong></td>
+<td>Keep only if v2 uses probabilities</td>
+</tr>
+<tr>
+<td><strong>E14 real streams</strong></td>
+<td>Keep as host validation; no 5-dataset expansion now</td>
+</tr>
+<tr>
+<td><strong>E15 Delay Tax</strong></td>
+<td>Replaced by <strong>E21</strong></td>
+</tr>
+<tr>
+<td><strong>ABCD/ABCD(X)</strong></td>
+<td>Cited only; not re-run</td>
+</tr>
+<tr>
+<td><strong>Chapter 2 service</strong></td>
+<td>Defer until after E20/E21</td>
+</tr>
+<tr>
+<td><strong>Product docs</strong></td>
+<td>Defer</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="6-risks-and-fallbacks">6. Risks and fallbacks<a class="headerlink" href="#6-risks-and-fallbacks" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deep signal has no power</td>
+<td>Phase-2 gate stops early; use a classical PCA/KS/linear-MMD feature monitor with the same fusion</td>
+</tr>
+<tr>
+<td>KDD host mismatch</td>
+<td>Keep the Hoeffding Tree host; deep model is only a signal channel</td>
+</tr>
+<tr>
+<td>Leakage in the learned fusion</td>
+<td>Leave-one-dataset-out; pre-registered rule; no test tuning</td>
+</tr>
+<tr>
+<td>Deep compute cost</td>
+<td>Frozen per-dataset encoder; batched GPU inference; cached signals; pilot-first</td>
+</tr>
+<tr>
+<td>DriftFormer is a weak classifier</td>
+<td>Never use it as the host; use its encoder only; compare an autoencoder/DeepRiver representation</td>
+</tr>
+<tr>
+<td>False alarms</td>
+<td>Raw channel only; E02 calibration; confirmation window; FAR target</td>
+</tr>
+<tr>
+<td>Scope says deep is out</td>
+<td>Dated scope amendment: deep is a <strong>label-free signal extractor</strong>, not the benchmark classifier; classical fallback ready</td>
+</tr>
+<tr>
+<td>Delay floor cannot be beaten</td>
+<td>Report warning vs confirmed separately; Lemma 1 is a theorem, not a failure</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="7-what-this-changes-in-the-project-story">7. What this changes in the project story<a class="headerlink" href="#7-what-this-changes-in-the-project-story" title="Permanent link">¶</a></h2>
+<p>The final report is re-centred:</p>
+<ol>
+<li><strong>Measurement lab + baseline detector map</strong> — E01/E02/E04/E17/KDD.</li>
+<li><strong>DF-H architecture + immediate-label benchmark</strong> — E18–E20.</li>
+<li><strong>Delay Tax benchmark + lemmas</strong> — E06/E21.</li>
+<li><strong>Minimal system/demo or a clearly scoped Chapter 2.</strong></li>
+</ol>
+<p>The mid-term report stays frozen. The post-mid-term report
+(<a href="../Nov14/">Nov 14</a>) remains the snapshot of what was built before this
+roadmap; new results land in the E18–E21 pages and the final report.</p>
+<hr/>
+<h2 id="8-definition-of-done">8. Definition of done<a class="headerlink" href="#8-definition-of-done" title="Permanent link">¶</a></h2>
+<ul>
+<li>DF-H implemented as a reusable detector adapter with tests.</li>
+<li>E18 signal report with a clear go/no-go verdict.</li>
+<li>E19 pilot and E20 full KDD result with a DF-H row beside SEED/STEPD.</li>
+<li>E21 delay benchmark with Lemmas 1–3 measured (or a documented negative result).</li>
+<li>New pages wired into the nav; Results/progress/scope updated.</li>
+<li>Every result regenerable from a saved artifact.</li>
+</ul>
+<p><em>Full implementation detail: <a href="../../Plans/df-h-ultimate-goal/">the approved DF-H plan</a>.
+This page is the repo-facing summary.</em></p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Phase0%3AResearch/idea/scope/" rel="canonical"/>
+<link href="../synopsis/" rel="prev"/>
+<link href="../../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/" rel="next"/>
+<link href="../../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Scope - Major Project — Streaming ML</title>
+<link href="../../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#scope-the-delay-tax">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Scope
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-problem-in-one-page">
+<span class="md-ellipsis">
+      
+        1. The problem in one page
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-what-the-research-established">
+<span class="md-ellipsis">
+      
+        2. What the research established
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-decisions-locked">
+<span class="md-ellipsis">
+      
+        3. Decisions locked
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-research-questions">
+<span class="md-ellipsis">
+      
+        4. Research questions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-the-three-chapters">
+<span class="md-ellipsis">
+      
+        5. The three chapters
+      
+    </span>
+</a>
+<nav aria-label="5. The three chapters" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-the-baseline-safe">
+<span class="md-ellipsis">
+      
+        Chapter 1 — The baseline (safe)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-the-system-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        Chapter 2 — The system (infrastructure spine)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-the-delayed-label-contribution-the-research">
+<span class="md-ellipsis">
+      
+        Chapter 3 — The delayed-label contribution (the research)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-mathematical-angle-the-delay-tax">
+<span class="md-ellipsis">
+      
+        6. The mathematical angle — the delay tax
+      
+    </span>
+</a>
+<nav aria-label="6. The mathematical angle — the delay tax" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-the-formal-setting">
+<span class="md-ellipsis">
+      
+        6.1 The formal setting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-lemma-1-the-reaction-floor">
+<span class="md-ellipsis">
+      
+        6.2 Lemma 1 — The reaction floor
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-lemma-2-the-power-loss-effective-sample-size">
+<span class="md-ellipsis">
+      
+        6.3 Lemma 2 — The power loss (effective sample size)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival">
+<span class="md-ellipsis">
+      
+        6.4 Lemma 3 — False-alarm inflation under batch arrival
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-lemma-4-the-identifiability-ceiling-why-the-hybrid-is-maximal">
+<span class="md-ellipsis">
+      
+        6.5 Lemma 4 — The identifiability ceiling (why the hybrid is maximal)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#66-what-the-math-is-for">
+<span class="md-ellipsis">
+      
+        6.6 What the math is for
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#67-explicitly-not-in-scope-math">
+<span class="md-ellipsis">
+      
+        6.7 Explicitly not in scope (math)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-datasets">
+<span class="md-ellipsis">
+      
+        7. Datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-deliverables">
+<span class="md-ellipsis">
+      
+        8. Deliverables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-scope-guards">
+<span class="md-ellipsis">
+      
+        9. Scope guards
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-milestones-1015-hweek-alongside-coursework">
+<span class="md-ellipsis">
+      
+        10. Milestones (~10–15 h/week, alongside coursework)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        11. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-open-decisions-teacher-dependent-must-be-asked">
+<span class="md-ellipsis">
+      
+        12. Open decisions (teacher-dependent — must be asked)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-still-to-do-before-implementation">
+<span class="md-ellipsis">
+      
+        13. Still to do before implementation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-problem-in-one-page">
+<span class="md-ellipsis">
+      
+        1. The problem in one page
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-what-the-research-established">
+<span class="md-ellipsis">
+      
+        2. What the research established
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-decisions-locked">
+<span class="md-ellipsis">
+      
+        3. Decisions locked
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-research-questions">
+<span class="md-ellipsis">
+      
+        4. Research questions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-the-three-chapters">
+<span class="md-ellipsis">
+      
+        5. The three chapters
+      
+    </span>
+</a>
+<nav aria-label="5. The three chapters" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-1-the-baseline-safe">
+<span class="md-ellipsis">
+      
+        Chapter 1 — The baseline (safe)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-2-the-system-infrastructure-spine">
+<span class="md-ellipsis">
+      
+        Chapter 2 — The system (infrastructure spine)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#chapter-3-the-delayed-label-contribution-the-research">
+<span class="md-ellipsis">
+      
+        Chapter 3 — The delayed-label contribution (the research)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-mathematical-angle-the-delay-tax">
+<span class="md-ellipsis">
+      
+        6. The mathematical angle — the delay tax
+      
+    </span>
+</a>
+<nav aria-label="6. The mathematical angle — the delay tax" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-the-formal-setting">
+<span class="md-ellipsis">
+      
+        6.1 The formal setting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-lemma-1-the-reaction-floor">
+<span class="md-ellipsis">
+      
+        6.2 Lemma 1 — The reaction floor
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-lemma-2-the-power-loss-effective-sample-size">
+<span class="md-ellipsis">
+      
+        6.3 Lemma 2 — The power loss (effective sample size)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival">
+<span class="md-ellipsis">
+      
+        6.4 Lemma 3 — False-alarm inflation under batch arrival
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-lemma-4-the-identifiability-ceiling-why-the-hybrid-is-maximal">
+<span class="md-ellipsis">
+      
+        6.5 Lemma 4 — The identifiability ceiling (why the hybrid is maximal)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#66-what-the-math-is-for">
+<span class="md-ellipsis">
+      
+        6.6 What the math is for
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#67-explicitly-not-in-scope-math">
+<span class="md-ellipsis">
+      
+        6.7 Explicitly not in scope (math)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-datasets">
+<span class="md-ellipsis">
+      
+        7. Datasets
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-deliverables">
+<span class="md-ellipsis">
+      
+        8. Deliverables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-scope-guards">
+<span class="md-ellipsis">
+      
+        9. Scope guards
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-milestones-1015-hweek-alongside-coursework">
+<span class="md-ellipsis">
+      
+        10. Milestones (~10–15 h/week, alongside coursework)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-risks-and-fallbacks">
+<span class="md-ellipsis">
+      
+        11. Risks and fallbacks
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-open-decisions-teacher-dependent-must-be-asked">
+<span class="md-ellipsis">
+      
+        12. Open decisions (teacher-dependent — must be asked)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-still-to-do-before-implementation">
+<span class="md-ellipsis">
+      
+        13. Still to do before implementation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Scope.pdf" href="../../../Phase0:Research/idea/scope/index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="scope-the-delay-tax">Scope — The Delay Tax<a class="headerlink" href="#scope-the-delay-tax" title="Permanent link">¶</a></h1>
+<p><strong>Working title:</strong> <em>The Delay Tax: drift detection and adaptation when labels are
+late, partial, and biased.</em></p>
+<p><strong>Status:</strong> scope locked — pending only the teacher-dependent questions in §12.
+This document supersedes <code>notes/08-scope.md</code> (kept as the draft it was). It
+consolidates the research phase (now complete) into a single reference.</p>
+<blockquote>
+<p><strong>Thesis spine:</strong>
+<em>Streaming ML works in simulation. Does it work in production?
+Build the system, find where it breaks, fix one thing properly.</em></p>
+<p><strong>The one thing we fix:</strong> production labels arrive <strong>late, partially, and
+selectively</strong> — and the field's detectors, metrics, and evaluation protocol
+quietly assume they arrive <strong>instantly, completely, and unbiased</strong>.</p>
+</blockquote>
+<hr/>
+<h2 id="1-the-problem-in-one-page">1. The problem in one page<a class="headerlink" href="#1-the-problem-in-one-page" title="Permanent link">¶</a></h2>
+<p>Streaming ML rests on a hidden assumption:</p>
+<blockquote>
+<p>Sample <code>x</code> arrives, and its true label <code>y</code> arrives <strong>with it</strong>. The model
+predicts, is immediately told whether it was right, and learns.</p>
+</blockquote>
+<p>That assumption is false in every real deployment:</p>
+<ul>
+<li>Fraud: a transaction is approved <em>now</em>; the chargeback lands <strong>30–90 days later</strong>.</li>
+<li>Ads: an impression is served <em>now</em>; the conversion arrives <strong>next week</strong>.</li>
+<li>Intrusion: a login is flagged <em>now</em>; the analyst verdict comes <strong>later, or never</strong>.</li>
+</ul>
+<p>Follow the consequences, because they cascade:</p>
+<ol>
+<li><strong>Detection is late.</strong> Drift detectors watch the <em>error stream</em>. If labels are
+   late, the error stream is late, so <strong>drift is detected only after the labels
+   catch up</strong> — meanwhile the model is silently wrong.</li>
+<li><strong>Evaluation breaks first.</strong> Prequential scoring (<code>predict → score → learn</code>)
+   requires the label in the same tick. Under delay you <strong>cannot even measure your
+   own accuracy in real time</strong>, so the field's own instrument for success fails in
+   the setting the field claims to serve.</li>
+<li><strong>Adaptation compounds the error.</strong> While labels are pending, the model keeps
+   learning <em>stale</em> samples — after a drift, it is actively reinforcing the
+   pre-drift concept.</li>
+<li><strong>The label process itself misbehaves.</strong> Labels arrive in bursts, out of order,
+   or only for flagged cases. That injects autocorrelation and selection bias into
+   the error stream — which detectors misread as drift (false alarms) or miss
+   entirely.</li>
+</ol>
+<p>The research phase (done — §2) confirms this is a <strong>real, under-populated gap</strong>,
+not a tutorial topic.</p>
+<hr/>
+<h2 id="2-what-the-research-established">2. What the research established<a class="headerlink" href="#2-what-the-research-established" title="Permanent link">¶</a></h2>
+<p>Findings from <code>research/01-landscape.md</code> and <code>research/02-delayed-labels.md</code>.</p>
+<p><strong>The gap is real and open.</strong> The delayed/partial-label literature is fragmented —
+terminology alone spans <em>verification latency, delayed labelling, label latency,
+extreme verification latency, partially labelled streams</em> — and no widely accepted
+benchmark or protocol exists. The most relevant syntheses are Gomes et al. (2022,
+<em>ACM CSUR</em> survey on delayed partially labelled streams) and a dedicated 2026
+experimental survey in <em>Digital Signal Processing</em>. The area is <strong>active but not
+converged</strong>: no canonical problem formulation, no dominant method.</p>
+<p><strong>Well-established (safe to build on):</strong></p>
+<ul>
+<li>Prequential evaluation is the right protocol for ordered streams; random
+  train/test splits are invalid (temporal leakage).</li>
+<li>No drift detector dominates. Delay / false-alarm / missed-detection trade-offs
+  depend on drift type, noise, imbalance, and configuration.</li>
+<li>ARF, SRP, Leveraging Bagging, HAT are the strong adaptive baselines;
+  Hoeffding Tree is the canonical static one.</li>
+<li>Synthetic generators give ground-truth drift → detection delay is computable;
+  real streams give external validity but unknown drift positions.</li>
+<li>Elec2 has known temporal-autocorrelation problems (a "no change" baseline and
+  Kappa+ must be reported; accuracy alone overstates learning).</li>
+</ul>
+<p><strong>The specific holes this project targets:</strong></p>
+<ul>
+<li><strong>Detector-level degradation under delay is unquantified.</strong> There is no clean
+  curve of <em>detection delay vs label latency</em>, or <em>false-alarm rate vs label
+  coverage</em>. Existing work studies classifiers or active-learning systems, not the
+  detector in isolation.</li>
+<li><strong>No standard confirmation protocol</strong> combining a label-free early warning with
+  delayed supervised confirmation. Research names this architecture explicitly as
+  a promising, unbuilt direction.</li>
+<li><strong>The operational cost of continual learning is under-measured.</strong> Papers rarely
+  report the latency, memory, and divergence costs of adaptation — the field is
+  populated by ML researchers, not infrastructure people. This is our home turf.</li>
+</ul>
+<p><strong>The bet, confirmed:</strong> the two strongest gaps (delayed labels, operational cost)
+both lie exactly where the field's standard assumptions diverge most sharply from
+production reality — and neither requires deriving novel algorithms.</p>
+<hr/>
+<h2 id="3-decisions-locked">3. Decisions locked<a class="headerlink" href="#3-decisions-locked" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direction</td>
+<td><strong>Systems + delayed labels</strong> (Notes 05 Option C → 08)</td>
+<td>The bigger question; 70% infrastructure; novel</td>
+</tr>
+<tr>
+<td>Data</td>
+<td><strong>Synthetic + real</strong>, in that order</td>
+<td>Ground truth first, external validity second</td>
+</tr>
+<tr>
+<td>Task</td>
+<td><strong>Binary + multiclass classification only</strong></td>
+<td>Focus; imbalance is a secondary axis, not a task</td>
+</tr>
+<tr>
+<td>Tool</td>
+<td><strong>River</strong>, plus our own harness</td>
+<td>It is the instrument, not the subject</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td><strong>docker-compose, single node</strong></td>
+<td>Sufficient; k8s is scope creep</td>
+</tr>
+<tr>
+<td>Adaptation strategy</td>
+<td>Detector-triggered <strong>and</strong> passive (both measured)</td>
+<td>The active-vs-passive question is a real finding</td>
+</tr>
+<tr>
+<td>Headline contribution</td>
+<td><strong>The hybrid detector + the delay-tax lemmas (§6)</strong></td>
+<td>Novel, measurable, failsafe (negative result is a result)</td>
+</tr>
+<tr>
+<td>Real datasets</td>
+<td><strong>≤ 3</strong> (Elec2, Phishing, + CreditCard)</td>
+<td>Elec2 caveats reported; enough breadth, no more</td>
+</tr>
+<tr>
+<td>Reproducibility</td>
+<td>≥ 10 seeds, fixed budgets, exact versions recorded</td>
+<td>Non-negotiable for a defensible project</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="4-research-questions">4. Research questions<a class="headerlink" href="#4-research-questions" title="Permanent link">¶</a></h2>
+<p>Three questions, one spine. Each is falsifiable and measurable.</p>
+<ul>
+<li>
+<p><strong>RQ1 (baseline, guaranteed).</strong> Under controlled synthetic drift — sudden,
+  gradual, incremental, recurring — how do ADWIN, DDM, EDDM, Page-Hinkley, KSWIN
+  compare on detection delay, false-alarm rate, and missed detections, and how do
+  adaptive models (HAT, ARF) recover compared to static ones (Hoeffding Tree,
+  Naive Bayes)? <em>This is the control condition: "what the literature says happens."</em></p>
+</li>
+<li>
+<p><strong>RQ2 (system, novel-by-measurement).</strong> What does running continual learning as
+  a real service cost — p50/p99 prediction latency during adaptation, throughput
+  ceiling, memory growth, checkpoint/restart cost, and <strong>how fast do scaled-out
+  replicas diverge</strong>? Where does it break first?</p>
+</li>
+<li>
+<p><strong>RQ3 (contribution, the gap).</strong> By how much does delayed, partial, and
+  selective labelling degrade drift detection and adaptation — exactly — and can a
+  <strong>hybrid detector</strong> (label-free early warning + delayed supervised confirmation)
+  recover the immediate-label baseline, or come provably close?</p>
+</li>
+</ul>
+<p>The math (§6) turns RQ3 from "degrades a lot" into <strong>four specific, provable
+claims</strong> about <em>how</em> and <em>by what factor</em> it degrades.</p>
+<hr/>
+<h2 id="5-the-three-chapters">5. The three chapters<a class="headerlink" href="#5-the-three-chapters" title="Permanent link">¶</a></h2>
+<h3 id="chapter-1-the-baseline-safe">Chapter 1 — The baseline (safe)<a class="headerlink" href="#chapter-1-the-baseline-safe" title="Permanent link">¶</a></h3>
+<p>The condensed Options A+B from <code>notes/05</code>. One experiment harness, one run matrix:</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drift type</td>
+<td>sudden (SEA), incremental (Hyperplane), gradual (RandomRBF), recurring (ConceptDriftStream composition)</td>
+</tr>
+<tr>
+<td>Detector</td>
+<td>ADWIN, DDM, EDDM, Page-Hinkley, KSWIN</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Hoeffding Tree (static), HAT (adaptive), ARF (ensemble), Logistic Regression (blind/passive)</td>
+</tr>
+<tr>
+<td>Metric</td>
+<td>detection delay, FP rate, missed detections, MTFA/MTD, dip depth, recovery time, rolling accuracy</td>
+</tr>
+<tr>
+<td>Rigour</td>
+<td>≥ 10 seeds, fixed stream length (~100k), fixed drift positions, mean ± std, Friedman + Nemenyi</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Deliverable:</strong> the reusable harness + the idealised numbers every later chapter
+measures reality against.</p>
+<h3 id="chapter-2-the-system-infrastructure-spine">Chapter 2 — The system (infrastructure spine)<a class="headerlink" href="#chapter-2-the-system-infrastructure-spine" title="Permanent link">¶</a></h3>
+<p>A real, containerised, reproducible continual-learning service:</p>
+<ul>
+<li>Event source: <strong>Redis Streams</strong> (zero-JVM friction) or Kafka/Redpanda — decided
+  in Phase 2, pinned early.</li>
+<li>Model service: <code>POST /predict</code> + a learning consumer; <strong>the same model that
+  serves is the model that learns</strong>, one pass.</li>
+<li>Live drift monitor (a real service, not an offline script).</li>
+<li>Prometheus metrics + Grafana dashboard; load generator to push it until it breaks.</li>
+<li>Versioned, seeded, reproducible end to end (docker-compose).</li>
+</ul>
+<p><strong>Deliverable:</strong> the running system + the "reality tax" chapter — the operational
+cost the literature never reports: adaptation latency cost, replica divergence,
+backpressure behaviour (drop learning or drop serving?), restart/recovery cost.</p>
+<h3 id="chapter-3-the-delayed-label-contribution-the-research">Chapter 3 — The delayed-label contribution (the research)<a class="headerlink" href="#chapter-3-the-delayed-label-contribution-the-research" title="Permanent link">¶</a></h3>
+<p>The core novel work, built on Chapter 1's harness:</p>
+<ol>
+<li><strong>Delay regimes</strong> — fixed (<code>d = 10/100/1000</code>), stochastic (geometric mean <code>d</code>),
+   partial (label probability <code>p ∈ {1, .5, .1}</code>), selective (only "flagged" samples
+   labelled — the endogenous-bias case).</li>
+<li><strong>Measure the degradation</strong> — detector delay/FP/FN and model recovery vs. the
+   <code>d = 0</code> control, at detector level and downstream accuracy level.</li>
+<li><strong>Build the hybrid</strong> — label-free early warning on the input stream <code>P(X)</code>,
+   supervised confirmation on the delayed error stream, with an explicit
+   confirmation protocol (warning within tolerance window, confirm on labels).</li>
+<li><strong>Evaluate</strong> — hybrid vs. naive-delayed-supervised vs. label-free-only vs.
+   immediate-label control; test the §6 lemmas empirically.</li>
+</ol>
+<p><strong>Fallback (safe):</strong> if the hybrid does not beat the naive baselines, that is a
+publishable negative result — "we quantified how much delayed labels break
+existing methods and why the obvious fix is insufficient." Chapter 3 <strong>cannot
+fail</strong>, which is why it is the bet.</p>
+<hr/>
+<h2 id="6-the-mathematical-angle-the-delay-tax">6. The mathematical angle — <em>the delay tax</em><a class="headerlink" href="#6-the-mathematical-angle-the-delay-tax" title="Permanent link">¶</a></h2>
+<p>The project's theory. Deliberately <strong>applied</strong> math — probability, concentration
+bounds, hypothesis testing — squarely within reach, and every claim is
+<strong>empirically verifiable</strong> in Chapter 3. This is not a bet on novel theory; it is
+a bet on formalising the obvious correctly and measuring the constants.</p>
+<h3 id="61-the-formal-setting">6.1 The formal setting<a class="headerlink" href="#61-the-formal-setting" title="Permanent link">¶</a></h3>
+<p>Let the concept be <code>C_t ∈ {C₀, C₁}</code>, with a real drift at time <code>τ</code>. The model
+predicts <code>ŷ_t</code>; the instantaneous error is</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>e_t = 1[ŷ_t ≠ y_t].
+</code></pre></div>
+<p>Under immediate labelling a detector observes <code>(e_t)</code> in real time and alarms at a
+stopping time <code>T</code> — the classical <strong>quickest detection</strong> problem (Page 1954;
+Lorden 1971 minimax; Shiryaev). The field's "detection delay vs false-alarm
+trade-off" is the empirical image of Lorden's criterion: minimise worst-case delay
+subject to a false-alarm constraint (average run length).</p>
+<p>Under label delay, each error <code>e_t</code> becomes observable only at <code>t + L_t</code>, for a
+latency process <code>L_t</code> (fixed, stochastic, or driven by a review policy). The
+detector's filtration is</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a>F_t = σ( e_s : s + L_s ≤ t ).
+</code></pre></div>
+<p>This is <em>quickest detection with delayed observations</em> — a variant the literature
+has barely touched. Four claims follow, each provable with undergraduate/early-grad
+probability and each with a Phase-3 experiment attached.</p>
+<h3 id="62-lemma-1-the-reaction-floor">6.2 Lemma 1 — The reaction floor<a class="headerlink" href="#62-lemma-1-the-reaction-floor" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>Any detector that observes only the error stream cannot alarm before the drift's
+labels arrive: <code>T ≥ τ + L_τ</code> pointwise, hence <code>E[T] ≥ τ + E[L]</code>.</p>
+</blockquote>
+<p><em>Proof idea:</em> <code>e_τ ∉ F_t</code> for <code>t &lt; τ + L_τ</code>; the alarm is a stopping time w.r.t.
+<code>F_t</code>. Trivial — and that triviality is the point: it is a <strong>hard lower bound on
+detection delay that no algorithm can beat</strong>, independent of how good the detector
+is. It converts "you detect drift a month late" from a complaint into a theorem.</p>
+<p><strong>Experiment:</strong> for each delay regime, measure detection delay of every detector
+and confirm it never dips below <code>d</code> (fixed case) / <code>E[L]</code> (stochastic case).</p>
+<h3 id="63-lemma-2-the-power-loss-effective-sample-size">6.3 Lemma 2 — The power loss (effective sample size)<a class="headerlink" href="#63-lemma-2-the-power-loss-effective-sample-size" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>Under stochastic per-sample delay, a windowed detector's confidence band widens
+by the factor <code>1/√p</code>, where <code>p</code> is the fraction of the window's labels that have
+arrived — equivalently, its minimum detectable mean shift grows from
+<code>Δ_min ∝ 1/√W</code> to <code>Δ_min ∝ 1/√(pW)</code>.</p>
+</blockquote>
+<p><em>Proof idea:</em> the observed error stream is a randomly thinned version of the true
+one; a window of <code>W</code> arrivals contains only ~<code>pW</code> distinct fresh errors, and any
+mean-estimate test (Hoeffding/CLT based — ADWIN's threshold is a constant times
+<code>√(ln(1/δ)/W)</code>) has standard error <code>σ/√n</code> with <code>n = pW</code>. Delay degrades
+sensitivity by the factor <code>1/√p</code> — a clean, checkable constant.</p>
+<p><strong>Experiment:</strong> for <code>p ∈ {1, .5, .25, .1}</code> and a fixed drift magnitude, measure
+ADWIN's detection delay; verify it tracks the predicted <code>1/√p</code> inflation.</p>
+<h3 id="64-lemma-3-false-alarm-inflation-under-batch-arrival">6.4 Lemma 3 — False-alarm inflation under batch arrival<a class="headerlink" href="#64-lemma-3-false-alarm-inflation-under-batch-arrival" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>If labels arrive in batches of size <code>b</code>, the observed error stream inherits
+intra-batch correlation <code>ρ &gt; 0</code>, inflating the variance of the estimated error
+rate by <code>1 + (b−1)ρ</code> (the standard clustered-data factor). Detectors calibrated
+for i.i.d. errors then fire spuriously: DDM's alarm rate rises above its nominal
+<code>α</code>.</p>
+</blockquote>
+<p><em>Proof idea:</em> the variance of a clustered sample mean; DDM's thresholds assume
+<code>e_t</code> independent Bernoulli. Batch arrival is exactly what daily/weekly label
+reconciliation does in production.</p>
+<p><strong>Experiment:</strong> feed detectors a delayed-error stream under batch arrival with no
+actual drift; measure FP rate vs. <code>b</code>.</p>
+<h3 id="65-lemma-4-the-identifiability-ceiling-why-the-hybrid-is-maximal">6.5 Lemma 4 — The identifiability ceiling (why the hybrid is maximal)<a class="headerlink" href="#65-lemma-4-the-identifiability-ceiling-why-the-hybrid-is-maximal" title="Permanent link">¶</a></h3>
+<blockquote>
+<p>If <code>P(X)</code> is unchanged but <code>P(Y|X)</code> differs between concepts (pure posterior
+drift), no label-free detector has any power: the likelihood ratio of the
+<code>X</code>-observations is identically 1, so the KL divergence between the two
+hypotheses is 0.</p>
+</blockquote>
+<p><em>Proof idea:</em> the <code>X</code>-marginal cannot distinguish joints that share it. This is
+the formal content of Žliobaitė's detectability result (2010) — and it <strong>justifies
+the hybrid by construction</strong>: label-free signals can only be an early warning;
+confirmation requires labels. The hybrid is the information-maximal architecture
+available, which is the strongest design statement a scoping document can make.</p>
+<p><strong>Experiment:</strong> construct a generator with pure posterior drift (e.g. flip
+<code>P(y|x)</code> in a region while keeping the marginal fixed); confirm label-free
+detectors miss it while the hybrid's delayed confirmation catches it.</p>
+<h3 id="66-what-the-math-is-for">6.6 What the math is <em>for</em><a class="headerlink" href="#66-what-the-math-is-for" title="Permanent link">¶</a></h3>
+<ul>
+<li>It gives the report a theory section with <strong>four lemmas it can actually prove</strong>,
+  each with an empirical counterpart — rigorous, but no dependence on novel
+  analysis (a systems-strength fit).</li>
+<li>It converts Chapter 3's headline from a table of numbers into a narrative:
+  <em>detection is bounded below by the reaction floor, weakened by <code>1/√p</code>, distorted
+  by batch autocorrelation, and capped by identifiability — and the hybrid is the
+  best possible response.</em></li>
+</ul>
+<h3 id="67-explicitly-not-in-scope-math">6.7 Explicitly <em>not</em> in scope (math)<a class="headerlink" href="#67-explicitly-not-in-scope-math" title="Permanent link">¶</a></h3>
+<ul>
+<li>No new change-detection algorithms, no regret bounds, no online convex
+  optimisation, no statistical learning theory, no proofs of novel theorems
+  beyond the four lemmas above. If a lemma resists a clean proof, it degrades to
+  an empirical claim — the project survives.</li>
+</ul>
+<hr/>
+<h2 id="7-datasets">7. Datasets<a class="headerlink" href="#7-datasets" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Data</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synthetic</td>
+<td>SEA, Hyperplane, RandomRBF, STAGGER, ConceptDriftStream compositions</td>
+<td>Ground-truth drift positions → detector metrics, lemmas 1–4</td>
+</tr>
+<tr>
+<td>Real</td>
+<td>Elec2, Phishing, CreditCard (≤3)</td>
+<td>External validity; Elec2 with no-change baseline + Kappa+; CreditCard gives a natural delayed-label (fraud) story</td>
+</tr>
+<tr>
+<td>Real, optional</td>
+<td>A second fraud/intrusion stream if CreditCard proves too small</td>
+<td>Only if time allows — not planned</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="8-deliverables">8. Deliverables<a class="headerlink" href="#8-deliverables" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Experiment harness</strong> — config-driven, seeded, reusable; one runner for
+   Chapters 1 and 3.</li>
+<li><strong>The running system</strong> — docker-compose stack: stream, model service, live
+   drift monitor, Prometheus/Grafana, load generator.</li>
+<li><strong>Results</strong> — accuracy-over-time curves; delay/FP/FN trade-off tables;
+   the delay-tax measurements (lemmas 1–3); system cost curves (latency,
+   throughput, memory, divergence).</li>
+<li><strong>The report</strong> — literature review (citations verified), methodology chapter,
+   the four lemmas with proofs, three results chapters, statistical testing.</li>
+<li><strong>Repo hygiene</strong> — README, pinned versions, seed policy, one-command
+   reproduction.</li>
+<li><strong>Demo</strong> — the live drift-and-recovery dashboard as a viva prop.</li>
+</ol>
+<hr/>
+<h2 id="9-scope-guards">9. Scope guards<a class="headerlink" href="#9-scope-guards" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>❌ Out of scope</th>
+<th>✅ Instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deep learning as the benchmark classifier</td>
+<td>Deep models are permitted <strong>only as label-free signal extractors</strong> for the hybrid detector (DF-H); the benchmark host stays classical (Hoeffding Tree / ARF / HAT)</td>
+</tr>
+<tr>
+<td>Regression, clustering, recsys</td>
+<td><strong>Classification only</strong></td>
+</tr>
+<tr>
+<td>Distributed <em>training</em> (parameter servers, federated)</td>
+<td>Single-node service; replica <em>divergence measurement</em> is in scope</td>
+</tr>
+<tr>
+<td>Building a streaming framework</td>
+<td>Use River; we build the <em>harness and system around it</em></td>
+</tr>
+<tr>
+<td>k8s / multi-cloud production deploy</td>
+<td>docker-compose on one machine</td>
+</tr>
+<tr>
+<td>&gt; 3 real datasets</td>
+<td>Exactly 3, chosen and justified</td>
+</tr>
+<tr>
+<td>Novel adaptation algorithms</td>
+<td>Hybrid <em>architecture</em> + formalised delay model + measurement</td>
+</tr>
+<tr>
+<td>Novel theorem-proving beyond the four lemmas</td>
+<td>Lemmas; anything harder degrades to empirical</td>
+</tr>
+</tbody>
+</table>
+<p>The single most common way student projects fail is scope creep, not difficulty.</p>
+<blockquote>
+<p><strong>Scope amendment (2026-11-14):</strong> DF-H uses a deep encoder as a <strong>label-free
+feature monitor</strong>, not as the benchmark classifier. The classical host remains
+the measured learner. This implements the hybrid architecture in §6.5 and
+keeps the classical baseline comparison intact. If the deep monitor is
+disallowed, the same fusion runs on a classical PCA/KS feature monitor.</p>
+</blockquote>
+<hr/>
+<h2 id="10-milestones-1015-hweek-alongside-coursework">10. Milestones (~10–15 h/week, alongside coursework)<a class="headerlink" href="#10-milestones-1015-hweek-alongside-coursework" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Weeks</th>
+<th>Work</th>
+<th>Exit criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 — Orientation</td>
+<td>1–4</td>
+<td><em>Mostly done.</em> Verify the 10–15 citations we'll actually cite; get River running; reproduce one published baseline</td>
+<td>A baseline number reproduced, bibliography skeleton</td>
+</tr>
+<tr>
+<td>1 — Baseline</td>
+<td>5–12</td>
+<td>Harness + Chapter 1 run matrix</td>
+<td>Harness reusable; idealised numbers done</td>
+</tr>
+<tr>
+<td>2 — System</td>
+<td>13–24</td>
+<td>Stream, model service, live monitor, metrics, load gen</td>
+<td>Running docker-compose stack</td>
+</tr>
+<tr>
+<td>3 — Break it</td>
+<td>25–32</td>
+<td>Latency/throughput/memory/divergence/restart measurements</td>
+<td>"Reality tax" chapter data</td>
+</tr>
+<tr>
+<td>4 — Delay tax</td>
+<td>33–44</td>
+<td>Delay regimes → degradation curves → hybrid → lemma verification</td>
+<td>The contribution (or the negative result)</td>
+</tr>
+<tr>
+<td>5 — Write-up</td>
+<td>45–52</td>
+<td>Report, figures, stats, README, demo</td>
+<td>Submittable project</td>
+</tr>
+</tbody>
+</table>
+<p>Phase 2 and 3 can shrink if the year tightens; Phase 4 is the bet and keeps its
+budget. Phase 1 is the control condition everything depends on — it goes first.</p>
+<hr/>
+<h2 id="11-risks-and-fallbacks">11. Risks and fallbacks<a class="headerlink" href="#11-risks-and-fallbacks" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hybrid doesn't beat naive baselines (Ch 3)</td>
+<td>Complete, publishable negative result; lemmas 1–3 still hold and are still the contribution</td>
+</tr>
+<tr>
+<td>Lemma 2 or 3 proof doesn't cleanly go through</td>
+<td>Degrade to empirical claim + simulation study; report honestly</td>
+</tr>
+<tr>
+<td>Phase 2 (system) overruns</td>
+<td>Shrink Phase 3; Chapter 2 is still a complete chapter</td>
+</tr>
+<tr>
+<td>Elec2 results are contested</td>
+<td>Pre-empt with no-change baseline + Kappa+ + exact preprocessing statement</td>
+</tr>
+<tr>
+<td>Scope creep (the real killer)</td>
+<td>§9 guards; anything new must pass the "which research question does this serve?" test</td>
+</tr>
+</tbody>
+</table>
+<p>Every chapter has a survivable failure mode; no single bet can sink the project.</p>
+<hr/>
+<h2 id="12-open-decisions-teacher-dependent-must-be-asked">12. Open decisions (teacher-dependent — must be asked)<a class="headerlink" href="#12-open-decisions-teacher-dependent-must-be-asked" title="Permanent link">¶</a></h2>
+<ul>
+<li>Does the teacher require <strong>novelty</strong>, or is rigorous measurement/comparison
+  acceptable? (This decides how hard Chapter 3 has to land.)</li>
+<li><strong>Report only, or report + working system?</strong> (This scope assumes both; a
+  report-only variant drops Phase 2/3 to optional.)</li>
+<li>Required <strong>format/length</strong> (IEEE two-column?), interim milestones, individual
+  or group, deadline.</li>
+</ul>
+<p>These change <em>packaging</em>, not <em>substance</em>. The spine survives any answer.</p>
+<hr/>
+<h2 id="13-still-to-do-before-implementation">13. Still to do before implementation<a class="headerlink" href="#13-still-to-do-before-implementation" title="Permanent link">¶</a></h2>
+<ul>
+<li>[ ] Verify the citations we will actually use (Google Scholar / Semantic Scholar —
+      every one; the research files are explicitly unverified).</li>
+<li>[ ] Ask the teacher the §12 questions.</li>
+<li>[ ] Decide the event-source choice (Redis Streams vs Kafka/Redpanda) in Phase 2.</li>
+<li>[ ] Pin River version; reproduce one published baseline number (Phase 0 exit).</li>
+<li>[ ] Optionally run research prompts 3–5 from
+      <code>research/perplexity-prompts.md</code> to sharpen Chapters 2 and the benchmark
+      methodology — useful, not blocking (the notes already cover the essentials).</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

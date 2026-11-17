@@ -1,0 +1,2835 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/Reports/Results/" rel="canonical"/>
+<link href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/" rel="prev"/>
+<link href="../E01-metric-v2/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>Results (global) - Major Project — Streaming ML</title>
+<link href="../../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#results-the-measured-verdicts-all-experiments">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Results (global)
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-global-verdict">
+<span class="md-ellipsis">
+      
+        1. The global verdict
+      
+    </span>
+</a>
+<nav aria-label="1. The global verdict" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters-in-one-line-each">
+<span class="md-ellipsis">
+      
+        Why this matters, in one line each
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-process-how-results-are-produced">
+<span class="md-ellipsis">
+      
+        2. The process — how results are produced
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-measured-evidence">
+<span class="md-ellipsis">
+      
+        3. Measured evidence
+      
+    </span>
+</a>
+<nav aria-label="3. Measured evidence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3a-exp-01-sea-one-abrupt-drift-seed-42">
+<span class="md-ellipsis">
+      
+        3a. Exp-01 — SEA, one abrupt drift (seed 42)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3b-exp-02-the-11-seed-sweep-is-exp-01s-number-reproducible">
+<span class="md-ellipsis">
+      
+        3b. Exp-02 — the 11-seed sweep (is Exp-01's number reproducible?)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3c-e01-corrected-metric-v2-11-seeds-2026-11-12">
+<span class="md-ellipsis">
+      
+        3c. E01 — corrected metric v2 (11 seeds, 2026-11-12)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3d-e04-detector-map-first-pass-5-seeds-2026-11-12">
+<span class="md-ellipsis">
+      
+        3d. E04 — detector map, first pass (5 seeds, 2026-11-12)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3e-e17-the-detector-map-on-a-real-stream-elec2-5-seeds-2026-11-13">
+<span class="md-ellipsis">
+      
+        3e. E17 — the detector map on a real stream (Elec2, 5 seeds, 2026-11-13)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3f-e14-the-real-stream-model-check-5-seeds-2026-11-14">
+<span class="md-ellipsis">
+      
+        3f. E14 — the real-stream model check (5 seeds, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3g-e03-the-baseline-ladder-11-seeds-2026-11-14">
+<span class="md-ellipsis">
+      
+        3g. E03 — the baseline ladder (11 seeds, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3h-e18-the-deep-signal-gate-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3h. E18 — the deep signal gate (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3i-e19-df-h-v1-pilot-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3i. E19 — DF-H v1 pilot (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3j-e21-the-delay-tax-fixed-delay-headline-2026-11-14">
+<span class="md-ellipsis">
+      
+        3j. E21 — the Delay Tax, fixed-delay headline (2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3k-e22-detector-shootout-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3k. E22 — detector shootout (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-verdict-registry-one-conclusion-per-experiment">
+<span class="md-ellipsis">
+      
+        4. Verdict registry — one conclusion per experiment
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-the-verdict-vs-what-was-promised">
+<span class="md-ellipsis">
+      
+        5. The verdict vs what was promised
+      
+    </span>
+</a>
+<nav aria-label="5. The verdict vs what was promised" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-exp-01-pre-registered-expectations-vs-measured">
+<span class="md-ellipsis">
+      
+        5a. Exp-01 — pre-registered expectations vs measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-exp-02-pre-registered-acceptance-vs-measured-legacy-metric">
+<span class="md-ellipsis">
+      
+        5b. Exp-02 — pre-registered acceptance vs measured (legacy metric)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-provenance">
+<span class="md-ellipsis">
+      
+        6. Provenance
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverLearn/">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-the-global-verdict">
+<span class="md-ellipsis">
+      
+        1. The global verdict
+      
+    </span>
+</a>
+<nav aria-label="1. The global verdict" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#why-this-matters-in-one-line-each">
+<span class="md-ellipsis">
+      
+        Why this matters, in one line each
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-process-how-results-are-produced">
+<span class="md-ellipsis">
+      
+        2. The process — how results are produced
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-measured-evidence">
+<span class="md-ellipsis">
+      
+        3. Measured evidence
+      
+    </span>
+</a>
+<nav aria-label="3. Measured evidence" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3a-exp-01-sea-one-abrupt-drift-seed-42">
+<span class="md-ellipsis">
+      
+        3a. Exp-01 — SEA, one abrupt drift (seed 42)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3b-exp-02-the-11-seed-sweep-is-exp-01s-number-reproducible">
+<span class="md-ellipsis">
+      
+        3b. Exp-02 — the 11-seed sweep (is Exp-01's number reproducible?)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3c-e01-corrected-metric-v2-11-seeds-2026-11-12">
+<span class="md-ellipsis">
+      
+        3c. E01 — corrected metric v2 (11 seeds, 2026-11-12)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3d-e04-detector-map-first-pass-5-seeds-2026-11-12">
+<span class="md-ellipsis">
+      
+        3d. E04 — detector map, first pass (5 seeds, 2026-11-12)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3e-e17-the-detector-map-on-a-real-stream-elec2-5-seeds-2026-11-13">
+<span class="md-ellipsis">
+      
+        3e. E17 — the detector map on a real stream (Elec2, 5 seeds, 2026-11-13)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3f-e14-the-real-stream-model-check-5-seeds-2026-11-14">
+<span class="md-ellipsis">
+      
+        3f. E14 — the real-stream model check (5 seeds, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3g-e03-the-baseline-ladder-11-seeds-2026-11-14">
+<span class="md-ellipsis">
+      
+        3g. E03 — the baseline ladder (11 seeds, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3h-e18-the-deep-signal-gate-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3h. E18 — the deep signal gate (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3i-e19-df-h-v1-pilot-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3i. E19 — DF-H v1 pilot (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3j-e21-the-delay-tax-fixed-delay-headline-2026-11-14">
+<span class="md-ellipsis">
+      
+        3j. E21 — the Delay Tax, fixed-delay headline (2026-11-14)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3k-e22-detector-shootout-80-cells-2026-11-14">
+<span class="md-ellipsis">
+      
+        3k. E22 — detector shootout (80 cells, 2026-11-14)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-verdict-registry-one-conclusion-per-experiment">
+<span class="md-ellipsis">
+      
+        4. Verdict registry — one conclusion per experiment
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-the-verdict-vs-what-was-promised">
+<span class="md-ellipsis">
+      
+        5. The verdict vs what was promised
+      
+    </span>
+</a>
+<nav aria-label="5. The verdict vs what was promised" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5a-exp-01-pre-registered-expectations-vs-measured">
+<span class="md-ellipsis">
+      
+        5a. Exp-01 — pre-registered expectations vs measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5b-exp-02-pre-registered-acceptance-vs-measured-legacy-metric">
+<span class="md-ellipsis">
+      
+        5b. Exp-02 — pre-registered acceptance vs measured (legacy metric)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-provenance">
+<span class="md-ellipsis">
+      
+        6. Provenance
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="Results (global).pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="results-the-measured-verdicts-all-experiments">Results — the measured verdicts, all experiments<a class="headerlink" href="#results-the-measured-verdicts-all-experiments" title="Permanent link">¶</a></h1>
+<p><strong>What this page is:</strong> the project's <strong>global results file</strong>. One page that holds
+the <em>conclusion</em> of every experiment — not the effort, not the logs, not the
+milestones: the bottom line, the numbers that back it, and the process that
+produced it. Written for management review; every figure and number traces to a
+data artifact (<code>experiments/*/results.json</code>).</p>
+<p><strong>How this page updates:</strong> an experiment is added here <strong>only when it concludes</strong>,
+as a single row in the verdict registry (§4) plus its measured evidence (§3). The
+global verdict (§1) is re-stated over all concluded experiments whenever one lands.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Status</strong></td>
+<td>12 concluded: Exp-01, Exp-02, <strong>E01 metric v2 correction (clean panel)</strong>, <strong>E03 baseline ladder (11 seeds)</strong>, <strong>E04 detector map first pass (5 seeds)</strong>, <strong>E14 real-stream model check (provisional 5-seed slice)</strong>, <strong>E17 real-stream detector check (5 seeds)</strong>, <strong>KDD'26 six-detector reproduction (50 trials)</strong>, <strong>E18 deep-signal gate (negative)</strong>, <strong>E19 DF-H v1 pilot (gate failed)</strong>, <strong>E21 Delay Tax fixed-delay headline</strong>, <strong>E22 detector shootout (DF-H beats the requested classical panel)</strong>; <strong>E21 is the surviving headline</strong> (<a href="../Roadmap-v2/">Roadmap v2</a>)</td>
+</tr>
+<tr>
+<td><strong>Data artifacts</strong></td>
+<td><code>experiments/exp01/results.json</code> · <code>experiments/exp02/results.json</code> · <code>experiments/results/e01/</code> (<strong>corrected metric, clean rerun</strong>) · <code>experiments/results/e03/</code> (<strong>baseline ladder</strong>) · <code>experiments/results/e04/</code> (<strong>detector map</strong>) · <code>experiments/results/e14/</code> (<strong>real-stream model check</strong>) · <code>experiments/results/e17/</code> (<strong>real-stream detector check</strong>) · <code>experiments/results/e18/</code> + <code>experiments/data/deep_signals/pilot/</code> (<strong>deep signal gate</strong>) · <code>experiments/results/e19_kdd_pilot/</code> (<strong>DF-H v1 pilot</strong>) · <code>experiments/results/e21/</code> (<strong>Delay Tax fixed-delay headline</strong>) · <code>experiments/results/e22_detector_shootout/</code> (<strong>detector shootout</strong>) · <code>experiments/results/kdd_bench_full/</code> (<strong>KDD'26 reproduction</strong>) · <code>experiments/results/_archive/e01_5model/</code> (<strong>pre-fix panel, superseded</strong>)</td>
+</tr>
+<tr>
+<td><strong>Method / protocol</strong></td>
+<td><a href="../../Phase1%3AExperimentation/thesis/"><code>thesis.md</code></a> · <a href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/"><code>streaming-vs-batch-metrics.md</code></a></td>
+</tr>
+<tr>
+<td><strong>Formatting note</strong></td>
+<td>unicode math (τ, κ₀, Δκ, ≈, ≥) renders identically in Obsidian, GitHub, mkdocs</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="1-the-global-verdict">1. The global verdict<a class="headerlink" href="#1-the-global-verdict" title="Permanent link">¶</a></h2>
+<blockquote>
+<p><strong>A model that keeps learning from the stream heals itself after a concept
+change — a model that was trained once and frozen does not.</strong>
+Across <strong>11 seeds</strong>: the frozen model recovered on <strong>0 of 11</strong> runs. The
+corrected metric (E01) prices the damage over a fixed 5,000-sample window with
+a panel-shared reference: <strong>74.8 ± 61.8</strong> vs <strong>515.0 ± 97.1</strong> samples·κ, a
+<strong>≈ 6.9×</strong> gap. Over the rest of the stream the gap is <strong>≈ 10.8×</strong>
+(<strong>321.4</strong> vs <strong>3,472.9</strong>). The streaming model also wins the overall
+averages: <strong>88.3% vs 85.4%</strong> accuracy, <strong>0.753 vs 0.685</strong> Cohen Kappa.
+Recovery is <strong>8/11</strong> seeds with a real excursion (285–4,279 samples); the old
+“0 on 8/11” was an artefact of the τ-anchored rule. The legacy <strong>294×</strong> and
+<strong>24×</strong> figures are retired as upper bounds; on the clean panel the worst
+DeepRiver seed (217.9) is <strong>0.74×</strong> the best frozen seed (295.2).</p>
+<p><strong>Detector track (2026-11-14).</strong> E18/E19 are negative on their pre-registered
+gates, but the focused <strong>E22</strong> shootout shows DF-H is <strong>3rd overall (7.34)</strong>,
+ahead of HDDM-W (7.47), ADWIN (9.94), HDDM-A (11.34) and PageHinkley (12.53)
+— behind only the KDD top two, SEED and STEPD — with a 0.04 FAR and a clear
+feature-permutation win. <strong>E21</strong> is the surviving headline: a label-free Stage-1
+warning in <strong>70–513</strong> samples vs <strong>2,120–3,269</strong> for the error-only panel at
+<code>L = 2,000</code>. The detector is a strong feature-drift warning system, not a
+top-2 universal detector.</p>
+</blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Metric correction — read this before quoting any number below</p>
+<p>Sections 3a and 3b use the original <code>damage_area</code> definition, which
+integrated from τ to the recovery point. On 8/11 seeds recovery collapsed to
+τ, truncating the streaming integral. <strong>294× and 24× are upper bounds and are
+retired.</strong> The corrected numbers are in §3c and
+<a href="../E01-metric-v2/"><code>E01-metric-v2.md</code></a>.</p>
+</div>
+<p><img alt="The process — how one experiment produces a verdict" src="../figures/results-process-flow.png"/></p>
+<p><em>Figure 1 — how every experiment in this file runs: one stream, two models in the
+same race, one prequential scoreboard, one verdict. No result below was produced
+any other way.</em></p>
+<h3 id="why-this-matters-in-one-line-each">Why this matters, in one line each<a class="headerlink" href="#why-this-matters-in-one-line-each" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Streaming model (keeps learning)</th>
+<th>Frozen model (trained once)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reacts to change on its own?</td>
+<td><strong>Yes</strong> — adapts on its own error signal</td>
+<td><strong>No</strong> — waits for a human to retrain</td>
+</tr>
+<tr>
+<td>Recovery after the drift at τ</td>
+<td><strong>8/11 seeds</strong> with a real excursion; 285–4,279 samples</td>
+<td><strong>never</strong> — 0 of 11 seeds recovered</td>
+</tr>
+<tr>
+<td>Skill lost, corrected <code>damage_ref</code> (5k window)</td>
+<td><strong>74.8 ± 61.8</strong> samples·κ (worst 217.9)</td>
+<td><strong>515.0 ± 97.1</strong> samples·κ (best 295.2)</td>
+</tr>
+<tr>
+<td>Skill lost over the rest of the stream (<code>damage_full</code>)</td>
+<td><strong>321.4 ± 203.8</strong> samples·κ</td>
+<td><strong>3,472.9 ± 559.7</strong> samples·κ</td>
+</tr>
+<tr>
+<td>Overall quality (full run, 48k samples)</td>
+<td><strong>0.883</strong> acc · <strong>0.753</strong> κ</td>
+<td>0.854 acc · 0.685 κ</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="2-the-process-how-results-are-produced">2. The process — how results are produced<a class="headerlink" href="#2-the-process-how-results-are-produced" title="Permanent link">¶</a></h2>
+<p>One experiment = <strong>one controlled race</strong>, run identically for both models on the
+same data in the same order. Three non-negotiable rules keep the comparison fair:</p>
+<ol>
+<li><strong>Prequential scoring</strong> — every sample is scored <em>before</em> it trains the model
+   (test-then-train). No model ever sees a future sample.</li>
+<li><strong>Same warm-up, same data</strong> — both models train on the same first 20% of the
+   stream; the frozen model never updates after that, the streaming model updates
+   on every sample.</li>
+<li><strong>Measured, not asserted</strong> — every number in this file is read from a committed
+   <code>results.json</code>; figures are re-rendered from that file, never hand-drawn.</li>
+</ol>
+<p>The scoreboard metrics used in every verdict:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>What it measures</th>
+<th>Good direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy / Cohen Kappa (rolling, w = 1,000)</td>
+<td>classification skill over time, chance-corrected</td>
+<td>↑</td>
+</tr>
+<tr>
+<td>κ_ref — shared pre-drift reference</td>
+<td>mean pre-drift skill across the model panel</td>
+<td>reference level</td>
+</tr>
+<tr>
+<td>Δκ — dip depth</td>
+<td>how much skill the drift knocks off, relative to κ_ref</td>
+<td>↓ (shallower)</td>
+</tr>
+<tr>
+<td><strong><code>recovery_rate</code></strong></td>
+<td>fraction of episodes with a real band exit followed by 500 in-band samples</td>
+<td>↑</td>
+</tr>
+<tr>
+<td><strong><code>damage_ref</code></strong> (primary)</td>
+<td>fixed-window integral <code>Σ max(κ_ref − κ(t), 0)</code> — cannot be gamed by a weak model's own baseline</td>
+<td>↓</td>
+</tr>
+<tr>
+<td><strong><code>damage_full</code></strong></td>
+<td>the same integral over the rest of the stream</td>
+<td>↓</td>
+</tr>
+<tr>
+<td><strong><code>AUE</code></strong></td>
+<td>mean error minus the <strong>timing-oracle</strong> error; secondary, because the oracle is not an upper bound</td>
+<td>↓</td>
+</tr>
+<tr>
+<td>~~Recovery time / damage area~~</td>
+<td>legacy Exp-01/02 definitions; kept only for audit, superseded by E01</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="3-measured-evidence">3. Measured evidence<a class="headerlink" href="#3-measured-evidence" title="Permanent link">¶</a></h2>
+<h3 id="3a-exp-01-sea-one-abrupt-drift-seed-42">3a. Exp-01 — SEA, one abrupt drift (seed 42)<a class="headerlink" href="#3a-exp-01-sea-one-abrupt-drift-seed-42" title="Permanent link">¶</a></h3>
+<p>The first data point. Measured 2026-09-09, seed 42, 60,000 samples, abrupt drift
+at τ = 30,000, 10% label noise. Streaming model: DeepRiver rolling deep classifier
+(RNN head, window = 500). Frozen model: Random Forest (100 trees) trained once on
+the warm-up. Full series: <code>experiments/exp01/results.json</code>.</p>
+<p><img alt="Headline scoreboard — full-run averages" src="../figures/results-headline-scoreboard.png"/></p>
+<p><em>Figure 2 — the overall race, 48,000 post-warm-up samples. The streaming model
+wins the cumulative scoreboard as well as the reactivity contest: +2.9 pp accuracy
+and +6.8 pp Cohen Kappa.</em></p>
+<p><img alt="Rolling Cohen Kappa over the stream — the recovery shapes" src="../../Phase1%3AExperimentation/figures/exp01-rolling-kappa-deepriver-vs-frozen.png"/></p>
+<p><em>Figure 3 — the verdict in one picture. Before the drift both models sit at the
+same skill level (κ₀ ≈ 0.755–0.759). At τ the frozen model (red) falls to 0.592
+and stays down; the streaming model (blue) dips only to 0.703 and is back inside
+its own band 835 samples later — with no human intervention.</em></p>
+<p><img alt="Recovery time and damage area — measured" src="../../Phase1%3AExperimentation/figures/exp01-damage-area-vs-recovery.png"/></p>
+<p><em>Figure 4 — the two decisive columns. Recovery: 835 samples vs never. Damage paid
+for the drift: 31 vs 3,307 samples·κ (log scale).</em></p>
+<table>
+<thead>
+<tr>
+<th>Drift-window metric (τ = 30,000)</th>
+<th>Streaming (DeepRiver rolling)</th>
+<th>Frozen (RF)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-drift baseline κ₀</td>
+<td>0.755</td>
+<td>0.759</td>
+</tr>
+<tr>
+<td>Minimum rolling Kappa after τ</td>
+<td>0.703</td>
+<td>0.592</td>
+</tr>
+<tr>
+<td>Dip depth Δκ</td>
+<td><strong>0.052</strong> (shallow)</td>
+<td>0.167 (3× deeper)</td>
+</tr>
+<tr>
+<td><strong>Recovery time</strong></td>
+<td><strong>835 samples</strong> — inside the pre-registered 5,000 budget</td>
+<td><strong>never</strong></td>
+</tr>
+<tr>
+<td><strong>Damage area</strong></td>
+<td><strong>31</strong> samples·κ</td>
+<td><strong>3,307</strong> samples·κ</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3b-exp-02-the-11-seed-sweep-is-exp-01s-number-reproducible">3b. Exp-02 — the 11-seed sweep (is Exp-01's number reproducible?)<a class="headerlink" href="#3b-exp-02-the-11-seed-sweep-is-exp-01s-number-reproducible" title="Permanent link">¶</a></h3>
+<p>The statistical data point. Measured 2026-09-12: <strong>exactly the Exp-01 replica</strong> — same
+stream, same two models, same warm-up, same prequential loop, same metric definitions —
+rerun on <strong>11 seeds</strong> (42, Exp-01's, plus 0–9), changing nothing but the seed. Full
+per-seed detail: <code>experiments/exp02/results.json</code>. Seed 42 reproduced Exp-01 <strong>exactly</strong>
+(835 samples, delta 0), so the sweep is a genuine rerun of the same experiment.</p>
+<p><img alt="Exp-02 seed sweep — recovery time and damage area per seed" src="../../Phase1%3AExperimentation/figures/exp02-seed-sweep-recovery.png"/></p>
+<p><em>Figure 5 — left: recovery time per seed; 8 of 11 seeds sit on the metric floor (0 =
+never left the pre-drift band) and the rest recover in 174–2,497 samples, all inside the
+5,000 budget. Right: damage area per seed (log scale); the 5 seeds with exactly zero
+measured damage are drawn as hatched stubs. The damage gap is stable; the recovery
+number is not.</em></p>
+<table>
+<thead>
+<tr>
+<th>Metric (11 seeds)</th>
+<th>Streaming (DeepRiver rolling)</th>
+<th>Frozen (RF)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-drift baseline κ₀</td>
+<td>0.751 ± 0.017</td>
+<td><strong>0.767 ± 0.018</strong></td>
+</tr>
+<tr>
+<td>Dip depth Δκ</td>
+<td><strong>0.045 ± 0.015</strong></td>
+<td>0.173 ± 0.018</td>
+</tr>
+<tr>
+<td>Recovery time (samples from τ)</td>
+<td><strong>median 0</strong>, mean 319 ± 765 (0 / 174 / 835 / 2,497)</td>
+<td><strong>never, 11/11</strong></td>
+</tr>
+<tr>
+<td>Damage area (samples·κ)</td>
+<td><strong>13 ± 31</strong> (median ≈ 0.001, max 103)</td>
+<td>3,710 ± 592 (min 2,439, max 4,368)</td>
+</tr>
+<tr>
+<td>Full-run accuracy</td>
+<td><strong>0.8830 ± 0.0021</strong></td>
+<td>0.8539 ± 0.0017</td>
+</tr>
+<tr>
+<td>Full-run Cohen Kappa</td>
+<td><strong>0.7530 ± 0.0044</strong></td>
+<td>0.6850 ± 0.0035</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="The damage gap as a distribution, one dot per seed" src="../../Phase1%3AExperimentation/figures/exp02-damage-distribution.png"/></p>
+<p><em>Figure 6 — the same damage numbers as a distribution: one dot per seed, median marked.
+Every frozen seed sits in a narrow band; every streaming seed is two orders of magnitude
+below it. Median ≈ 0.001 vs 3,822 samples·κ.</em></p>
+<p><strong>What the sweep settles.</strong> Exp-01's specific <strong>835</strong> was a property of seed 42, not of
+the method: across 11 seeds the recovery time is 0 on eight seeds (no excursion to
+recover from) and 174 / 835 / 2,497 on the other three. What <em>is</em> stable is everything
+the claim actually rests on — the frozen model never recovers (0/11, no exceptions), the
+damage gap is two orders of magnitude on the mean and <strong>24× even worst-case-vs-best-case</strong>,
+and the streaming dip is consistently ~3.8× shallower. Exp-02 also mildly <strong>restores</strong>
+Exp-01's refuted control expectation: the frozen model <em>does</em> start ahead while the
+concept is stationary (κ₀ 0.767 vs 0.751), and still loses the full run because it
+collapses at τ.</p>
+<p><strong>One methodological finding, recorded not patched.</strong> The recovery-time rule looks for
+the first sustained in-band run <em>starting at τ</em>, so a model that stays in band for the
+first 500 samples and dips afterwards is scored 0. Seven of eleven seeds did leave the
+band after τ, but only the three with an <em>early</em> excursion are credited with a recovery
+time — which makes recovery non-monotone in dip depth (seed 3 dips deeper than seed 9
+yet scores 0). <strong>Damage area and dip depth are the trustworthy drift-window metrics;
+recovery time is meaningful only conditional on an early excursion.</strong> Details in the
+<a href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/">Exp-02 write-up</a> §6c.</p>
+<p><img alt="Why the recovery metric under-reports" src="../../Phase1%3AExperimentation/figures/exp02-recovery-vs-dip.png"/></p>
+<p><em>Figure 7 — the flaw in one picture. Green = an excursion early enough for its recovery
+to be credited; orange X = a seed that did leave its band but was scored 0 because the
+excursion began after τ + 500; hollow blue = never left the band. Four of the eleven
+seeds are orange — which is why the mean recovery time is not a property of the model.</em></p>
+<h3 id="3c-e01-corrected-metric-v2-11-seeds-2026-11-12">3c. E01 — corrected metric v2 (11 seeds, 2026-11-12)<a class="headerlink" href="#3c-e01-corrected-metric-v2-11-seeds-2026-11-12" title="Permanent link">¶</a></h3>
+<p>This supersedes the damage numbers in 3a and 3b. E01 re-ran the same SEA/DeepRiver
+vs frozen pilot with a fixed-window, panel-shared damage metric and recovery
+conditional on a real band exit.</p>
+<table>
+<thead>
+<tr>
+<th>Metric (11 seeds)</th>
+<th style="text-align: right;">DeepRiver</th>
+<th style="text-align: right;">Frozen RF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>damage_ref</code></strong> (5k window, primary)</td>
+<td style="text-align: right;"><strong>74.8 ± 61.8</strong> (worst 217.9)</td>
+<td style="text-align: right;"><strong>515.0 ± 97.1</strong> (best 295.2)</td>
+</tr>
+<tr>
+<td><strong><code>damage_full</code></strong> (rest of stream)</td>
+<td style="text-align: right;"><strong>321.4 ± 203.8</strong></td>
+<td style="text-align: right;"><strong>3,472.9 ± 559.7</strong></td>
+</tr>
+<tr>
+<td><code>AUE</code> vs timing oracle</td>
+<td style="text-align: right;"><strong>−0.0472 ± 0.0058</strong></td>
+<td style="text-align: right;">+0.0010 ± 0.0027</td>
+</tr>
+<tr>
+<td><code>recovery_rate</code></td>
+<td style="text-align: right;"><strong>8/11</strong></td>
+<td style="text-align: right;"><strong>0/11</strong></td>
+</tr>
+<tr>
+<td>Recovery time, recovered seeds</td>
+<td style="text-align: right;">285–4,279 (mean 1,502)</td>
+<td style="text-align: right;">never</td>
+</tr>
+<tr>
+<td>Full-run accuracy / Cohen κ</td>
+<td style="text-align: right;"><strong>0.883 / 0.753</strong></td>
+<td style="text-align: right;">0.854 / 0.685</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="E01 metric v2 — damage_ref and AUE per model" src="../../Phase1%3AExperimentation/figures/e01-metric-v2-model-comparison.png"/></p>
+<p><em>Figure 8 — the corrected comparison. Left: <code>damage_ref</code>; right: AUE against the
+timing oracle. AUE is secondary because the timing oracle knows when the drift
+happened but not what the new concept is; its own damage (505) is almost identical
+to frozen. The primary result is the <code>damage_ref</code> gap.</em></p>
+<p><strong>Verdict.</strong> Frozen recovered on <strong>0/11</strong> seeds. DeepRiver's <code>damage_ref</code> was lower
+on <strong>11/11</strong> seeds, with a <strong>≈6.9×</strong> mean gap and a <strong>≈10.8×</strong> full-stream gap. On
+the clean panel the worst DeepRiver seed (217.9) is <strong>0.74×</strong> the best frozen seed
+(295.2), so the legacy <strong>24×</strong> worst-case claim is retired along with the <strong>294×</strong>
+mean. The clean headline is: <em>the frozen model never recovers, and the streaming
+model pays roughly one seventh of the fixed-window damage.</em> The full write-up is
+<a href="../E01-metric-v2/"><code>E01-metric-v2.md</code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Clean panel</p>
+<p>The E01 rerun contains only DeepRiver, frozen RF, and the timing oracle. The
+earlier artifact that also included HT/HAT (a since-fixed host-default bug) is
+archived at <code>experiments/results/_archive/e01_5model/</code> and is superseded by
+the numbers above.</p>
+</div>
+<h3 id="3d-e04-detector-map-first-pass-5-seeds-2026-11-12">3d. E04 — detector map, first pass (5 seeds, 2026-11-12)<a class="headerlink" href="#3d-e04-detector-map-first-pass-5-seeds-2026-11-12" title="Permanent link">¶</a></h3>
+<p>Eight detectors were replayed on the raw and smoothed mistake streams of two
+hosts, across four generators and four drift shapes. This is the first map of
+“which alarm works for which change”.</p>
+<table>
+<thead>
+<tr>
+<th>Drift shape</th>
+<th>Best default</th>
+<th style="text-align: right;">Balanced score</th>
+<th style="text-align: right;">Changes caught</th>
+<th style="text-align: right;">False alarms /1k</th>
+<th style="text-align: right;">Detection delay</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrupt</td>
+<td><strong>HDDM-A, raw</strong></td>
+<td style="text-align: right;"><strong>0.683</strong></td>
+<td style="text-align: right;">75%</td>
+<td style="text-align: right;">0.0075</td>
+<td style="text-align: right;">0.185</td>
+</tr>
+<tr>
+<td>Gradual</td>
+<td><strong>HDDM-A, raw</strong></td>
+<td style="text-align: right;"><strong>0.842</strong></td>
+<td style="text-align: right;">95%</td>
+<td style="text-align: right;">0.0083</td>
+<td style="text-align: right;">0.155</td>
+</tr>
+<tr>
+<td>Incremental</td>
+<td><strong>HDDM-A, raw</strong></td>
+<td style="text-align: right;"><strong>0.883</strong></td>
+<td style="text-align: right;">90%</td>
+<td style="text-align: right;">0.0033</td>
+<td style="text-align: right;">0.012</td>
+</tr>
+<tr>
+<td>Recurring</td>
+<td><strong>HDDM-A, raw</strong></td>
+<td style="text-align: right;"><strong>0.500</strong></td>
+<td style="text-align: right;">73%</td>
+<td style="text-align: right;">0.0308</td>
+<td style="text-align: right;">0.144</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="E04 detector balanced score — static host, raw signal" src="../../Phase1%3AExperimentation/figures/e04-detector-f1-ht-raw.png"/></p>
+<p><em>Figure 9 — balanced score per detector and drift shape on the static host, raw
+signal. HDDM-A is the best cell for every shape; recurring drift is the hard
+case.</em></p>
+<p><strong>Verdict.</strong> <strong>HDDM-A on the raw signal is the sensible default</strong> across all four
+shapes. Recurring change is the hard case (0.50); incremental is the easiest
+(0.88). Smoothing the mistake signal raises false alarms without improving the
+ranking; the raw channel is the default and the smoothed channel is a diagnostic.
+This is a 5-seed first pass with default detector settings, not the full
+pre-registered matrix. The full write-up is
+<a href="../E04-detector-map/"><code>E04-detector-map.md</code></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Scoring bug found and fixed</p>
+<p>The first E04 report selected KSWIN for incremental with F1 = 1.0 and episode
+recall = 0.25. That was impossible: zero-alarm runs had <code>precision = None</code> and
+were excluded from the F1 mean. The corrected report recomputes F1 from raw
+TP/FP/episode counts and treats zero alarms as F1 = 0. The “KSWIN perfect”
+result is retired.</p>
+</div>
+<h3 id="3e-e17-the-detector-map-on-a-real-stream-elec2-5-seeds-2026-11-13">3e. E17 — the detector map on a real stream (Elec2, 5 seeds, 2026-11-13)<a class="headerlink" href="#3e-e17-the-detector-map-on-a-real-stream-elec2-5-seeds-2026-11-13" title="Permanent link">¶</a></h3>
+<p>E04's eight detectors were replayed on real electricity-market records: 45,312
+rows of Elec2, shuffled per seed, with a known label-swap drift injected at
+<code>τ = 22,656</code>. This is the first real-data check of the detector map. Mean over
+5 seeds, raw channel, corrected balanced score:</p>
+<table>
+<thead>
+<tr>
+<th>Drift shape</th>
+<th style="text-align: right;">HDDM-A, static HT</th>
+<th style="text-align: right;">ADWIN, static HT</th>
+<th style="text-align: right;">HDDM-A, adaptive HAT</th>
+<th style="text-align: right;">ADWIN, adaptive HAT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrupt</td>
+<td style="text-align: right;"><strong>0.933</strong></td>
+<td style="text-align: right;">0.452</td>
+<td style="text-align: right;">0.400</td>
+<td style="text-align: right;"><strong>1.000</strong></td>
+</tr>
+<tr>
+<td>Gradual</td>
+<td style="text-align: right;"><strong>0.960</strong></td>
+<td style="text-align: right;">0.495</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td>Incremental</td>
+<td style="text-align: right;"><strong>0.960</strong></td>
+<td style="text-align: right;">0.842</td>
+<td style="text-align: right;"><strong>1.000</strong></td>
+<td style="text-align: right;">0.971</td>
+</tr>
+<tr>
+<td>Recurring</td>
+<td style="text-align: right;"><strong>0.787</strong></td>
+<td style="text-align: right;">0.508</td>
+<td style="text-align: right;">0.593</td>
+<td style="text-align: right;"><strong>0.770</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict.</strong> The E04 default is <strong>host-conditional on real data</strong>. On the static
+Hoeffding Tree, HDDM-A repeats the synthetic result and wins all four shapes. On
+the adaptive HAT it does not: ADWIN wins abrupt (1.000 vs 0.400) and recurring
+(0.770 vs 0.593), ties gradual, and loses only incremental. Across the better
+host/channel per detector, mean F1 is ADWIN <strong>0.935</strong> vs HDDM-A <strong>0.910</strong>. The
+one-sided Hoeffding test can miss an abrupt change that an adaptive learner
+repairs quickly; ADWIN's two-sided window comparison still sees it. Recurring
+remains the hard case. Five seeds, one dataset, one injected mechanism — this is
+a warning, not a final ranking. The full write-up is
+<a href="../E17-real-detector-map/"><code>E17-real-detector-map.md</code></a>.</p>
+<h3 id="3f-e14-the-real-stream-model-check-5-seeds-2026-11-14">3f. E14 — the real-stream model check (5 seeds, 2026-11-14)<a class="headerlink" href="#3f-e14-the-real-stream-model-check-5-seeds-2026-11-14" title="Permanent link">¶</a></h3>
+<p>E14 replayed the streaming-vs-frozen comparison on real features and labels:
+Elec2 (45,312 rows) and Phishing (1,250 rows), with label-swap and
+feature-permutation drift injected at a known point. Five seeds, 100 runs,
+metric v2. Pooled over 20 dataset × mechanism × seed cells:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Cohen κ</th>
+<th style="text-align: right;"><code>damage_ref</code></th>
+<th style="text-align: right;"><code>damage_full</code></th>
+<th style="text-align: right;">Recovery rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frozen RF</td>
+<td style="text-align: right;">0.685</td>
+<td style="text-align: right;">0.395</td>
+<td style="text-align: right;">297.4</td>
+<td style="text-align: right;">4,703.0</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr>
+<td><strong>ARF</strong></td>
+<td style="text-align: right;"><strong>0.875</strong></td>
+<td style="text-align: right;"><strong>0.724</strong></td>
+<td style="text-align: right;"><strong>198.0</strong></td>
+<td style="text-align: right;"><strong>2,684.8</strong></td>
+<td style="text-align: right;"><strong>0.20</strong></td>
+</tr>
+<tr>
+<td>HAT</td>
+<td style="text-align: right;">0.803</td>
+<td style="text-align: right;">0.583</td>
+<td style="text-align: right;">245.7</td>
+<td style="text-align: right;">3,019.6</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr>
+<td>DriftFormer</td>
+<td style="text-align: right;">0.770</td>
+<td style="text-align: right;">0.524</td>
+<td style="text-align: right;">284.9</td>
+<td style="text-align: right;">3,497.5</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr>
+<td>Oracle refit</td>
+<td style="text-align: right;">0.698</td>
+<td style="text-align: right;">0.415</td>
+<td style="text-align: right;">280.3</td>
+<td style="text-align: right;">4,518.3</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict.</strong> ARF leads on both datasets (Elec2 <code>damage_ref</code> 202.4 vs frozen
+295.0; Phishing 193.5 vs 299.8), and the provisional acceptance rules pass:
+pooled damage ratio <strong>0.666×</strong>, ARF lower in <strong>18/20</strong> cells, frozen recovered
+<strong>0/20</strong>, κ gain <strong>+0.329</strong>. DriftFormer beats frozen on κ but not on damage — on
+Elec2 it pays slightly more (314.7 vs 295.0). That is the expected negative that
+justifies using the deep model as a <strong>signal extractor</strong>, not as the KDD host.
+Two datasets, five seeds and one injected mechanism per stream: <strong>provisional,
+not field-wide</strong>. The full write-up is <a href="../E14-real-streams/"><code>E14-real-streams.md</code></a>.</p>
+<h3 id="3g-e03-the-baseline-ladder-11-seeds-2026-11-14">3g. E03 — the baseline ladder (11 seeds, 2026-11-14)<a class="headerlink" href="#3g-e03-the-baseline-ladder-11-seeds-2026-11-14" title="Permanent link">¶</a></h3>
+<p>E03 ran the full 11-seed ladder on SEA and Hyperplane: frozen RF, three
+scheduled-retrain intervals, static and adaptive trees, ARF, Leveraging Bagging,
+ADWIN Bagging, and the timing oracle. 220 model runs, 220 episodes.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Cohen κ</th>
+<th style="text-align: right;">AUE</th>
+<th style="text-align: right;"><code>damage_ref</code></th>
+<th style="text-align: right;">Recovery rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Leveraging Bagging</strong></td>
+<td style="text-align: right;"><strong>0.857</strong></td>
+<td style="text-align: right;"><strong>0.707</strong></td>
+<td style="text-align: right;"><strong>−0.0469</strong></td>
+<td style="text-align: right;"><strong>455.7</strong></td>
+<td style="text-align: right;"><strong>1.000</strong></td>
+</tr>
+<tr>
+<td>HAT</td>
+<td style="text-align: right;">0.847</td>
+<td style="text-align: right;">0.685</td>
+<td style="text-align: right;">−0.0447</td>
+<td style="text-align: right;">489.2</td>
+<td style="text-align: right;">0.955</td>
+</tr>
+<tr>
+<td>ARF</td>
+<td style="text-align: right;">0.839</td>
+<td style="text-align: right;">0.671</td>
+<td style="text-align: right;">−0.0368</td>
+<td style="text-align: right;">575.4</td>
+<td style="text-align: right;">0.591</td>
+</tr>
+<tr>
+<td>ADWIN Bagging</td>
+<td style="text-align: right;">0.853</td>
+<td style="text-align: right;">0.698</td>
+<td style="text-align: right;">−0.0293</td>
+<td style="text-align: right;">614.1</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td>Hoeffding Tree</td>
+<td style="text-align: right;">0.844</td>
+<td style="text-align: right;">0.679</td>
+<td style="text-align: right;">−0.0200</td>
+<td style="text-align: right;">700.8</td>
+<td style="text-align: right;">0.955</td>
+</tr>
+<tr>
+<td>Scheduled RF, 1k</td>
+<td style="text-align: right;">0.855</td>
+<td style="text-align: right;">0.702</td>
+<td style="text-align: right;">−0.0161</td>
+<td style="text-align: right;">733.5</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td>Scheduled RF, 5k</td>
+<td style="text-align: right;">0.850</td>
+<td style="text-align: right;">0.692</td>
+<td style="text-align: right;">−0.0056</td>
+<td style="text-align: right;">824.1</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td>Scheduled RF, 20k</td>
+<td style="text-align: right;">0.838</td>
+<td style="text-align: right;">0.667</td>
+<td style="text-align: right;">−0.0021</td>
+<td style="text-align: right;">849.4</td>
+<td style="text-align: right;">0.682</td>
+</tr>
+<tr>
+<td>Frozen RF</td>
+<td style="text-align: right;">0.810</td>
+<td style="text-align: right;">0.609</td>
+<td style="text-align: right;">+0.0004</td>
+<td style="text-align: right;">871.7</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr>
+<td>Oracle refit</td>
+<td style="text-align: right;">0.811</td>
+<td style="text-align: right;">0.609</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">864.3</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict.</strong> Every streaming adapter pays less damage than frozen RF and than
+every scheduled-retrain interval. The best streaming adapter is <strong>Leveraging
+Bagging (455.7)</strong>, then HAT (489.2) and ARF (575.4); the 1k scheduled model is
+the best batch baseline (733.5) but still pays <strong>1.6×</strong> the LB damage. The
+pre-registered acceptance cell passes: ARF's AUE (−0.0368) is better than
+scheduled-5k's (−0.0056).</p>
+<p><strong>Phase-noise caveat.</strong> The scheduled models recover by construction at each
+retrain tick, so recovery rate is not the comparison — <code>damage_ref</code> is. The
+phase-noise test is <strong>inconclusive</strong>: the refit buffer (12,000) is longer than
+the 1k and 5k intervals, so recovery lag is buffer-dominated, not phase-driven;
+only the 20k cell satisfies the design and it has one observation. The honest
+conclusion is that the ladder orders the models, not that recovery is uniform
+over a retrain interval. Artifact:
+<code>experiments/results/e03/summary.json</code> and <code>schedule_test.json</code>.</p>
+<h3 id="3h-e18-the-deep-signal-gate-80-cells-2026-11-14">3h. E18 — the deep signal gate (80 cells, 2026-11-14)<a class="headerlink" href="#3h-e18-the-deep-signal-gate-80-cells-2026-11-14" title="Permanent link">¶</a></h3>
+<p>A frozen SSL-pretrained DriftFormer encoder was asked whether its label-free
+signals beat the raw error rate on 2 datasets × 4 drift types × 2 transitions ×
+5 trials. The pre-registered AUC gate was one deep signal at <strong>≥ 0.75</strong> and
+<strong>≥ 0.10 above</strong> the error rate.</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th style="text-align: right;">AUC</th>
+<th style="text-align: right;">vs error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feature_ks</code> (classical control)</td>
+<td style="text-align: right;"><strong>0.628</strong></td>
+<td style="text-align: right;">+0.029</td>
+</tr>
+<tr>
+<td><code>embedding_shift</code></td>
+<td style="text-align: right;"><strong>0.616</strong></td>
+<td style="text-align: right;">+0.017</td>
+</tr>
+<tr>
+<td><code>embedding_var_shift</code></td>
+<td style="text-align: right;">0.599</td>
+<td style="text-align: right;">+0.000</td>
+</tr>
+<tr>
+<td><code>error_rate</code></td>
+<td style="text-align: right;">0.598</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td><code>ssl_loss</code></td>
+<td style="text-align: right;">0.532</td>
+<td style="text-align: right;">−0.067</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict: FAIL.</strong> Best deep signal <strong>0.616</strong>, far short of 0.75. The deep view
+has power on feature permutation (<code>embedding_var_shift</code> 0.781), but the error
+rate is stronger there (0.879); label-only drift stays with Stage 2. A
+FAR-calibrated timing diagnostic at 0.1/1k shows Stage 1 detects feature
+permutation 2–5× earlier than error and detects feature filtering when error is
+blind — but the classical <code>feature_ks</code> control is often just as fast, so the
+deep marginal value is unproven. Full page:
+<a href="../E18-deep-signals/"><code>E18-deep-signals.md</code></a>.</p>
+<p><img alt="E18 signal gate: overall AUC and drift-type breakdown" src="../figures/e18-signal-gate.png"/></p>
+<p><em>E18 — the deep signals cluster around the error-rate baseline overall; the
+feature-permutation cell is where they have real power, but the error rate is
+stronger there.</em></p>
+<p><img alt="E18 timing diagnostic at 0.1 FAR/1k" src="../figures/e18-timing.png"/></p>
+<p><em>E18 timing — feature signals alarm before the error rate on feature
+permutation, and detect feature filtering where the error rate misses. “miss”
+means no alarm inside the 2,500-sample budget; percentages mark hit rates below
+100%.</em></p>
+<h3 id="3i-e19-df-h-v1-pilot-80-cells-2026-11-14">3i. E19 — DF-H v1 pilot (80 cells, 2026-11-14)<a class="headerlink" href="#3i-e19-df-h-v1-pilot-80-cells-2026-11-14" title="Permanent link">¶</a></h3>
+<p>Rule-based fusion of Stage 1 (deep, classical, both) with SEED, STEPD, ADWIN
+and HDDM-A on the same 80 cells.</p>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th style="text-align: right;">Mean F1</th>
+<th style="text-align: right;">FAR/1k</th>
+<th style="text-align: right;">Overall rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STEPD</td>
+<td style="text-align: right;"><strong>0.281</strong></td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;"><strong>5.22</strong></td>
+</tr>
+<tr>
+<td>SEED</td>
+<td style="text-align: right;">0.267</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;"><strong>5.44</strong></td>
+</tr>
+<tr>
+<td><strong>DFH = 2of3_both</strong></td>
+<td style="text-align: right;">0.223</td>
+<td style="text-align: right;"><strong>0.04</strong></td>
+<td style="text-align: right;"><strong>7.09</strong></td>
+</tr>
+<tr>
+<td><code>2of3_deep</code></td>
+<td style="text-align: right;">0.221</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">7.12</td>
+</tr>
+<tr>
+<td>HDDM-W</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">7.31</td>
+</tr>
+<tr>
+<td><code>OR_deep</code></td>
+<td style="text-align: right;">0.178</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">7.72</td>
+</tr>
+<tr>
+<td><code>S1_both</code></td>
+<td style="text-align: right;">0.160</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">8.50</td>
+</tr>
+<tr>
+<td><code>AND_deep</code></td>
+<td style="text-align: right;">0.201</td>
+<td style="text-align: right;"><strong>0.01</strong></td>
+<td style="text-align: right;">8.53</td>
+</tr>
+<tr>
+<td>ADWIN</td>
+<td style="text-align: right;">0.117</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">9.59</td>
+</tr>
+<tr>
+<td><code>2of3_nodeep</code> (control)</td>
+<td style="text-align: right;">0.154</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">9.97</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict: FAIL.</strong> DFH is <strong>3rd</strong>, not top-2; it wins no feature cell as the
+primary, is <strong>tied 5th–7th on Covtype</strong> (average position 6.0; rank value
+7.44), and passes only the FAR check (0.04 vs ADWIN 0.11). Ablations own
+feature cells (<code>AND_deep</code> abrupt permutation 1.50; <code>S1_both</code> gradual filtering
+1.00), and DFH beats the no-feature control by 2.9 ranks — so the feature
+monitor adds information, but the fixed 2-of-3 rule is not top-2. <strong>No full E20
+run</strong>; E21 Delay Tax is the next headline. Full page:
+<a href="../E19-hybrid-detector/"><code>E19-hybrid-detector.md</code></a>.</p>
+<p><img alt="E19 overall rank and F1–FAR trade-off" src="../figures/e19-overall-rank.png"/></p>
+<p><em>E19 — DFH is third overall, behind STEPD and SEED, with the lowest FAR of the
+competitive rows.</em></p>
+<p><img alt="E19 feature-cell ranks and per-dataset robustness" src="../figures/e19-feature-cells.png"/></p>
+<p><em>E19 — the ablations own feature cells, but DFH is tied 5th–7th on Covtype and
+tied 3rd–4th on Electricity, so the strict dataset-robustness bar fails.</em></p>
+<h3 id="3j-e21-the-delay-tax-fixed-delay-headline-2026-11-14">3j. E21 — the Delay Tax, fixed-delay headline (2026-11-14)<a class="headerlink" href="#3j-e21-the-delay-tax-fixed-delay-headline-2026-11-14" title="Permanent link">¶</a></h3>
+<p>The surviving contribution. An error-only detector cannot react until the
+post-drift labels arrive, so its detection time is floor-bound at <code>τ + L</code>. A
+label-free Stage 1 monitor is not. This is the fixed-delay Lemma-1 synthesis on
+the same 80 KDD cells as E19.</p>
+<p>At <code>L = 2,000</code> samples, detection delay after onset:</p>
+<table>
+<thead>
+<tr>
+<th>Cell</th>
+<th style="text-align: right;">Stage 1 deep</th>
+<th style="text-align: right;">Stage 1 classical</th>
+<th style="text-align: right;">SEED</th>
+<th style="text-align: right;">STEPD</th>
+<th style="text-align: right;">ADWIN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Covtype, abrupt</td>
+<td style="text-align: right;"><strong>70</strong></td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">2,130</td>
+<td style="text-align: right;">2,120</td>
+<td style="text-align: right;">2,472</td>
+</tr>
+<tr>
+<td>Covtype, gradual</td>
+<td style="text-align: right;"><strong>306</strong></td>
+<td style="text-align: right;">406</td>
+<td style="text-align: right;">2,710</td>
+<td style="text-align: right;">2,616</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>Electricity, abrupt</td>
+<td style="text-align: right;"><strong>76</strong></td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">2,129</td>
+<td style="text-align: right;">2,180</td>
+<td style="text-align: right;">3,269</td>
+</tr>
+<tr>
+<td>Electricity, gradual</td>
+<td style="text-align: right;"><strong>293</strong></td>
+<td style="text-align: right;">513</td>
+<td style="text-align: right;">2,701</td>
+<td style="text-align: right;">2,694</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict: the label tax is real, and Stage 1 does not pay it.</strong> Stage 1 warns
+<strong>4–30× earlier</strong> than the error-only panel at <code>L = 2,000</code>; its delay is flat in
+<code>L</code>, while every error-only detector shifts by <code>L</code>. The honest limit: Stage 1 is
+blind to label-only drift, so the result is a <strong>warning/confirmation split</strong>
+(<code>T_warn</code> vs <code>T_confirm</code>), not a standalone detector. The full
+stochastic/partial/selective/batch regime matrix is scaffolded but not yet run.
+Full page: <a href="../E21-delay-detector/"><code>E21-delay-detector.md</code></a>.</p>
+<p><img alt="E21 — the label tax: error-only detection shifts by L; label-free warning does not" src="../figures/e21-delay-floor.png"/></p>
+<p><em>E21 fixed-delay headline. Flat blue/gray lines are label-free Stage 1; dashed
+red/orange/purple lines are error-only detectors at <code>base + L</code>.</em></p>
+<h3 id="3k-e22-detector-shootout-80-cells-2026-11-14">3k. E22 — detector shootout (80 cells, 2026-11-14)<a class="headerlink" href="#3k-e22-detector-shootout-80-cells-2026-11-14" title="Permanent link">¶</a></h3>
+<p>A focused capability check on the datasets in the repo: our DF-H and Stage-1
+monitor against <strong>ADWIN, HDDM-A, HDDM-W and PageHinkley</strong>, with SEED/STEPD as the
+KDD reference.</p>
+<table>
+<thead>
+<tr>
+<th>Detector</th>
+<th style="text-align: right;">Mean F1</th>
+<th style="text-align: right;">FAR/1k</th>
+<th style="text-align: right;">Overall rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>STEPD</strong> (ref)</td>
+<td style="text-align: right;"><strong>0.281</strong></td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;"><strong>5.44</strong></td>
+</tr>
+<tr>
+<td><strong>SEED</strong> (ref)</td>
+<td style="text-align: right;">0.267</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;"><strong>5.59</strong></td>
+</tr>
+<tr>
+<td><strong>DF-H (ours)</strong></td>
+<td style="text-align: right;"><strong>0.223</strong></td>
+<td style="text-align: right;"><strong>0.04</strong></td>
+<td style="text-align: right;"><strong>7.34</strong></td>
+</tr>
+<tr>
+<td>HDDM-W</td>
+<td style="text-align: right;">0.170</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">7.47</td>
+</tr>
+<tr>
+<td>Stage 1 both</td>
+<td style="text-align: right;">0.160</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">8.66</td>
+</tr>
+<tr>
+<td>Stage 1 deep</td>
+<td style="text-align: right;">0.144</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">9.00</td>
+</tr>
+<tr>
+<td>ADWIN</td>
+<td style="text-align: right;">0.117</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">9.94</td>
+</tr>
+<tr>
+<td>HDDM-A</td>
+<td style="text-align: right;">0.128</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">11.34</td>
+</tr>
+<tr>
+<td>PageHinkley</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">12.53</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict: DF-H beats the requested classical panel.</strong> It is <strong>3rd overall</strong>,
+ahead of HDDM-W (7.47), ADWIN (9.94), HDDM-A (11.34) and PageHinkley (12.53),
+with the lowest FAR of the high-F1 rows. On feature permutation it beats every
+requested classical detector (<strong>5.8 abrupt / 5.5 gradual</strong> vs 8.8–16.0). It does
+<strong>not</strong> beat SEED/STEPD, HDDM-W wins Covtype (6.1 vs 7.9) and abrupt filtering
+(4.0 vs 11.5), and the Stage-1-only variants are the right tool on filtering.
+Full page: <a href="../E22-detector-shootout/"><code>E22-detector-shootout.md</code></a>.</p>
+<p><img alt="E22 overall rank and F1–FAR trade-off" src="../figures/e22-overall.png"/></p>
+<p><em>E22 — DF-H is third overall and sits at low FAR; SEED/STEPD remain ahead.
+HDDM-W buys F1 with a much higher false-alarm rate; PageHinkley barely alarms
+and barely scores.</em></p>
+<hr/>
+<h2 id="4-verdict-registry-one-conclusion-per-experiment">4. Verdict registry — one conclusion per experiment<a class="headerlink" href="#4-verdict-registry-one-conclusion-per-experiment" title="Permanent link">¶</a></h2>
+<p>The cumulative table. Rows land here <strong>only with a measured verdict</strong>; scheduled
+experiments are listed so the roadmap is visible, with their acceptance bar.</p>
+<table>
+<thead>
+<tr>
+<th>Exp</th>
+<th>Question asked</th>
+<th>Setting</th>
+<th>Verdict (measured)</th>
+<th>Conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Exp-01</strong> ✅ <em>(legacy metric)</em></td>
+<td>Can a streaming deep learner beat a <em>frozen</em> batch model on a drifting stream?</td>
+<td>SEA, one abrupt drift, 2 models, seed 42</td>
+<td><strong>Streaming wins</strong> — recovers in 835 samples (frozen: never); legacy damage 31 vs 3,307</td>
+<td>Weakest form of the claim <strong>confirmed</strong>. The 835/damage numbers are superseded by E01</td>
+</tr>
+<tr>
+<td><strong>Exp-02</strong> ✅ <em>(legacy metric)</em></td>
+<td>Is the 835-sample recovery a fluke of one seed?</td>
+<td>SEA, one abrupt drift, 2 models, <strong>11 seeds</strong></td>
+<td><strong>Streaming wins on every seed</strong> — frozen recovered <strong>0/11</strong>; legacy damage <strong>13 ± 31</strong> vs <strong>3,710 ± 592</strong> (≈294×; 24× worst-vs-best)</td>
+<td>The claim <strong>generalises</strong>; the legacy magnitudes are <strong>upper bounds</strong> and retired by E01. Frozen still wins the stationary phase (κ₀ 0.767 vs 0.751)</td>
+</tr>
+<tr>
+<td><strong>E01</strong> ✅</td>
+<td>Does the corrected metric preserve the Exp-01/02 verdict?</td>
+<td>SEA abrupt, <strong>11 seeds</strong>, metric v2, clean panel</td>
+<td><strong>Frozen recovered 0/11; DeepRiver <code>damage_ref</code> lower 11/11; 74.8 ± 61.8 vs 515.0 ± 97.1 (≈6.9×); <code>damage_full</code> 321.4 vs 3,472.9 (≈10.8×); recovery 8/11; worst-vs-best 0.74×</strong></td>
+<td>The claim <strong>survives</strong>, the magnitude shrinks. <strong>294× and 24× retired.</strong> AUE is secondary: the timing oracle is weak (damage 505). Panel is DeepRiver + frozen + oracle; the pre-fix four-model artifact is archived</td>
+</tr>
+<tr>
+<td><strong>E04</strong> ✅ <em>(first pass, 5 seeds)</em></td>
+<td>Which detector works for which drift shape, and does the host matter?</td>
+<td>4 generators × 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds</td>
+<td><strong>HDDM-A raw is best for all four shapes; balanced score 0.683 abrupt, 0.842 gradual, 0.883 incremental, 0.500 recurring; recurring is hardest; EWMA raises false alarms</strong></td>
+<td>One sensible default exists <strong>on the static host and synthetic generators</strong>; recurring drift is the hard case. A scoring bug that made a never-ringing detector look perfect was found and fixed. E17 shows the default is host-conditional on real Elec2; the full 11-seed matrix and tuning are pending</td>
+</tr>
+<tr>
+<td><strong>E17</strong> ✅ <em>(real stream, 5 seeds)</em></td>
+<td>Does the E04 detector default survive on real data?</td>
+<td>Elec2 label-swap, 4 shapes × 8 detectors × 2 hosts × raw/EWMA, 5 seeds</td>
+<td><strong>On static HT, HDDM-A raw wins all four (F1 0.933/0.960/0.960/0.787); on adaptive HAT, ADWIN wins abrupt (1.000 vs 0.400) and recurring (0.770 vs 0.593); best-host mean F1 ADWIN 0.935 vs HDDM-A 0.910</strong></td>
+<td>The synthetic default is <strong>host-conditional</strong>; “wins all four” does not transfer to the adaptive host. Recurring remains hardest. The 50-trial KDD'26 run confirms SEED/STEPD (2.12) beat HDDM-A (3.87); ABCD/ABCD(X) is cited from the paper, not re-run</td>
+</tr>
+<tr>
+<td><strong>KDD'26</strong> ✅ <em>(reproduction, 50 trials)</em></td>
+<td>Does HDDM-A remain the best detector on the paper's real-data benchmark?</td>
+<td>7 real datasets × 4 drift types × abrupt/gradual × 6 detectors, 50 trials</td>
+<td><strong>SEED and STEPD tie for first (avg rank 2.12; mean F1 0.300/0.303); HDDM-A is fourth (3.87; 0.155), behind HDDM-W (3.56); DDM 4.54; ADWIN 4.80</strong></td>
+<td>HDDM-A is <strong>not</strong> the best detector on real data. The ranking reproduces the KDD'26 paper and the F1 values match its tables. ABCD/ABCD(X) is cited from the paper, not re-run</td>
+</tr>
+<tr>
+<td><strong>E03</strong> ✅ <em>(11 seeds)</em></td>
+<td>Does streaming also beat a <em>scheduled-retrain</em> batch model (the honest industrial baseline)?</td>
+<td>SEA + Hyperplane, 10-model ladder, 11 seeds, 220 runs</td>
+<td><strong>Every streaming adapter beats frozen and every scheduled interval on <code>damage_ref</code>: LB 455.7, HAT 489.2, ARF 575.4 vs scheduled-1k 733.5 and frozen 871.7; acceptance AUE passes (ARF −0.0368 vs scheduled-5k −0.0056)</strong></td>
+<td>The ladder confirms the damage ordering at 11 seeds. <strong>Phase-noise claim is inconclusive</strong>: the 12k refit buffer dominates the 1k/5k intervals; only the 20k cell is valid (n=1)</td>
+</tr>
+<tr>
+<td><strong>E14</strong> ✅ <em>(provisional, 2 datasets × 5 seeds)</em></td>
+<td>Does the streaming win survive on <strong>real</strong> streams, and can DriftFormer host?</td>
+<td>Elec2 + Phishing, label-swap + feature-permutation, 5 seeds, 100 runs</td>
+<td><strong>ARF leads both datasets: <code>damage_ref</code> 198.0 vs frozen 297.4 (0.666×), lower in 18/20 cells, κ 0.724 vs 0.395; frozen recovered 0/20; DriftFormer κ 0.524 and does not beat ARF</strong></td>
+<td>Streaming adaptation survives the first real-stream check; DriftFormer is a <strong>signal extractor, not the host</strong>. Provisional: 2 datasets, 5 seeds; expansion deferred</td>
+</tr>
+<tr>
+<td><strong>E18</strong> ❌ <em>(signal gate, 80 cells)</em></td>
+<td>Does a label-free deep signal beat the error rate?</td>
+<td>Covtype + Electricity × 4 drift types × 2 transitions × 5 trials</td>
+<td><strong>Best deep AUC 0.616 vs error 0.598; feature permutation 0.781 vs 0.879; label-only ~0.51; timing at 0.1/1k: feature permutation 72–414 vs error 184–1,033; feature filtering detected where error is blind; <code>feature_ks</code> competitive</strong></td>
+<td><strong>Gate FAIL.</strong> Deep is a warning channel, not standalone; classical control travels to E19</td>
+</tr>
+<tr>
+<td><strong>E19</strong> ❌ <em>(DF-H v1 pilot, 80 cells)</em></td>
+<td>Does DF-H fusion beat the scalar panel?</td>
+<td>Same 80 cells; Stage 1 deep/classical/both + SEED/STEPD/ADWIN/HDDM-A</td>
+<td><strong>DFH 3rd (rank 7.09; F1 0.223; FAR 0.04) behind STEPD 5.22 and SEED 5.44; no primary feature-cell win; Covtype tied 5th–7th; ablations <code>AND_deep</code> 1.50 abrupt permutation and <code>S1_both</code> 1.00 gradual filtering; beats no-feature control 9.97</strong></td>
+<td><strong>Gate FAIL.</strong> Feature monitor adds value but not top-2; no full E20; E21 is next</td>
+</tr>
+<tr>
+<td><strong>E21</strong> ✅ <em>(fixed-delay headline)</em></td>
+<td>Does label delay create a floor for error-only detectors that a label-free warning avoids?</td>
+<td>Same 80 KDD cells; Stage 1 vs SEED/STEPD/ADWIN at L = 0…10k</td>
+<td><strong>At L = 2k: Stage 1 deep 70–513 samples vs SEED/STEPD 2,120–2,710 and ADWIN 2,472–3,269; Stage 1 flat in L, error-only shifts by L</strong></td>
+<td><strong>The surviving headline.</strong> Label-free warning is not floor-bound; the honest result is <code>T_warn</code> vs <code>T_confirm</code>, not a standalone detector. Full regime matrix scaffolded, not run</td>
+</tr>
+<tr>
+<td><strong>E22</strong> ✅ <em>(detector shootout)</em></td>
+<td>What is DF-H capable of against ADWIN / HDDM-A / HDDM-W / PageHinkley?</td>
+<td>Same 80 cells; requested classical panel + SEED/STEPD reference</td>
+<td><strong>DFH 3rd (7.34; F1 0.223; FAR 0.04) ahead of HDDM-W 7.47, ADWIN 9.94, HDDM-A 11.34, PageHinkley 12.53; behind STEPD 5.44/SEED 5.59; feature permutation 5.8/5.5 vs panel 8.8–16.0; Covtype HDDM-W 6.1 vs DFH 7.9</strong></td>
+<td><strong>Capability proven vs the requested panel</strong>, not top-2; feature filtering better in the Stage-1-only ablation</td>
+</tr>
+<tr>
+<td><strong>E15</strong> ⏳ <em>(replaced by E21)</em></td>
+<td>The <strong>Delay Tax</strong>: do delayed/rare labels starve batch retraining while streaming keeps working?</td>
+<td>label-delay sweep</td>
+<td><em>pending — replaced by E21</em></td>
+<td>acceptance: streaming quality degrades slower under delay; E21 adds the DF-H detector benchmark</td>
+</tr>
+</tbody>
+</table>
+<p><em>Scope guard: Exp-01 is deliberately the easiest possible version of the claim
+(one synthetic stream, no scheduled retrain, no label delay, single seed). Each
+row above removes one of those cushions. The global verdict stands on what is
+measured today and is re-stated as rows conclude.</em></p>
+<hr/>
+<h2 id="5-the-verdict-vs-what-was-promised">5. The verdict vs what was promised<a class="headerlink" href="#5-the-verdict-vs-what-was-promised" title="Permanent link">¶</a></h2>
+<p>The project pre-registered its expectations <em>before</em> running (thesis §6), so the
+results can be checked against the promises rather than reported after the fact.</p>
+<h3 id="5a-exp-01-pre-registered-expectations-vs-measured">5a. Exp-01 — pre-registered expectations vs measured<a class="headerlink" href="#5a-exp-01-pre-registered-expectations-vs-measured" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pre-registered expectation</th>
+<th>Expected</th>
+<th>Measured (Exp-01)</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Streaming recovery is bounded</td>
+<td>~250–350 samples</td>
+<td><strong>835 samples</strong></td>
+<td><strong>PASS</strong> (same order; well inside the 5,000-sample falsification budget)</td>
+</tr>
+<tr>
+<td>Frozen model never recovers</td>
+<td>never</td>
+<td><strong>never</strong> (still depressed at stream end)</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Frozen pays unbounded damage</td>
+<td>unbounded</td>
+<td>3,307 vs 31 samples·κ</td>
+<td><strong>PASS</strong> (≈ 106×)</td>
+</tr>
+<tr>
+<td>Dip is shallow for streaming, deep for frozen</td>
+<td>shallow vs deep</td>
+<td>0.052 vs 0.167</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Frozen wins cumulative accuracy (honest control)</td>
+<td>batch ahead in steady state</td>
+<td>streaming wins 0.757 vs 0.689</td>
+<td><strong>REFUTED — in our favour</strong> on this seed</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Expected vs measured — recovery time and damage area" src="../figures/expected-vs-measured-sept9.png"/></p>
+<p><em>Figure 8 — pre-registered expectations (hatched) against measured results (blue):
+the measured recovery is inside the promised regime, and the measured damage gap is
+even larger than the thesis sketched.</em></p>
+<h3 id="5b-exp-02-pre-registered-acceptance-vs-measured-legacy-metric">5b. Exp-02 — pre-registered acceptance vs measured <em>(legacy metric)</em><a class="headerlink" href="#5b-exp-02-pre-registered-acceptance-vs-measured-legacy-metric" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pre-registered condition (fixed before the run)</th>
+<th>Required</th>
+<th>Measured</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Seeds</td>
+<td>≥ 10</td>
+<td>11</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Recovery reported as a distribution</td>
+<td>mean ± SD</td>
+<td>mean 319 ± 765, median 0, range 0–2,497</td>
+<td><strong>PASS</strong> — with a heavy-tail caveat: 8/11 seeds sit on the metric floor, so the mean is not a robust centre</td>
+</tr>
+<tr>
+<td>Streaming recovers on every seed</td>
+<td>every seed</td>
+<td>11/11 (8 of them never left the band)</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Frozen never recovers on every seed</td>
+<td>every seed</td>
+<td>11/11</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>H2: frozen wins steady state (restated control)</td>
+<td>frozen κ₀ ≥ streaming κ₀</td>
+<td>frozen 0.767 vs streaming 0.751</td>
+<td><strong>SUPPORTED</strong> — unlike the single-seed Exp-01, where the two were level</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bottom line:</strong> the falsification conditions set before the runs were not
+triggered. Exp-01 showed the effect exists on one seed; Exp-02 shows the <em>claim</em>
+holds on all eleven — the frozen model never recovers. The specific 835-sample
+figure was seed luck and is retired. <strong>E01 supersedes the damage magnitudes:</strong> the
+legacy 294×/24× are upper bounds; the corrected gaps are ≈6.9× (<code>damage_ref</code>) and
+≈10.8× (<code>damage_full</code>), and on the clean panel the worst DeepRiver seed is 0.74×
+the best frozen seed. The legacy worst-vs-best framing is <strong>retired</strong>. The one
+control expectation Exp-01 refuted (batch winning steady state) is restored by the
+larger sample, and streaming still wins the run outright.</p>
+<hr/>
+<h2 id="6-provenance">6. Provenance<a class="headerlink" href="#6-provenance" title="Permanent link">¶</a></h2>
+<ul>
+<li>Measured numbers: <code>experiments/exp01/results.json</code> · <code>experiments/exp02/results.json</code> ·
+  <code>experiments/results/e01/summary.json</code> (<strong>corrected metric</strong>) ·
+  <code>experiments/results/e03/summary.json</code> + <code>schedule_test.json</code> (<strong>baseline ladder</strong>) ·
+  <code>experiments/results/e04/detections.jsonl</code> (<strong>detector map raw counts</strong>) ·
+  <code>experiments/results/e14/summary.json</code> (<strong>real-stream model check</strong>) ·
+  <code>experiments/results/e17/detector_report.json</code> (<strong>real-stream detector check</strong>) ·
+  <code>experiments/results/e18/summary.json</code> + <code>detection.json</code> (<strong>deep signal gate</strong>) ·
+  <code>experiments/results/e19_kdd_pilot/ranking.json</code> + <code>summary.csv</code> (<strong>DF-H v1 pilot</strong>) ·
+  <code>experiments/results/e21/delay_floor.json</code> (<strong>Delay Tax headline</strong>) ·
+  <code>experiments/results/e22_detector_shootout/ranking.json</code> + <code>summary.csv</code> (<strong>detector shootout</strong>)</li>
+<li>Full write-ups: <a href="../../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/"><code>exp01-deepriver-vs-frozen-sea.md</code></a> ·
+  <a href="../../Phase1%3AExperimentation/exp02-seed-sweep-sea/"><code>exp02-seed-sweep-sea.md</code></a> ·
+  <a href="../E01-metric-v2/"><code>E01-metric-v2.md</code></a> (<strong>correction</strong>) ·
+  <a href="../E04-detector-map/"><code>E04-detector-map.md</code></a> (<strong>detector map</strong>) ·
+  <a href="../E14-real-streams/"><code>E14-real-streams.md</code></a> (<strong>real-stream model check</strong>) ·
+  <a href="../E17-real-detector-map/"><code>E17-real-detector-map.md</code></a> (<strong>real-stream check</strong>) ·
+  <a href="../E18-deep-signals/"><code>E18-deep-signals.md</code></a> (<strong>deep signal gate</strong>) ·
+  <a href="../E19-hybrid-detector/"><code>E19-hybrid-detector.md</code></a> (<strong>DF-H v1 pilot</strong>) ·
+  <a href="../E21-delay-detector/"><code>E21-delay-detector.md</code></a> (<strong>Delay Tax headline</strong>) ·
+  <a href="../E22-detector-shootout/"><code>E22-detector-shootout.md</code></a> (<strong>detector shootout</strong>)</li>
+<li>Benchmark reproduction: <code>experiments/kdd_bench.py</code> and <code>experiments/kdd_env/</code>
+  (KDD'26 14-detector protocol; six-detector 50-trial run complete, ABCD/ABCD(X)
+  arm pending; artifact <code>experiments/results/kdd_bench_full/</code>)</li>
+<li>Thesis + pre-registered expectations: <a href="../../Phase1%3AExperimentation/thesis/"><code>thesis.md</code></a></li>
+<li>Protocol &amp; metric definitions: <a href="../../Phase1%3AExperimentation/streaming-vs-batch-metrics/"><code>streaming-vs-batch-metrics.md</code></a></li>
+<li>Milestone records: <a href="../Sept9/"><code>Sept9.md</code></a> (Exp-01)</li>
+<li>Figure sources: <code>experiments/scripts/make_results_figures.py</code> ·
+  <code>experiments/scripts/make_exp01_summary_chart.py</code> ·
+  <code>experiments/scripts/make_e18_e19_figures.py</code> (<strong>E18/E19</strong>) ·
+  <code>experiments/scripts/make_e21_delay_figure.py</code> (<strong>E21</strong>) ·
+  <code>experiments/scripts/make_e22_report_figures.py</code> (<strong>E22</strong>) ·
+  <code>experiments/scripts/exp02_seed_sweep_sea.py --figure-only</code> ·
+  <code>experiments/results/e01/figures/model_comparison.png</code> (E01)</li>
+</ul>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

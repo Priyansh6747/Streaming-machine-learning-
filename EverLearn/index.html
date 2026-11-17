@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Research and experimentation on machine learning from data streams (concept drift, the Delay Tax)." name="description"/>
+<link href="https://priyansh6747.github.io/Streaming-machine-learning-/EverLearn/" rel="canonical"/>
+<link href="../DriftDeck/" rel="prev"/>
+<link href="../EverRank/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.8.1" name="generator"/>
+<title>EverLearn - Major Project — Streaming ML</title>
+<link href="../assets/stylesheets/main.57a0d79d.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.fb2fffe2.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#everlearn-models-that-never-stop-learning">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Major Project — Streaming ML" class="md-header__button md-logo" data-md-component="logo" href=".." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Major Project — Streaming ML
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              EverLearn
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Major Project — Streaming ML" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Major Project — Streaming ML">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Major Project — Streaming ML
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/final-report/">
+<span class="md-ellipsis">
+    
+  
+    Final report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/progress/">
+<span class="md-ellipsis">
+    
+  
+    Progress log
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Plan
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Plan
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Plans/df-h-ultimate-goal/">
+<span class="md-ellipsis">
+    
+  
+    DF-H — ultimate goal
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Roadmap-v2/">
+<span class="md-ellipsis">
+    
+  
+    Roadmap v2 — summary
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 0 — Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 0 — Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Notes
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Notes
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/01-streaming-learning/">
+<span class="md-ellipsis">
+    
+  
+    Streaming learning
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/02-concept-drift/">
+<span class="md-ellipsis">
+    
+  
+    Concept drift
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/03-river-library/">
+<span class="md-ellipsis">
+    
+  
+    The River library
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/04-evaluation/">
+<span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/05-project-directions/">
+<span class="md-ellipsis">
+    
+  
+    Project directions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/06-literature-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Literature &amp; landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/07-open-questions/">
+<span class="md-ellipsis">
+    
+  
+    Open questions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/notes/08-scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Literature review
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Literature review
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/">
+<span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/gap-analysis/">
+<span class="md-ellipsis">
+    
+  
+    Gap analysis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/Conclusion/">
+<span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/cano-krawczyk-2022-rose/">
+<span class="md-ellipsis">
+    
+  
+    ROSE (Cano &amp; Krawczyk 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/cerqueira-2023-studd/">
+<span class="md-ellipsis">
+    
+  
+    STUDD (Cerqueira 2023)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/botacin-gomes-2024-label-delays/">
+<span class="md-ellipsis">
+    
+  
+    Label delays (Botacin &amp; Gomes 2024)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/gomes-2022-dpl-survey/">
+<span class="md-ellipsis">
+    
+  
+    DPL survey (Gomes 2022)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/kdd2026-drift-benchmark/">
+<span class="md-ellipsis">
+    
+  
+    KDD 2026 drift benchmark
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/agu-2026-gamma-weibull/">
+<span class="md-ellipsis">
+    
+  
+    Gamma-Weibull (AGU 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/read-2012-batch-vs-instance/">
+<span class="md-ellipsis">
+    
+  
+    Batch- vs instance-incremental (Read 2012)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/literature_review/papers/dasari-2026-when-to-retrain/">
+<span class="md-ellipsis">
+    
+  
+    When to retrain (Dasari 2026)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/research/01-landscape/">
+<span class="md-ellipsis">
+    
+  
+    Landscape
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/research/02-delayed-labels/">
+<span class="md-ellipsis">
+    
+  
+    Delayed labels
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Explore
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Explore
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/">
+<span class="md-ellipsis">
+    
+  
+    README
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/01-transformers-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Transformers bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/02-quantization/">
+<span class="md-ellipsis">
+    
+  
+    Quantization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/02-quant-trading/">
+<span class="md-ellipsis">
+    
+  
+    Quant trading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/03-quant-streaming-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Quant / streaming bridge
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/explore/03-streaming-finance-bridge/">
+<span class="md-ellipsis">
+    
+  
+    Streaming / finance bridge
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Idea
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Idea
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/idea/synopsis/">
+<span class="md-ellipsis">
+    
+  
+    Synopsis
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase0%3AResearch/idea/scope/">
+<span class="md-ellipsis">
+    
+  
+    Scope
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Phase 1 — Experimentation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Phase 1 — Experimentation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/exp01-deepriver-vs-frozen-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-01: DeepRiver vs frozen batch
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/exp02-seed-sweep-sea/">
+<span class="md-ellipsis">
+    
+  
+    Exp-02: seed sweep (11 seeds)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/thesis/">
+<span class="md-ellipsis">
+    
+  
+    Thesis: beating batch on reactivity metrics
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Phase1%3AExperimentation/streaming-vs-batch-metrics/">
+<span class="md-ellipsis">
+    
+  
+    Streaming vs Batch: real metrics
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Results/">
+<span class="md-ellipsis">
+    
+  
+    Results (global)
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E01-metric-v2/">
+<span class="md-ellipsis">
+    
+  
+    E01 — Metric v2 correction
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E04-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E04 — Detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E14-real-streams/">
+<span class="md-ellipsis">
+    
+  
+    E14 — Real-stream model check
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E17-real-detector-map/">
+<span class="md-ellipsis">
+    
+  
+    E17 — Real-stream detector map
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E18-deep-signals/">
+<span class="md-ellipsis">
+    
+  
+    E18 — Deep signal gate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E19-hybrid-detector/">
+<span class="md-ellipsis">
+    
+  
+    E19 — DF-H v1 pilot
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E21-delay-detector/">
+<span class="md-ellipsis">
+    
+  
+    E21 — Delay Tax detector
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/E22-detector-shootout/">
+<span class="md-ellipsis">
+    
+  
+    E22 — Detector shootout
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Milestones
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_8_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Milestones
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Sept9/">
+<span class="md-ellipsis">
+    
+  
+    Sept 9
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/mid_term/">
+<span class="md-ellipsis">
+    
+  
+    Mid-term report
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/Nov14/">
+<span class="md-ellipsis">
+    
+  
+    Nov 14 — post-mid-term
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_9" type="checkbox"/>
+<label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Viva
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_9_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_9">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Viva
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../Reports/viva-brief/">
+<span class="md-ellipsis">
+    
+  
+    Viva brief
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_10" type="checkbox"/>
+<label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_10_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_10">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../struct/">
+<span class="md-ellipsis">
+    
+  
+    Repository structure
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../dataset/">
+<span class="md-ellipsis">
+    
+  
+    Datasets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../ML/">
+<span class="md-ellipsis">
+    
+  
+    ML reference
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_11" type="checkbox"/>
+<label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+<span class="md-ellipsis">
+    
+  
+    Product
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_11_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_11">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Product
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../DriftDeck/">
+<span class="md-ellipsis">
+    
+  
+    DriftDeck
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    EverLearn
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-tldr">
+<span class="md-ellipsis">
+      
+        1. TL;DR
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-idea">
+<span class="md-ellipsis">
+      
+        2. The idea
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-problem-the-staleness-window">
+<span class="md-ellipsis">
+      
+        3. The problem — the staleness window
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-wedge-features-are-real-time-models-are-frozen">
+<span class="md-ellipsis">
+      
+        4. The wedge — features are real-time, models are frozen
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-the-customer-actually-buys">
+<span class="md-ellipsis">
+      
+        5. What the customer actually buys
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-evidence-the-mechanism-is-already-measured">
+<span class="md-ellipsis">
+      
+        6. The evidence — the mechanism is already measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-the-two-killer-use-cases">
+<span class="md-ellipsis">
+      
+        7. The two killer use cases
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-how-it-works-mechanically">
+<span class="md-ellipsis">
+      
+        8. How it works mechanically
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-the-hard-problems-honest">
+<span class="md-ellipsis">
+      
+        9. The hard problems — honest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-positioning">
+<span class="md-ellipsis">
+      
+        10. Positioning
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-the-build-order">
+<span class="md-ellipsis">
+      
+        11. The build order
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-business-model-brief">
+<span class="md-ellipsis">
+      
+        12. Business model (brief)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-one-screen-recap">
+<span class="md-ellipsis">
+      
+        13. One-screen recap
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../EverRank/">
+<span class="md-ellipsis">
+    
+  
+    EverRank
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-tldr">
+<span class="md-ellipsis">
+      
+        1. TL;DR
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-the-idea">
+<span class="md-ellipsis">
+      
+        2. The idea
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-problem-the-staleness-window">
+<span class="md-ellipsis">
+      
+        3. The problem — the staleness window
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-wedge-features-are-real-time-models-are-frozen">
+<span class="md-ellipsis">
+      
+        4. The wedge — features are real-time, models are frozen
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-what-the-customer-actually-buys">
+<span class="md-ellipsis">
+      
+        5. What the customer actually buys
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-the-evidence-the-mechanism-is-already-measured">
+<span class="md-ellipsis">
+      
+        6. The evidence — the mechanism is already measured
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-the-two-killer-use-cases">
+<span class="md-ellipsis">
+      
+        7. The two killer use cases
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-how-it-works-mechanically">
+<span class="md-ellipsis">
+      
+        8. How it works mechanically
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-the-hard-problems-honest">
+<span class="md-ellipsis">
+      
+        9. The hard problems — honest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-positioning">
+<span class="md-ellipsis">
+      
+        10. Positioning
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-the-build-order">
+<span class="md-ellipsis">
+      
+        11. The build order
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-business-model-brief">
+<span class="md-ellipsis">
+      
+        12. Business model (brief)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-one-screen-recap">
+<span class="md-ellipsis">
+      
+        13. One-screen recap
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset"><a class="md-content__button md-icon" download="EverLearn.pdf" href="index.pdf" title="Download as PDF"><html><body><svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 18h-2v-2h2zm0-3h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5m9-3c0 5.18-3.95 9.45-9 9.95v-2.01c3.95-.49 7-3.86 7-7.94s-3.05-7.45-7-7.94V2.05c5.05.5 9 4.77 9 9.95M11 2.05v2.01c-1.46.18-2.8.76-3.91 1.62L5.67 4.26C7.15 3.05 9 2.25 11 2.05M4.06 11H2.05c.2-2 1-3.85 2.21-5.33L5.68 7.1A7.9 7.9 0 0 0 4.06 11M11 19.94v2.01c-2-.2-3.85-.99-5.33-2.21l1.42-1.42c1.11.86 2.45 1.44 3.91 1.62M2.05 13h2.01c.18 1.46.76 2.8 1.62 3.91l-1.42 1.42A10 10 0 0 1 2.05 13"></path></svg></body></html></a>
+<h1 id="everlearn-models-that-never-stop-learning">EverLearn — models that never stop learning<a class="headerlink" href="#everlearn-models-that-never-stop-learning" title="Permanent link">¶</a></h1>
+<p><strong>Product doc — turning the streaming-learning research into a product.</strong></p>
+<blockquote>
+<p><strong>One line:</strong> EverLearn is a model-serving layer where the model is never stale,
+because it learns from every prediction it makes — one sample at a time, in
+bounded memory, with no retraining pipeline.</p>
+</blockquote>
+<p><em>(Working name — rename in one edit if you want a different one.)</em></p>
+<hr/>
+<h2 id="1-tldr">1. TL;DR<a class="headerlink" href="#1-tldr" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>What</strong></td>
+<td>A self-learning serving layer: predict now, learn on the next label, forever</td>
+</tr>
+<tr>
+<td><strong>Who</strong></td>
+<td>Teams running high-velocity ML — fraud, ads, personalisation, recommendations, moderation</td>
+</tr>
+<tr>
+<td><strong>The gap</strong></td>
+<td>Every production model is frozen between retrains. The staleness window is where money leaks</td>
+</tr>
+<tr>
+<td><strong>The wedge</strong></td>
+<td>Real-time ML made the <em>features</em> real-time; the <em>model</em> never got there. EverLearn does</td>
+</tr>
+<tr>
+<td><strong>The engine</strong></td>
+<td>River / DeepRiver streaming learners — O(1) time and bounded memory per sample</td>
+</tr>
+<tr>
+<td><strong>The metric</strong></td>
+<td><strong>Staleness saved</strong> = damage area avoided × cost-per-error, in dollars</td>
+</tr>
+<tr>
+<td><strong>The moat</strong></td>
+<td>A measured mechanism (Exp-01/02) plus governance that makes self-modifying models safe to deploy</td>
+</tr>
+<tr>
+<td><strong>The build order</strong></td>
+<td>Shadow mode on fraud → live on one stream → governance → platform</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="2-the-idea">2. The idea<a class="headerlink" href="#2-the-idea" title="Permanent link">¶</a></h2>
+<p>Almost every ML product runs the same ritual: train a model, freeze it, deploy it,
+watch it silently rot until someone reruns the pipeline. The model is a <em>finished
+object</em> that is periodically rebuilt.</p>
+<p>Streaming learning inverts that. The model is <strong>never finished</strong> — it is permanently
+mid-training. Every sample that flows through it follows the same three steps:
+<strong>predict, score, learn, discard.</strong> The label arrives (now, or later), the model takes
+one bounded-memory update, and the world's most recent truth is already inside it.
+There is no retrain event because there is nothing to retrain: the model is always
+as current as the last sample it saw.</p>
+<p>The product is that inversion, packaged. <strong>EverLearn wraps any model and makes it
+self-updating</strong> — the customer stops maintaining a retraining pipeline and instead
+owns a model that cannot go stale by construction.</p>
+<p>This is deliberately <em>not</em> a drift-detection product. DriftDeck answers "is my model
+wrong?"; EverLearn answers "make it stop being wrong — automatically." Detection and
+adaptation are the two halves of the research; DriftDeck is the watch, EverLearn is
+the act.</p>
+<hr/>
+<h2 id="3-the-problem-the-staleness-window">3. The problem — the staleness window<a class="headerlink" href="#3-the-problem-the-staleness-window" title="Permanent link">¶</a></h2>
+<p>Between one retrain and the next, the world moves and the model doesn't. The model is
+silently wrong for the whole window, and two costs compound inside it:</p>
+<p><strong>Cost 1 — the decay itself.</strong> Accuracy leaks continuously from the moment of
+deployment. A weekly retrain means the model is, on average, <em>half a week stale</em> —
+and that staleness is invisible to the team that owns it until someone measures it.</p>
+<p><strong>Cost 2 — the retrain machinery.</strong> The pipeline that rebuilds the model is itself a
+product-scale investment: feature stores, training jobs, validation, registry, rollout,
+rollback. MLOps teams spend a large share of their effort feeding a cycle that is,
+structurally, always behind the data.</p>
+<p>The research already priced cost 1. On a drifting stream, the frozen model never
+recovered — its corrected <code>damage_ref</code> was <strong>515.0 ± 97.1</strong> samples·κ across 11
+seeds, versus <strong>74.8 ± 61.8</strong> for the streaming model (<strong>≈6.9×</strong>), and a model that
+retrains on a schedule can only heal at the tick, staying wrong for up to a full
+interval by pure luck of phase. The staleness window is not an accident of bad ops;
+it is the defining property of batch-trained models.</p>
+<p><strong>Why this is a product and not a feature:</strong> every "retrain faster" fix reduces the
+window but keeps it — and keeps the machinery. Only a model that learns from the stream
+itself eliminates both at once. That is the offer.</p>
+<hr/>
+<h2 id="4-the-wedge-features-are-real-time-models-are-frozen">4. The wedge — features are real-time, models are frozen<a class="headerlink" href="#4-the-wedge-features-are-real-time-models-are-frozen" title="Permanent link">¶</a></h2>
+<p>The real-time ML market already proved the demand for lower staleness. Tecton, Chalk,
+Fennel and friends made <strong>features</strong> real-time: sub-second freshness for the inputs to
+the model. But the model those features feed is still batch-trained — retrained
+nightly or weekly, deployed through a registry.</p>
+<p>So the industry is currently real-time <em>until the last mile</em>, then frozen. A fraud
+model consumes a feature computed 100 ms ago, but its weights were decided three weeks
+ago. That last mile — <strong>the model's own knowledge</strong> — is the entire staleness that
+remains, and nobody sells it as a product.</p>
+<table>
+<thead>
+<tr>
+<th>Camp</th>
+<th>Examples</th>
+<th>What they made real-time</th>
+<th>What EverLearn changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Real-time feature platforms</td>
+<td>Tecton, Chalk, Fennel, Featureform</td>
+<td>Features (the inputs)</td>
+<td>Nothing — EverLearn sits downstream of them</td>
+</tr>
+<tr>
+<td>Serving + retrain platforms</td>
+<td>Seldon, Vertex, SageMaker</td>
+<td>Deployment, not learning</td>
+<td>The retrain job disappears</td>
+</tr>
+<tr>
+<td>Online-learning libraries</td>
+<td>Vowpal Wabbit, River</td>
+<td>The algorithm, as OSS</td>
+<td>The operational product around it</td>
+</tr>
+<tr>
+<td><strong>EverLearn</strong></td>
+<td>—</td>
+<td><strong>The model itself</strong></td>
+<td>The model's knowledge updates with every sample</td>
+</tr>
+</tbody>
+</table>
+<p>The differentiation is one sentence: <strong>everyone else made the inputs fresh and left
+the model frozen. EverLearn makes the model fresh.</strong></p>
+<hr/>
+<h2 id="5-what-the-customer-actually-buys">5. What the customer actually buys<a class="headerlink" href="#5-what-the-customer-actually-buys" title="Permanent link">¶</a></h2>
+<p>Not "streaming ML" — nobody buys a mechanism. They buy <strong>the end of the staleness
+window</strong>, delivered as three things:</p>
+<ol>
+<li><strong>The SDK.</strong> Wrap any model: <code>EverLearn(model=your_model)</code> preserves the <code>.predict()</code>
+   contract; the learning happens invisibly when each label lands. Drop-in for
+   sklearn / River / PyTorch serving paths.</li>
+<li><strong>The engine.</strong> River / DeepRiver learners underneath — O(1) time and bounded memory
+   per sample, so one node learns continuously at line rate instead of running batch
+   jobs.</li>
+<li><strong>The governance.</strong> The honest reason teams don't ship self-modifying models is
+   fear. EverLearn's controls exist to make that fear manageable: <strong>shadow mode</strong>
+   (learn silently, measure, deploy nothing), <strong>snapshots</strong> (the model is a sequence
+   of versions, rollback to any of them), <strong>learning dials</strong> (per-model learning rate,
+   sample cap, what-not-to-learn rules), and an <strong>audit log</strong> (what the model learned,
+   when, from what).</li>
+</ol>
+<p>The headline metric the product reports: <strong>staleness saved</strong> — the damage area the
+self-learning model avoided versus the customer's scheduled-retrain baseline, times
+their cost-per-error. The research's damage-area metric becomes the customer's
+dollar figure.</p>
+<hr/>
+<h2 id="6-the-evidence-the-mechanism-is-already-measured">6. The evidence — the mechanism is already measured<a class="headerlink" href="#6-the-evidence-the-mechanism-is-already-measured" title="Permanent link">¶</a></h2>
+<p>The product's founding claim — <em>a model that keeps learning recovers; a frozen one
+never does</em> — is not a pitch, it is Exp-01/02 plus the E01 metric correction:</p>
+<table>
+<thead>
+<tr>
+<th>Fact</th>
+<th>Number</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frozen batch model recovered after drift</td>
+<td><strong>0 / 11 seeds</strong></td>
+<td>E01</td>
+</tr>
+<tr>
+<td>Streaming model recovered (real excursion)</td>
+<td><strong>8 / 11 seeds</strong>; the other 3 never left the band</td>
+<td>E01</td>
+</tr>
+<tr>
+<td>Damage paid while wrong, corrected <code>damage_ref</code></td>
+<td><strong>74.8 ± 61.8</strong> vs <strong>515.0 ± 97.1</strong> samples·κ — ≈ <strong>6.9×</strong></td>
+<td>E01</td>
+</tr>
+<tr>
+<td>Damage over the rest of the stream (<code>damage_full</code>)</td>
+<td><strong>321.4</strong> vs <strong>3,472.9</strong> samples·κ — ≈ <strong>10.8×</strong></td>
+<td>E01</td>
+</tr>
+<tr>
+<td>Worst streaming seed vs best frozen seed</td>
+<td><strong>0.74×</strong>, not 24×</td>
+<td>E01</td>
+</tr>
+<tr>
+<td>Streaming self-heal on the pilot stream</td>
+<td>back inside the pre-drift band <strong>834 samples</strong> after drift on seed 42; frozen fell 0.75 → 0.59 κ and never returned</td>
+<td>Exp-01</td>
+</tr>
+</tbody>
+</table>
+<p>The legacy <strong>294×</strong> mean and <strong>24×</strong> worst-vs-best figures were upper bounds from a
+truncated integral and are retired. The durable claim is the 0/11 frozen recovery
+and the corrected ≈6.9× mean damage gap.</p>
+<p>The honest caveat, carried over from the research: this is one synthetic stream, two
+models, no delayed labels, no real data. It proves the <em>mechanism</em>, not the market.
+The product's first engineering phase exists to close exactly that gap — on the
+customer's own stream, in shadow mode, where the proof doubles as the sales demo.</p>
+<hr/>
+<h2 id="7-the-two-killer-use-cases">7. The two killer use cases<a class="headerlink" href="#7-the-two-killer-use-cases" title="Permanent link">¶</a></h2>
+<p>Streaming learning wins in two different places, and it is worth keeping them
+distinct because they sell differently:</p>
+<p><strong>A. Self-healing serving — the drop-in upgrade.</strong> Fraud detection, ads, content
+moderation: the model consumes real-time features (already built), but its weights go
+stale. EverLearn sits behind the existing serving API; predictions are unchanged; the
+model simply keeps learning from each confirmed label (chargeback, conversion, verdict)
+as it arrives. The sale is "your current model, minus the decay between retrains."
+The killer demo: run the customer's own stream through a frozen model and the
+self-learning model side by side — the frozen one drifts off and stays off, the
+EverLearn model dips and heals itself live (this demo <em>is</em> Exp-01, rerun on their data).</p>
+<p><strong>B. Per-entity models — where streaming is the only option.</strong> One lightweight model
+per user, session, device, or seller, updated on every interaction, on-device or
+server-side. Batch systems cannot build per-user models at all — they fake it with
+embeddings and global retrains. Streaming learning makes per-entity models <em>trivial</em>:
+a few hundred bytes of state per entity, one update per event, personalisation that
+reacts to the user's last ten actions, not last month's global retrain. This use case
+has no batch competitor, which makes it the cleanest market entry.</p>
+<hr/>
+<h2 id="8-how-it-works-mechanically">8. How it works mechanically<a class="headerlink" href="#8-how-it-works-mechanically" title="Permanent link">¶</a></h2>
+<p>The loop is the prequential harness from the research, productised:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>   request ──► predict_one(x) ──► serve ŷ            (unchanged, fast path)
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>                                      │
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>                         (label arrives — now or days later)
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>                                      │
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>             join (prediction ↔ label) via the event backbone
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>                                      │
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>             learn_one(x, y)          (O(1), bounded memory)
+<a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a>             metric.update(y, ŷ)      (rolling κ, damage area, staleness saved)
+<a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a>             snapshot policy          (version the model when skill moves)
+</code></pre></div>
+<p>Every sample is scored <em>before</em> it is learned — that is what makes the reported skill
+honest — and nothing is stored. The infrastructure mirrors DriftDeck's: an SDK that
+emits <code>(id, features, ŷ)</code>, an event backbone (Kafka at scale, Redis Streams for one
+node) with a predictions topic and a labels topic, and a join buffer sized by the
+customer's maximum label delay. The engineering hard part is the same two-stream join;
+the learning itself is the cheap part.</p>
+<hr/>
+<h2 id="9-the-hard-problems-honest">9. The hard problems — honest<a class="headerlink" href="#9-the-hard-problems-honest" title="Permanent link">¶</a></h2>
+<p>The idea is strong; these are the things that kill it if ignored:</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Severity</th>
+<th>Honest status &amp; mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The Delay Tax on the learner</strong> — labels arrive late, so the model learns yesterday's truth, and drift is exactly when it matters most</td>
+<td>High</td>
+<td>This is the project's open problem. The product's first experiment is a delayed-label learner; until then EverLearn can only promise bounded staleness, not zero lag</td>
+</tr>
+<tr>
+<td><strong>Trust &amp; governance</strong> — teams will not deploy a model that changes itself</td>
+<td>High</td>
+<td>Shadow mode first (measure, don't deploy), snapshots + rollback, audit log, per-model learning dials. Governance <em>is</em> the product, not an add-on</td>
+</tr>
+<tr>
+<td><strong>Catastrophic forgetting</strong> — bounded-memory continual learning degrades on long streams</td>
+<td>Medium</td>
+<td>Hybrid design: streaming core + periodic offline consolidation. Known solutions; needs engineering, not research</td>
+</tr>
+<tr>
+<td><strong>Poisoned labels</strong> — a model that learns from everything is exposed to bad labels</td>
+<td>Medium</td>
+<td>Learning dials (blocklists, confidence gates, anomaly fences) at the ingestion point</td>
+</tr>
+<tr>
+<td><strong>Regulation</strong> — some industries require frozen, validated models</td>
+<td>Medium</td>
+<td>Target the ones that don't (fraud, ads, personalisation, moderation); on-prem tier for the rest</td>
+</tr>
+<tr>
+<td><strong>It is not a category</strong> — nobody has budget for "streaming ML"</td>
+<td>High</td>
+<td>Sell the outcome: "never stale," "no retrain pipeline." The mechanism stays under the hood</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="10-positioning">10. Positioning<a class="headerlink" href="#10-positioning" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Detects staleness</th>
+<th>Removes staleness</th>
+<th>Model keeps learning</th>
+<th>Per-entity models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retrain pipelines (the status quo)</td>
+<td>✖</td>
+<td>✖ (only at the tick)</td>
+<td>✖</td>
+<td>✖</td>
+</tr>
+<tr>
+<td>Real-time feature platforms</td>
+<td>✖</td>
+<td>✖</td>
+<td>✖</td>
+<td>✖</td>
+</tr>
+<tr>
+<td>Drift monitors (incl. DriftDeck)</td>
+<td>✔</td>
+<td>✖ (tells you to retrain)</td>
+<td>✖</td>
+<td>✖</td>
+</tr>
+<tr>
+<td>Vowpal Wabbit / River (OSS)</td>
+<td>—</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>EverLearn</strong></td>
+<td>✔ (built-in, as a by-product)</td>
+<td>✔ <strong>by construction</strong></td>
+<td>✔</td>
+<td>✔ <strong>native</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The honest position: EverLearn does not compete with drift monitors — it is the thing
+they tell you to do, done automatically. The research's own pairing is the strategy:
+<strong>DriftDeck prices the decay, EverLearn deletes it.</strong> A customer that buys one is one
+sentence away from buying the other.</p>
+<hr/>
+<h2 id="11-the-build-order">11. The build order<a class="headerlink" href="#11-the-build-order" title="Permanent link">¶</a></h2>
+<p>Ordered so the product de-risks itself <em>and</em> the research's next experiments become
+the product's first milestones:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Build</th>
+<th>Exit criterion</th>
+<th>De-risks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A — Shadow</strong></td>
+<td>SDK + engine + label-join + damage accounting, on one real stream (CreditCard fraud), shadow mode only</td>
+<td>The self-learning model measurably beats the customer's scheduled-retrain baseline on staleness saved — without being deployed</td>
+<td>The mechanism survives real data; the killer demo exists</td>
+</tr>
+<tr>
+<td><strong>B — Live</strong></td>
+<td>Snapshots, rollback, one pilot model learning in production</td>
+<td>The pilot runs live with an owner who can revert it in one action</td>
+<td>Governance under fire; first real dollars attached to staleness saved</td>
+</tr>
+<tr>
+<td><strong>C — Platform</strong></td>
+<td>Multi-model, per-entity models, alerts, integrations (registry, feature stores), auth/tenancy</td>
+<td>Several models, one customer, zero retrain jobs left for them</td>
+<td>Product–market fit signal</td>
+</tr>
+<tr>
+<td><strong>D — Distribute</strong></td>
+<td>Hosted + on-prem; OSS the SDK and engine</td>
+<td>Paying customers</td>
+<td>Business</td>
+</tr>
+</tbody>
+</table>
+<p>The research roadmap slots straight in: Exp-05 (label delay) is Phase A's core
+engineering risk; Exp-03/04 (baseline ladder, real streams) are Phase A's shadow-mode
+validation written in academic form. No wasted work — the experiments <em>are</em> the
+product's first build phases.</p>
+<hr/>
+<h2 id="12-business-model-brief">12. Business model (brief)<a class="headerlink" href="#12-business-model-brief" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>OSS core</strong> — the SDK and the engine. Cheap to give away (the algorithms are the
+  research; River is already OSS) and it builds distribution in the MLOps community.</li>
+<li><strong>Paid</strong> — the operational layer: the label-join infrastructure, snapshots and
+  rollback, the audit log, multi-model management, SSO, support. Hosted or on-prem.</li>
+<li><strong>Pricing</strong> — per model or per event, not per seat: the value scales with the
+  staleness the customer avoids, and the "staleness saved" dollar figure the product
+  reports is the ROI number that justifies the subscription.</li>
+</ul>
+<hr/>
+<h2 id="13-one-screen-recap">13. One-screen recap<a class="headerlink" href="#13-one-screen-recap" title="Permanent link">¶</a></h2>
+<p><strong>Product.</strong> EverLearn — a self-learning serving layer. Models that learn from every
+prediction, in bounded memory, with no retraining pipeline.</p>
+<p><strong>Why it exists.</strong> Every production model is frozen between retrains, silently leaking
+money through the staleness window, and the retrain machinery that fights it is itself
+expensive and always behind.</p>
+<p><strong>The wedge.</strong> Real-time ML made features real-time; EverLearn makes the model's own
+knowledge real-time. The last mile nobody sells.</p>
+<p><strong>The offer.</strong> Drop-in SDK, River/DeepRiver engine, and governance (shadow mode,
+snapshots, rollback, audit) that makes self-modifying models safe to deploy.</p>
+<p><strong>The metric.</strong> Staleness saved — damage area avoided × cost-per-error, in dollars.</p>
+<p><strong>The evidence.</strong> E01: a streaming model self-heals after drift (8/11 seeds with a real
+excursion; the other 3 never left the band); a frozen model never does (0/11), paying
+<strong>≈6.9×</strong> more corrected <code>damage_ref</code>. The mechanism is measured, not promised.</p>
+<p><strong>The honest gaps.</strong> Delayed labels weaken the learner exactly when it matters (the
+Delay Tax — the project's open problem), and self-modifying models need governance
+before any team will ship them. Both are Phase A.</p>
+<p><strong>The build order.</strong> Shadow mode on fraud → live pilot → platform → distribute — with
+the research's own experiments as the first milestones.</p>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "toc.follow", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+<script src="../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
